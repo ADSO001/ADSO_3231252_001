@@ -83,6 +83,18 @@ body {
     display: flex;
     flex-direction: column;
 }
+.link_olvido {
+    font-size: 12px;
+    color: #007bff; /* Azul estándar para links */
+    text-decoration: none;
+    margin-bottom: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.link_olvido:hover {
+    text-decoration: underline;
+}
 
 .contenedor_login {
     width: 100%;
