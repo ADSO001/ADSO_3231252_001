@@ -1,0 +1,163 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+.gran_contenedor {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    flex-wrap: wrap;
+
+}
+
+
+.zona_imagen {
+    flex: 1 1 45%;
+    min-height: 100vh;
+}
+
+.zona_imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+.zona_formulario {
+    flex: 1 1 55%;
+
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+
+.contenedor_login {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+
+.cabecera_interna {
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.marca_sigcmi {
+    font-weight: bold;
+    font-size: 14px;
+    color: #000;
+}
+
+.logo_centrado {
+    height: 70px;
+    margin-bottom: 10px;
+}
+
+.subtitulo_gris {
+    color: #a0a0a0;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.titulo_seccion {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+
+
+
+.boton_negro {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    padding: 14px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- MEDIA QUERIES (Responsividad) --- */
+
+/* Para tablets y pantallas medianas */
+@media (max-width: 1024px) {
+    .zona_formulario {
+        padding: 40px;
+    }
+}
+
+/* Para móviles */
+@media (max-width: 768px) {
+    .gran_contenedor {
+        flex-direction: column;
+        /* Apila la imagen arriba y el formulario abajo */
+    }
+
+    .zona_imagen {
+        flex: 0 0 300px;
+        /* La imagen ocupa una altura fija de 300px */
+        min-height: auto;
+        width: 100%;
+    }
+
+    .zona_formulario {
+        flex: 1 1 auto;
+        width: 100%;
+        padding: 30px 20px;
+        border-radius: 25px 25px 0 0;
+        /* Efecto estético de panel subiendo */
+        margin-top: -25px;
+        /* Sube un poco sobre la imagen */
+        z-index: 2;
+    }
+
+    .cabecera_interna {
+        display: none;
+        /* Opcional: ocultar el texto SIGCMI superior en móvil para ahorrar espacio */
+    }
+
+    .boton_negro {
+        max-width: 100%;
+        /* En móvil el botón ocupa todo el ancho disponible */
+    }
+}
+
+/* Para móviles muy pequeños */
+@media (max-width: 480px) {
+    .logo_centrado {
+        height: 60px;
+    }
+
+    .titulo_seccion {
+        font-size: 15px;
+    }
+}
