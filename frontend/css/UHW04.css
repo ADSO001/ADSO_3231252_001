@@ -140,3 +140,133 @@ body {
     font-size: 12px;
     color: #888888;
 }
+.seccion-citas-hoy {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.cabecera-citas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.titulo-citas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.subtitulo-citas {
+    font-size: 12px;
+    color: #888888;
+}
+
+.lista-citas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tarjeta-cita {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.columna-hora {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 200px;
+}
+
+.hora-cita {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.etiqueta-estado {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.estado-confirmado {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.estado-programado {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #cccccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.columna-detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.nombre-paciente {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.nombre-medico {
+    font-size: 12px;
+    color: #888888;
+}
+
+.tipo-consulta {
+    font-size: 12px;
+    color: #bbbbbb;
+}
+
+.columna-metodo {
+    font-size: 12px;
+    color: #aaaaaa;
+    text-align: right;
+    width: 250px;
+}
+
+@media (max-width: 1024px) {
+    .tarjeta-estadistica {
+        width: 48%;
+    }
+    .tarjeta-rendimiento {
+        width: 100%;
+    }
+    .tarjeta-cita {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .columna-hora, .columna-metodo {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+@media (max-width: 768px) {
+    .contenedor-principal {
+        flex-direction: column;
+    }
+    .barra-lateral {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+}
