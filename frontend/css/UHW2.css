@@ -150,6 +150,40 @@
     color: #444;
     line-height: 1.5;
 }
+.separador {
+    font-size: 18px;
+    margin: 35px 0 20px 0;
+    color: #1a1a1a;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.lista_campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.campo_basico_largo {
+    grid-column: span 2;
+}
+
+.campo_basico p, .campo_basico_largo p {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.campo_basico input, .campo_basico select, .campo_basico_largo input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background-color: #fcfcfc;
+}
 
 
 
