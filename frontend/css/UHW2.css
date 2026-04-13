@@ -174,7 +174,10 @@
     margin-bottom: 8px;
     color: #333;
 }
-
+.gris_chico {
+    color: #999;
+    font-size: 12px;
+}
 .campo_basico input, .campo_basico select, .campo_basico_largo input {
     width: 100%;
     padding: 12px;
@@ -183,6 +186,17 @@
     font-size: 14px;
     outline: none;
     background-color: #fcfcfc;
+}
+.zona_archivo {
+    margin: 25px 0;
+}
+
+.input_file {
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    background: #fafafa;
 }
 
 
