@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,17 @@
     <link rel="stylesheet" href="css/UHW2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
     <div class="gran_contenedor">
-        
+
         <div class="zona_imagen">
             <img src="img/doctor2.jpg" alt="Doctor">
         </div>
 
         <div class="zona_formulario">
-            
+
             <div class="cabecera">
                 <a href="index.html" class="boton_flecha">
                     <i class="fa fa-arrow-left"></i> Atrás
@@ -32,7 +34,7 @@
             <p class="negrita">Tipo de Usuario</p>
             <br>
             <div class="botones_tipo">
-                
+
                 <a href="ccmedico.html" class="enlace_caja">
                     <button class="opcion activa">
                         <i class="fa fa-user-md"></i>
@@ -53,11 +55,12 @@
                     </button>
                 </a>
             </div>
-             <div class="cuadro_azul">
+            <div class="cuadro_azul">
                 <i class="fa fa-info-circle"></i>
-                <p>Como médico, tu cuenta requerirá verificación administrativa antes de ser activada. Deberás proporcionar documentación que acredite tu título profesional.</p>
+                <p>Como médico, tu cuenta requerirá verificación administrativa antes de ser activada. Deberás
+                    proporcionar documentación que acredite tu título profesional.</p>
             </div>
-                        <h3 class="separador">Información Personal</h3>
+            <h3 class="separador">Información Personal</h3>
 
             <div class="lista_campos">
                 <div class="campo_basico">
@@ -69,9 +72,91 @@
                     <input type="text" placeholder="Ingrese su apellido">
                 </div>
 
+                <div class="campo_basico">
+                    <p>Tipo de documento</p>
+                    <select>
+                        <option>Seleccionar</option>
+                        <option>Cédula de ciudadanía</option>
+                        <option>Tarjeta de identidad</option>
+                        <option>Registro civil</option>
+                        <option>Cédula de extranjería</option>
+                        <option>Pasaporte</option>
+                        <option>Permiso Especial de Permanencia (PEP)</option>
 
-           
+
+                    </select>
+                </div>
+                <div class="campo_basico">
+                    <p>Número de documento</p>
+                    <input type="text" placeholder="Número">
+                </div>
+                <div class="campo_basico">
+                    <p>Género</p>
+                    <select>
+                        <option>Seleccionar</option>
+                        <option>Masculino</option>
+                        <option>Femenino</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+                <div class="campo_basico">
+                    <p>Teléfono</p>
+                    <input type="text" placeholder="Teléfono">
+                </div>
+                <div class="campo_basico">
+                    <p>Contraseña</p>
+                    <input type="password">
+                    <p class="info_puntos">Mínimo 8 - 12 Caracteres. Debe contener una letra mayúscula y un carácter
+                        especial.</p>
+                </div>
+                <div class="campo_basico">
+                    <p>Confirmar contraseña</p>
+                    <input type="password">
+                </div>
+                <div class="campo_basico_largo">
+                    <p>Dirección</p>
+                    <input type="text" placeholder="Ingrese su dirección">
+                </div>
+                <div class="campo_basico_largo">
+                    <p>Email</p>
+                    <input type="email" placeholder="Correo electrónico">
+                </div>
+            </div>
+
+            <h3 class="separador">Información Profesional</h3>
+
+            <div class="lista_campos">
+                <div class="campo_basico">
+                    <p>Especialidad</p>
+                    <select>
+                        <option>Seleccionar</option>
+                        <option>Medicina General</option>
+                        <option>Dermatología</option>
+                        <option>Pediatría</option>
+                        <option>Cardiología</option>
+                        <option>Ginecología</option>
+                        <option>Oftalmología</option>
+                        <option>Traumatología</option>
+                        <option>Odontología</option>
+                        <option>Neurología</option>
+                        <option>Psiquiatría</option>
+                    </select>
+                </div>
+                <div class="campo_basico">
+                    <p>Número de tarjeta profesional</p>
+                    <input type="text">
+                </div>
+                <div class="campo_basico">
+                    <p>Años de experiencia</p>
+                    <input type="number">
+                </div>
+            </div>
+
+
+
+
         </div>
     </div>
 </body>
+
 </html>
