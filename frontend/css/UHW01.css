@@ -70,7 +70,23 @@
     color: #aaa;
     margin-top: 5px;
 }
-
+.boton_crear_cuenta {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+}
 
 .boton_flecha {
     text-decoration: none;
