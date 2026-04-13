@@ -83,6 +83,16 @@ body {
     display: flex;
     flex-direction: column;
 }
+.textos_caja .negrita {
+    font-weight: bold;
+    color: #000;
+    font-size: 14px;
+}
+
+.gris_chico {
+    color: #888;
+    font-size: 11px;
+}
 .link_olvido {
     font-size: 12px;
     color: #007bff; /* Azul estándar para links */
@@ -94,6 +104,24 @@ body {
 
 .link_olvido:hover {
     text-decoration: underline;
+}
+.grupo_input {
+    width: 100%;
+    margin-bottom: 15px;
+}
+.gris_chico {
+    color: #888;
+    font-size: 11px;
+}
+.grupo_input input {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #f5f5f5; /* Fondo gris plano */
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none; /* Quita el borde azul por defecto al hacer click */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); /* Sombra interna sutil */
 }
 
 .contenedor_login {
@@ -138,11 +166,23 @@ body {
 }
 
 
+.acciones_finales {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; /* Centra los botones negros */
+}
 
-
+.enlace_boton {
+    width: 100%;
+    text-decoration: none;
+    display: block; /* Importante para que acepte el ancho */
+    margin-bottom: 10px;
+}
 .boton_negro {
     width: 100%;
-    max-width: 250px;
+    max-width: 400px;
     margin: 0 auto;
     padding: 14px;
     background-color: #000;
