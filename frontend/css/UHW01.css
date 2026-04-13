@@ -38,6 +38,38 @@
     align-items: center;
     margin-bottom: 30px;
 }
+.lista_campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide en 2 columnas iguales */
+    gap: 20px;
+}
+
+.campo_basico_largo {
+    grid-column: span 2; /* Para que Email o Dirección ocupen todo el ancho */
+}
+
+.campo_basico p, .campo_basico_largo p {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.campo_basico input, .campo_basico select, .campo_basico_largo input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background-color: #fcfcfc;
+}
+
+.info_puntos {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 5px;
+}
 
 
 .boton_flecha {
