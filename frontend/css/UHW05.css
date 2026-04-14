@@ -120,3 +120,21 @@ body {
     font-size: 12px;
     color: #888;
 }
+.seccion-contenido {
+    margin-left: 260px;
+    padding: 50px;
+    width: 100%;
+    background-color: #fcfcfc;
+    min-height: 100vh;
+}
+
+.encabezado h2 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.subtitulo {
+    color: #888;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
