@@ -68,3 +68,32 @@ body {
     background-color: #e0e0e0;
     color: #000000;
 }
+.espacio-icono {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.espacio-icono img {
+    width: 100%;
+    opacity: 0.7;
+}
+
+.pie-lateral {
+    padding: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.boton-cerrar-sesion {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
