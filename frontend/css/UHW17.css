@@ -191,3 +191,178 @@ barra-filtros {
     outline: none;
     cursor: pointer;
 }
+
+
+.lista-agenda {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.icono-lista {
+    margin-bottom: 15px;
+}
+
+.tarjeta-cita {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.fila-arriba {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.datos-tiempo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.fecha {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.hora {
+    color: #666;
+    font-size: 15px;
+}
+
+.estado {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+}
+
+.ok {
+    background: black;
+}
+
+.gris {
+    background: #ccc;
+    color: #333;
+}
+
+.link-ver {
+    color: #000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.fila-abajo {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.columna {
+    flex: 1;
+    min-width: 200px;
+}
+
+.columna p {
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.etiqueta {
+    color: #888;
+}
+
+.texto-oscuro {
+    font-weight: 600;
+    color: #222;
+}
+
+.texto-claro {
+    color: #555;
+}
+
+.texto-pequeno {
+    font-size: 11px;
+    color: #999;
+    margin-top: 10px;
+}
+
+@media (max-width: 800px) {
+    .web {
+        flex-direction: column;
+    }
+
+    .lateral {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .item {
+        width: 48%;
+    }
+
+    .cuerpo {
+        padding: 15px;
+    }
+
+    .barra-filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .select-estado, .btn-nuevo {
+        width: 100%;
+    }
+
+    .fila-arriba, .fila-abajo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+@media (max-width: 768px) {
+    .contenedor-principal {
+        flex-direction: column;
+    }
+    .barra-lateral {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+}
+.cuerpo {
+    flex: 1;
+    padding: 30px;
+    background: #fafafa;
+    overflow-y: auto;
+}
+
+.titulo {
+    margin-bottom: 25px;
+}
+
+.titulo h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.titulo p {
+    color: #888;
+    font-size: 14px;
+}
