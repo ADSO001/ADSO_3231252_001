@@ -237,3 +237,21 @@ body {
     cursor: pointer;
     font-weight: 700;
 }
+/* RESPONSIVE CELULAR */
+@media (max-width: 768px) {
+    .contenedor-principal {
+        flex-direction: column;
+    }
+
+    .barra-lateral {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+    }
+
+    .seccion-contenido {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
