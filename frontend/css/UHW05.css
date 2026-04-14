@@ -138,3 +138,25 @@ body {
     font-size: 15px;
     margin-bottom: 30px;
 }
+.contenedor-buscador {
+    position: relative;
+    max-width: 800px;
+    margin-bottom: 40px;
+}
+
+.icono-busqueda {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+}
+
+.buscador {
+    width: 100%;
+    padding: 14px 15px 14px 50px;
+    border: 1px solid #eee;
+    background: #fff;
+    border-radius: 12px;
+    outline: none;
+}
