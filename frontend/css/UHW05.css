@@ -224,3 +224,16 @@ body {
     padding: 1px 6px;
     border-radius: 4px;
 }
+.boton-historial {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
