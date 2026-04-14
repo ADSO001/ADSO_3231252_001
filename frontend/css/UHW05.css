@@ -196,3 +196,31 @@ body {
     gap: 15px;
     margin-bottom: 20px;
 }
+.imagen-texto {
+    width: 50px;
+    height: 50px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.grupo-nombre h3 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.detalles p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.etiqueta-sangre {
+    background: #333;
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
