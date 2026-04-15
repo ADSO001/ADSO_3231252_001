@@ -164,4 +164,96 @@ body {
     font-size: 12px;
     color: #888888;
 }
+.textos-usuario {
+    display: flex;
+    flex-direction: column;
+}
+
+.texto-fuerte {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.texto-suave {
+    color: #888;
+    font-size: 11px;
+}
+
+.area-trabajo {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.encabezado-pagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.titulos h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.titulos p {
+    color: #888;
+    font-size: 14px;
+}
+
+.boton-opciones {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 24px;
+}
+
+.tarjeta-blanca {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+}
+
+.barra-superior-tarjeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.grupo-titulo-doctor {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icono-mediano {
+    width: 24px;
+}
+
+.texto-normal {
+    font-size: 18px;
+    color: #555;
+}
+
+.nombre-doctor {
+    font-size: 32px;
+}
+
+.caja-leyenda {
+    display: flex;
+    gap: 15px;
+}
+
+.item-leyenda {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #888;
+}
 
