@@ -101,5 +101,27 @@ img {
     width: 100%;
     margin-bottom: 25px;
 }
+.grupo_input_recuperar label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #000000;
+}
+
+.grupo_input_recuperar input {
+    width: 100%;
+    padding: 14px;
+    background-color: #f9f9f9;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    font-size: 16px; 
+    transition: border-color 0.2s;
+}
+
+.grupo_input_recuperar input:focus {
+    outline: 2px solid #000000;
+    border-color: transparent;
+}
 
 
