@@ -238,3 +238,39 @@ body {
 button:hover {
     opacity: 0.7;
 }
+
+
+/*===ESTILOS DE VENTANAS EMERGENTES===*/
+
+.capa-oscura {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.cuadro-emergente {
+    background-color: #d1d1d1;
+    width: 90%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.titulo-emergente {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.info-cita-actual {
+    font-size: 14px;
+    line-height: 1.6;
+}
