@@ -296,7 +296,8 @@ button:hover {
     background-color: #fff;
 }
 
-input[type="date"] {
+input[type="date"], 
+input[type="time"] {
     font-family: inherit;
     outline: none;
 }

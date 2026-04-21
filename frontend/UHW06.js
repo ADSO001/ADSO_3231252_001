@@ -18,6 +18,11 @@ function abrirVentanaReprogramar() {
                 <div class="contenedorInput">
                     <input type="date" id="nuevaFecha" value="2026-03-06">
                 </div>
+
+                <label class="etiquetaInput">Nueva hora</label>
+                <div class="contenedorInput">
+                    <input type="time" id="nuevaHora" value="10:30">
+                </div>
             </div>
         </div>
     `;
