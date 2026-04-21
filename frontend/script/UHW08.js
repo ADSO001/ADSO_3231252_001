@@ -34,4 +34,23 @@ function mostrar_notificacion(mensaje, tipo_alerta) {
         contenedor_notificaciones.className = 'contenedor_notificaciones';
         document.body.appendChild(contenedor_notificaciones);
     }
+     var burbuja_aviso = document.createElement('div');
+    burbuja_aviso.className = "burbuja_aviso " + tipo_alerta;
+
+    var icono_tipo;
+    if (tipo_alerta === 'alerta_exito') {
+        icono_tipo = '<i class="fa-solid fa-circle-check"></i>';
+    } else {
+        icono_tipo = '<i class="fa-solid fa-circle-exclamation"></i>';
+    }
+
+    burbuja_aviso.innerHTML = icono_tipo + "<span>" + mensaje + "</span>";
+    contenedor_notificaciones.appendChild(burbuja_aviso);
+
+    setTimeout(function() {
+        burbuja_aviso.classList.add('desvanecer_notificacion');
+        setTimeout(function() {
+            burbuja_aviso.remove();
+        }, 500);
+    }, 4000);
 }
