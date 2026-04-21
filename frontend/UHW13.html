@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Doctor, en esta página encontrarás toda la información acerca de tus citas de hoy y pacientes.">
     <title>SIGCMI</title>
     <link rel="stylesheet" href="css/UHW13.css">
     <link href="https://fonts.googleapis.com/css2?family=Material Symbols Outlined" rel="stylesheet" />
@@ -12,9 +14,9 @@
 <body>
 
     <header class="header">
-        <img class="logo" src="img/logo.jpg" alt="logo">
-        <div class="user"></div>
-        <button class="logout"><a href="index.html">Cerrar sesión</a></button>
+        <img class="logo" src="img/logo.jpg" alt="Logotipo de SIGCMI">
+        <div class="user" aria-live="polite"></div>
+        <button id="logout">Cerrar sesión</button>
     </header>
 
     <main class="container">
@@ -41,7 +43,7 @@
                 <p class="def">Registros creados</p>
             </div>
         </section>
-        
+
         <section class="menu">
 
             <a href="UHW13.html" class="pag activo">
@@ -61,7 +63,7 @@
 
         </section>
 
-
+        <script src="js/UHW13.js"></script>
 </body>
 
 </html>
