@@ -154,4 +154,22 @@ img {
     outline: 3px solid rgba(0, 0, 0, 0.2);
     outline-offset: 2px;
 }
+.volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+    transition: transform 0.2s;
+}
+
+.volver:hover {
+    text-decoration: underline;
+    transform: translateX(-3px);
+}
+
+
 
