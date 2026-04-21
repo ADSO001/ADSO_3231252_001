@@ -23,10 +23,25 @@ function abrirVentanaReprogramar() {
                 <div class="contenedorInput">
                     <input type="time" id="nuevaHora" value="10:30">
                 </div>
+
+                <div class="botonesArea">
+                    <button type="button" id="btnCancelar" class="btnNegro">Cancelar</button>
+                </div>
             </div>
         </div>
     `;
 
     document.body.appendChild(capaOscura);
     capaOscura.style.display = 'flex';
+
+    document.getElementById('btnCancelar').onclick = function() {
+        cerrarVentana();
+    };
+}
+
+function cerrarVentana() {
+    const ventana = document.querySelector('.capaOscura');
+    if (ventana) {
+        ventana.remove();
+    }
 }
