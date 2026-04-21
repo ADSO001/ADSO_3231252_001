@@ -317,3 +317,13 @@ input[type="time"] {
     font-weight: bold;
     cursor: pointer;
 }
+
+.btnClaro {
+    background-color: #f0f0f0;
+    color: black;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}

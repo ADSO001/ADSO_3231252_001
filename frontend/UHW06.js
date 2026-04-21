@@ -26,6 +26,7 @@ function abrirVentanaReprogramar() {
 
                 <div class="botonesArea">
                     <button type="button" id="btnCancelar" class="btnNegro">Cancelar</button>
+                    <button type="button" id="btnConfirmar" class="btnClaro">Confirmar cambio</button>
                 </div>
             </div>
         </div>
@@ -35,6 +36,10 @@ function abrirVentanaReprogramar() {
     capaOscura.style.display = 'flex';
 
     document.getElementById('btnCancelar').onclick = function() {
+        cerrarVentana();
+    };
+
+    document.getElementById('btnConfirmar').onclick = function() {
         cerrarVentana();
     };
 }
