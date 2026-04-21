@@ -220,6 +220,26 @@ img {
     filter: grayscale(1);
     opacity: 0.6;
 }
-
+@media (max-width: 850px) {
+    .gran_contenedor {
+        flex-direction: column;
+    }
+    .zona_imagen {
+        width: 100%;
+        height: 180px;
+    }
+    .zona_formulario {
+        width: 100%;
+        padding: 60px 20px;
+    }
+    .cabecera_interna {
+        top: 20px;
+        left: 20px;
+    }
+    .footer_logo {
+        position: static;
+        margin-top: 40px;
+    }
+}
 
 
