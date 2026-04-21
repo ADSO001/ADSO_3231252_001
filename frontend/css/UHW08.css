@@ -75,4 +75,14 @@ img {
     margin: 0 auto 30px auto; 
   
 }
+.caja_recuperacion {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.icono_llave {
+    font-size: 35px;
+    color: #444444;
+    margin-bottom: 20px;
+}
 
