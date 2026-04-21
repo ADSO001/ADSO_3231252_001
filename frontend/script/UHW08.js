@@ -26,3 +26,12 @@ function validar_formato_correo(correo) {
     var patron_correo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return patron_correo.test(correo);
 }
+function mostrar_notificacion(mensaje, tipo_alerta) {
+    var contenedor_notificaciones = document.querySelector('.contenedor_notificaciones');
+
+    if (!contenedor_notificaciones) {
+        contenedor_notificaciones = document.createElement('div');
+        contenedor_notificaciones.className = 'contenedor_notificaciones';
+        document.body.appendChild(contenedor_notificaciones);
+    }
+}
