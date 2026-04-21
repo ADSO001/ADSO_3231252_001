@@ -1,0 +1,28 @@
+function enviar(evento) {
+    evento.preventDefault();
+    
+    var boton_enviar = document.querySelector('.boton_enviar');
+    var entrada_email = document.getElementById('email');
+    var correo_ingresado = entrada_email.value.trim();
+
+    if (correo_ingresado === "") {
+        mostrar_notificacion("Por favor, ingrese su correo electrónico", "alerta_error");
+    } else if (!validar_formato_correo(correo_ingresado)) {
+        mostrar_notificacion("El formato del correo no es válido", "alerta_error");
+    } else {
+        boton_enviar.disabled = true;
+        boton_enviar.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
+
+        setTimeout(function() {
+            mostrar_notificacion("Correo enviado con éxito. Revise su bandeja.", "alerta_exito");
+            boton_enviar.disabled = false;
+            boton_enviar.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar';
+            entrada_email.value = "";
+        }, 1500);
+    }
+}
+
+function validar_formato_correo(correo) {
+    var patron_correo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return patron_correo.test(correo);
+}
