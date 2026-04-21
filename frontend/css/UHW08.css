@@ -62,3 +62,17 @@ img {
     font-size: 1.1rem;
     color: #000000;
 }
+.contenedor_login {
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.logo_centrado {
+    display: block;     
+    width: 120px;   
+    height: auto;      
+    margin: 0 auto 30px auto; 
+  
+}
+
