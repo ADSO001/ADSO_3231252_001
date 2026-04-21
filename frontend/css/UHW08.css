@@ -129,4 +129,29 @@ img {
     color: #666666; 
     margin-top: 8px;
 }
+.boton_enviar {
+    width: 100%;
+    padding: 15px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.3s;
+}
+
+.boton_enviar:hover {
+    opacity: 0.9;
+}
+
+.boton_enviar:focus {
+    outline: 3px solid rgba(0, 0, 0, 0.2);
+    outline-offset: 2px;
+}
 
