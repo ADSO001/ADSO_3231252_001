@@ -136,3 +136,106 @@ a{
     font-size: 14px;
     color: #595959;
 }
+
+
+/* Estilo de la tarjeta de paciente */
+.tarjeta-paciente {
+    background-color: white;
+    border: 1px solid #efefef;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.4);
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #e71616;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #e9e2e2;
+}
+
+.datos {
+    flex: 1;
+}
+
+.fila-nombre {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nombre {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.etiqueta {
+    background-color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);
+    color: #595959;
+
+}
+
+
+.edad {
+    font-size: 13px;
+    margin: 5px 0;
+    color: #595959;
+}
+
+.detalles-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Dos columnas */
+    gap: 10px;
+    font-size: 12px;
+    margin-top: 10px;
+    color: #595959;
+}
+
+.sangre {
+    background-color: #eee;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+/* Botones de acción */
+.acciones {
+    display: flex;
+    flex-direction: column; /* Botones uno sobre otro */
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-blanco {
+    display: inline-flex;
+    background-color: white;
+    border: 1px solid #ddd;
+    gap: 8px;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.4);
+        align-items: center;
+         color: black;
+}
+.btn-blanco a{
+    color: black;
+}
+ 
+.btn-blanco:hover {
+    background-color: #d5d5d5;
+   
+}
