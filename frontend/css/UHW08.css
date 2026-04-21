@@ -85,4 +85,10 @@ img {
     color: #444444;
     margin-bottom: 20px;
 }
+.titulo_recuperar {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #000000;
+}
 
