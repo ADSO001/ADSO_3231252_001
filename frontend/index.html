@@ -11,6 +11,11 @@
 
 <body>
 
+  <div id="notificacion" class="notificacion">
+    <i class="fa fa-exclamation-circle"></i>
+    <span id="mensaje_notificacion"></span>
+  </div>
+
   <div class="gran_contenedor">
 
     <div class="zona_imagen">
@@ -52,23 +57,19 @@
           </a>
         </div>
 
-        <h2 class="titulo_seccion">Iniciar sesión en SIGCMI</h2>
-                    <div class="grupo_input">
-                    <input type="email" placeholder="Correo electrónico">
-                </div>
-                
-                <div class="grupo_input">
-                    <input type="password" placeholder="Contraseña">
-                </div>
-
-                   <a href="UHW08.html" class="link_olvido">
-                    ¿Has olvidado tu contraseña?
-                </a>
-
-
-<div class="acciones_finales">
-          
-          <a href="UHW04.html" class="enlace_boton">
+        <h2 class="titulo_seccion">Iniciar sesión en SIGCMI</h2>      
+        <div class="grupo_input">
+          <input type="email" id="email" placeholder="Correo electrónico">
+        </div>
+        
+        <div class="grupo_input">
+          <input type="password" id="password" placeholder="Contraseña">
+        </div>
+        <a href="UHW08.html" class="link_olvido">
+          ¿Has olvidado tu contraseña?
+        </a>
+        <div class="acciones_finales"> 
+          <a href="UHW04.html" class="enlace_boton" onclick="return validarLogin(event)">
             <button class="boton_negro">
               <i class="fa fa-users"></i> Iniciar sesión
             </button>
@@ -79,13 +80,11 @@
               <i class="fa fa-user-plus"></i> Crear cuenta
             </button>
           </a>
-
         </div>
-
-
-
-
+      </div>
+    </div>
   </div>
+  <script src="script/script.js"></script>
 </body>
 
 </html>

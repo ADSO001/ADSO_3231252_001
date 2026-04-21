@@ -196,6 +196,31 @@ body {
     align-items: center;
     gap: 8px;
 }
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #0056b3; 
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+    font-family: sans-serif;
+}
+
+.notificacion.mostrar {
+    transform: translateX(0);
+}
+
+.notificacion i {
+    font-size: 1.2rem;
+}
 
 /* --- MEDIA QUERIES (Responsividad) --- */
 
