@@ -140,6 +140,59 @@ body {
     font-size: 12px;
     color: #888888;
 }
+
+.contenido-principal {
+    width: 100%;
+    padding: 30px;
+    background-color: #fafafa;
+}
+
+.encabezado {
+    margin-bottom: 30px;
+}
+
+.encabezado h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.encabezado p {
+    color: #888888;
+    font-size: 14px;
+}
+
+.cuadricula-estadisticas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.tarjeta-estadistica {
+    width: 23%;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.cabecera-tarjeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #555555;
+}
+
+.numero-tarjeta {
+    font-size: 28px;
+    font-weight: bold;
+}
 .seccion-citas-hoy {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
