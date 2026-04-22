@@ -11,44 +11,85 @@
 
 <body>
 
-    <!--Header section-->
     <header class="header">
-        <img class="logo" src="img/logo.png" alt="logo"><!--Logo-->
-        <div class="user"></div><!--Recolectar info del usuario-->
-        <button class="logout"><a href="index.html">Cerrar Sesión</a></button><!--Cerrar la sesion del usuario-->
+        <img class="logo" src="img/logo.png" alt="logo">
+        <div class="user"></div>
+        <button class="logout"><a href="index.html">Cerrar Sesión</a></button>
     </header>
 
-    <!--Main container-->
     <main class="container">
 
-        <!--Cards section-->
         <section class="cards">
             <div class="card">
                 <h3>Próximas citas</h3>
-                <p class="number" id="numCitas">0</p><!--Sacar la cantidad te citas que tiene proximamente-->
+                <p class="number" id="numCitas">0</p>
                 <p class="desc">Citas programadas</p>
             </div>
             <div class="card">
                 <h3>Consultas realizadas</h3>
-                <p class="number" id="numConsultas">0</p><!--Sacar la cantidad te citas que tiene proximamente-->
+                <p class="number" id="numConsultas">0</p>
                 <p class="desc">Total de consultas</p>
             </div>
             <div class="card">
                 <h3>Historial médico</h3>
-                <p class="number" id="numHistorial">0</p><!--Sacar la cantidad te citas que tiene proximamente-->
+                <p class="number" id="numHistorial">0</p>
                 <p class="desc">Registros guardados</p>
             </div>
         </section>
 
-        <!-- Tabs section -->
         <section class="tabs">
             <button class="tab"><a href="UHW06.html">Mis citas</a></button>
             <button class="tabAct">Historial Medico</button>
             <button class="tab"><a href="UHW12.html">Nueva Cita</a></button>
         </section>
 
-        <!--Agenda section-->
         <section class="agenda">
+            <div class="cabeceraHistorial">
+                <h2 class="tituloSeccion">Historial Médico</h2>
+                <p class="subtituloSeccion">Tus registros y diagnósticos</p>
+            </div>
+
+            <div class="contenedorRegistro">
+                <div class="detallesRegistro">
+                    <div class="filaInfo">
+                        <p class="fechaRegistro"><strong>Sábado, 3 de Marzo 2026</strong> <span
+                                class="horaRegistro">9:00</span></p>
+                        <p class="nombreMedico">Médico: <strong>Dr. María González</strong></p>
+                    </div>
+
+                    <div class="campoInfo">
+                        <span class="etiqueta">Paciente:</span>
+                        <span class="valor">Juan Pérez García</span>
+                    </div>
+
+                    <div class="campoInfo">
+                        <span class="etiqueta">Tipo de sangre:</span>
+                        <span class="valor">O+</span>
+                    </div>
+
+                    <div class="campoInfo">
+                        <span class="etiqueta">Alergias:</span>
+                        <span class="valor">Latex</span>
+                    </div>
+
+                    <div class="campoInfo">
+                        <span class="etiqueta">Motivo:</span>
+                        <span class="valor">Fuerte dolor abdominal</span>
+                    </div>
+
+                    <div class="campoInfo">
+                        <span class="etiqueta">Descripción:</span>
+                        <p class="textoLargo">El paciente se presenta a consulta por un fuerte dolor abdominal, menciona
+                            llevar 24 horas de dolor continuo, presenta sudoración y presion baja.</p>
+                    </div>
+
+                    <div class="campoInfo">
+                        <span class="etiqueta">Resolución:</span>
+                        <p class="textoLargo">Enviamos examenes de sangre y ecografía para descartar calculos o
+                            apendicitis, se le envía medicación por intravenosa para reducción de dolor y siguiente cita
+                            para lectura de examenes.</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

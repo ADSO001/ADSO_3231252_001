@@ -116,7 +116,76 @@ a{
 }
 
 .agenda {
+    background-color: #f5f5f5;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.cabeceraHistorial {
+    margin-bottom: 20px;
+}
+
+.tituloSeccion {
+    font-size: 18px;
+    color: #333;
+}
+
+.subtituloSeccion {
+    font-size: 13px;
+    color: #888;
+}
+
+.contenedorRegistro {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.filaInfo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.fechaRegistro {
+    font-size: 14px;
+}
+
+.horaRegistro {
+    color: #aaa;
+    margin-left: 5px;
+}
+
+.nombreMedico {
+    font-size: 13px;
+    color: #666;
+}
+
+.campoInfo {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    margin-bottom: 12px;
+    align-items: baseline;
+}
+
+.etiqueta {
+    font-size: 14px;
+    color: #999;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.valor {
+    font-size: 14px;
+    color: #000;
+    font-weight: 500;
+}
+
+.textoLargo {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
 }
