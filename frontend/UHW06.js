@@ -50,3 +50,31 @@ function cerrarVentana() {
         ventana.remove();
     }
 }
+
+/* Ventana para cancelar la cita */
+
+function abrirVentanaCancelar() {
+    const capaOscura = document.createElement('div');
+    capaOscura.className = 'capaOscura';
+    capaOscura.id = 'emergenteCancelar';
+    
+    capaOscura.innerHTML = `
+        <div class="cuadroEmergente">
+            <h1 class="tituloEmergente">Cancelación de cita</h1>
+            
+            <div class="infoCitaActual">
+                <p><strong>Médico:</strong> Dr. Maria Gonzalez</p>
+                <p><strong>Cita actual:</strong> Sábado, 3 de marzo 2026 - 9:00</p>
+            </div>
+
+            <div class="contenedorPregunta">
+                <p class="preguntaConfirmacion">
+                    ¿Está seguro de que desea cancelar la cita para el sábado, 3 de marzo a las 9:00 AM?
+                </p>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(capaOscura);
+    capaOscura.style.display = 'flex';
+}
