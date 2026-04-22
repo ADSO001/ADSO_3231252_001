@@ -5,50 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGCMI</title>
-    <link rel="stylesheet" href="UHW16.css">
+    <link rel="stylesheet" href="UHW12.css">
     <link rel="icon" href="img/icono.png" type="image/png">
 </head>
 
 <body>
 
-    <!--Header section-->
     <header class="header">
-        <img class="logo" src="img/logo.png" alt="logo"><!--Logo-->
-        <div class="user"></div><!--Recolectar info del usuario-->
-        <button class="logout"><a href="index.html">Cerrar Sesión</a></button><!--Cerrar la sesion del usuario-->
+        <img class="logo" src="img/logo.png" alt="logo">
+        <div class="user"></div>
+        <button class="logout"><a href="index.html">Cerrar Sesión</a></button>
     </header>
 
-    <!--Main container-->
     <main class="container">
 
-        <!--Cards section-->
         <section class="cards">
             <div class="card">
                 <h3>Próximas citas</h3>
-                <p class="number" id="numCitas">0</p><!--Sacar la cantidad te citas que tiene proximamente-->
+                <p class="number" id="numCitas">0</p>
                 <p class="desc">Citas programadas</p>
             </div>
             <div class="card">
                 <h3>Consultas realizadas</h3>
-                <p class="number" id="numConsultas">0</p><!--Sacar la cantidad te citas que tiene proximamente-->
+                <p class="number" id="numConsultas">0</p>
                 <p class="desc">Total de consultas</p>
             </div>
             <div class="card">
                 <h3>Historial médico</h3>
-                <p class="number" id="numHistorial">0</p><!--Sacar la cantidad te citas que tiene proximamente-->
+                <p class="number" id="numHistorial">0</p>
                 <p class="desc">Registros guardados</p>
             </div>
         </section>
 
-        <!-- Tabs section -->
         <section class="tabs">
             <button class="tab"><a href="UHW06.html">Mis citas</a></button>
             <button class="tab"><a href="UHW11.html">Historial Medico</a></button>
             <button class="tabAct">Nueva Cita</button>
         </section>
 
-        <!--Agenda section-->
         <section class="agenda">
+            <div class="cabeceraAgenda">
+                <h2 class="tituloAgenda">Agendar Nueva Cita</h2>
+                <p class="subtituloAgenda">Selecciona un médico disponible</p>
+            </div>
+
+            <div class="contenedorMedicos">
+                <div class="tarjetaMedico">
+                    <div class="perfilMedico">
+                        <div class="avatarMedico">M</div>
+                        <div class="infoBasica">
+                            <p class="nombreDoc">Dr. María González</p>
+                            <p class="especialidadDoc">Medicina General</p>
+                        </div>
+                    </div>
+
+                    <p class="costoConsulta">@Consulta: $50</p>
+                    <hr class="divisor">
+
+                    <div class="seccionHorarios">
+                        <p class="tituloHorarios">Horario de atención</p>
+                        <div class="bloqueHoras">
+                            <span class="chipHora">Mar: 9:00-09:20</span>
+                            <span class="chipHora">Mar: 9:40-10:00</span>
+                            <span class="chipHora">Vie: 9:20-9:40</span>
+                        </div>
+                    </div>
+
+                    <button class="btnAgendar">Agendar</button>
+                </div>
             </div>
         </section>
     </main>

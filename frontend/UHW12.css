@@ -116,7 +116,105 @@ a{
 }
 
 .agenda {
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.cabeceraAgenda {
+    margin-bottom: 30px;
+}
+
+.tituloAgenda {
+    font-size: 20px;
+}
+
+.subtituloAgenda {
+    font-size: 14px;
+    color: #999;
+}
+
+.contenedorMedicos {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.tarjetaMedico {
+    background-color: #fff;
+    border-radius: 12px;
     padding: 20px;
+    width: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #f0f0f0;
+}
+
+.perfilMedico {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatarMedico {
+    width: 40px;
+    height: 40px;
+    background-color: #d10000;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.nombreDoc {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.especialidadDoc {
+    font-size: 12px;
+    color: #777;
+}
+
+.costoConsulta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 15px;
+}
+
+.divisor {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+.tituloHorarios {
+    font-size: 13px;
+    color: #bbb;
+    margin-bottom: 12px;
+}
+
+.bloqueHoras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.chipHora {
+    font-size: 11px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.btnAgendar {
+    width: 100%;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }
