@@ -72,9 +72,24 @@ function abrirVentanaCancelar() {
                     ¿Está seguro de que desea cancelar la cita para el sábado, 3 de marzo a las 9:00 AM?
                 </p>
             </div>
+
+            <div class="botonesArea botonesCancelar">
+                <button type="button" id="btnConfirmarCancelar" class="btnClaro">Si, deseo cancelar</button>
+            </div>
         </div>
     `;
 
     document.body.appendChild(capaOscura);
     capaOscura.style.display = 'flex';
+
+    document.getElementById('btnConfirmarCancelar').onclick = function() {
+        cerrarVentanaCancelar();
+    };
+}
+
+function cerrarVentanaCancelar() {
+    const ventana = document.querySelector('#emergenteCancelar');
+    if (ventana) {
+        ventana.remove();
+    }
 }
