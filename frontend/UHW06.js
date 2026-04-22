@@ -67,14 +67,17 @@ function abrirVentanaCancelar() {
                 <p><strong>Cita actual:</strong> Sábado, 3 de marzo 2026 - 9:00</p>
             </div>
 
-            <div class="contenedorPregunta">
-                <p class="preguntaConfirmacion">
-                    ¿Está seguro de que desea cancelar la cita para el sábado, 3 de marzo a las 9:00 AM?
-                </p>
-            </div>
+            <div class="formularioReprogramar">
+                <div class="contenedorPregunta">
+                    <p class="preguntaConfirmacion">
+                        ¿Está seguro de que desea cancelar la cita para el sábado, 3 de marzo a las 9:00 AM?
+                    </p>
+                </div>
 
-            <div class="botonesArea botonesCancelar">
-                <button type="button" id="btnConfirmarCancelar" class="btnClaro">Si, deseo cancelar</button>
+                <div class="botonesArea botonesCancelar">
+                    <button type="button" id="btnConfirmarCancelar" class="btnClaro">Si, deseo cancelar</button>
+                    <button type="button" id="btnVolver" class="btnNegro">No, deseo volver</button>
+                </div>
             </div>
         </div>
     `;
@@ -83,6 +86,10 @@ function abrirVentanaCancelar() {
     capaOscura.style.display = 'flex';
 
     document.getElementById('btnConfirmarCancelar').onclick = function() {
+        cerrarVentanaCancelar();
+    };
+
+    document.getElementById('btnVolver').onclick = function() {
         cerrarVentanaCancelar();
     };
 }
