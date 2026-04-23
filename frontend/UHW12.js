@@ -43,7 +43,14 @@ function abrirVentanaAgendar() {
                         <input type="time" id="horaCita" class="inputForm">
                     </div>
 
-                    <div id="contenedorResumen"></div>
+                    <div class="resumenCita">
+                        <p class="resumenTitulo">Resumen de la cita</p>
+                        <p id="resumenFecha">Fecha: No seleccionada</p>
+                        <p id="resumenHora">Hora: No seleccionada</p>
+                        <p>Médico: Dr. María González - Medicina General</p>
+                    </div>
+
+                    <div id="contenedorBotonesAccion"></div>
                 </div>
             </div>
         </div>
@@ -51,6 +58,20 @@ function abrirVentanaAgendar() {
 
     document.body.appendChild(capaOscura);
     capaOscura.style.display = 'flex';
+
+    // Lógica para actualizar el resumen en tiempo real
+    const inputFecha = document.getElementById('fechaCita');
+    const inputHora = document.getElementById('horaCita');
+    const txtFecha = document.getElementById('resumenFecha');
+    const txtHora = document.getElementById('resumenHora');
+
+    inputFecha.addEventListener('change', () => {
+        txtFecha.innerText = "Fecha: " + inputFecha.value;
+    });
+
+    inputHora.addEventListener('change', () => {
+        txtHora.innerText = "Hora: " + inputHora.value;
+    });
 }
 
 function cerrarVentanaAgendar() {
