@@ -52,7 +52,7 @@ function abrirVentanaAgendar() {
 
                     <div class="botonesFinales">
                         <button class="btnCancelarModal" onclick="cerrarVentanaAgendar()">Cancelar</button>
-                        <div id="contenedorConfirmar"></div>
+                        <button class="btnConfirmarModal" onclick="confirmarAgendamiento()">Confirmar cita</button>
                     </div>
                 </div>
             </div>
@@ -79,4 +79,14 @@ function abrirVentanaAgendar() {
 function cerrarVentanaAgendar() {
     const ventana = document.getElementById('emergenteAgendar');
     if (ventana) ventana.remove();
+}
+
+function confirmarAgendamiento() {
+    const fecha = document.getElementById('fechaCita').value;
+    const hora = document.getElementById('horaCita').value;
+
+    if(fecha && hora) {
+        // Lógica para subir al sistema aquí
+        cerrarVentanaAgendar();
+    }
 }
