@@ -50,7 +50,10 @@ function abrirVentanaAgendar() {
                         <p>Médico: Dr. María González - Medicina General</p>
                     </div>
 
-                    <div id="contenedorBotonesAccion"></div>
+                    <div class="botonesFinales">
+                        <button class="btnCancelarModal" onclick="cerrarVentanaAgendar()">Cancelar</button>
+                        <div id="contenedorConfirmar"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,7 +62,6 @@ function abrirVentanaAgendar() {
     document.body.appendChild(capaOscura);
     capaOscura.style.display = 'flex';
 
-    // Lógica para actualizar el resumen en tiempo real
     const inputFecha = document.getElementById('fechaCita');
     const inputHora = document.getElementById('horaCita');
     const txtFecha = document.getElementById('resumenFecha');
