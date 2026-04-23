@@ -194,6 +194,70 @@ body {
     font-size: 28px;
     font-weight: bold;
 }
+.cuadricula-rendimiento {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.tarjeta-rendimiento {
+    width: 48%;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.titulo-seccion-tarjeta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.fila-progreso {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #888888;
+}
+
+.etiqueta-progreso {
+    width: 140px;
+}
+
+.contenedor-barra {
+    flex-grow: 1;
+    height: 8px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+.barra-verde {
+    height: 100%;
+    background-color: #28a745;
+    border-radius: 10px;
+}
+
+.barra-roja {
+    height: 100%;
+    background-color: #a52a2a;
+    border-radius: 10px;
+}
+
+.porcentaje-progreso {
+    width: 40px;
+    text-align: right;
+    font-weight: bold;
+    color: #333333;
+}
+
 .seccion-citas-hoy {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
