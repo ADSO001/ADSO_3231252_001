@@ -218,3 +218,87 @@ a{
     font-weight: bold;
     cursor: pointer;
 }
+
+/*VENTANA EMERGENTE DE AGENDAR*/
+
+/* --- Lógica de Ventana Emergente --- */
+.capaOscura {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* JS lo cambia a flex */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modalAgendar {
+    background-color: white;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.cabeceraModal {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.tituloModal {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.subtituloModal {
+    color: #888;
+    font-size: 14px;
+}
+
+.cerrarModal {
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+}
+
+/* --- Layout de dos columnas --- */
+.cuerpoModal {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 40px;
+}
+
+.perfilDocModal {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatarDoc {
+    width: 45px;
+    height: 45px;
+    background-color: #d10000;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.divisorModal {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.itemInfo {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #555;
+}
