@@ -1,5 +1,4 @@
 function abrirVentanaAgendar() {
-    // Evita duplicar la ventana si ya está abierta
     if (document.getElementById('emergenteAgendar')) return;
 
     const capaOscura = document.createElement('div');
@@ -34,8 +33,12 @@ function abrirVentanaAgendar() {
                 </div>
                 
                 <div class="columnaSeleccion">
-                    <div id="contenedorInputs">
-                        </div>
+                    <div class="grupoInput">
+                        <label class="pasoTexto">1. Selecciona la fecha</label>
+                        <input type="date" id="fechaCita" class="inputForm">
+                    </div>
+
+                    <div id="contenedorPasosSiguientes"></div>
                 </div>
             </div>
         </div>
