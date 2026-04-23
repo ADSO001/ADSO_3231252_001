@@ -343,6 +343,7 @@ a{
     border-color: #000;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
 }

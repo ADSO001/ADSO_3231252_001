@@ -38,7 +38,12 @@ function abrirVentanaAgendar() {
                         <input type="date" id="fechaCita" class="inputForm">
                     </div>
 
-                    <div id="contenedorPasosSiguientes"></div>
+                    <div class="grupoInput">
+                        <label class="pasoTexto">2. Selecciona la hora</label>
+                        <input type="time" id="horaCita" class="inputForm">
+                    </div>
+
+                    <div id="contenedorResumen"></div>
                 </div>
             </div>
         </div>
