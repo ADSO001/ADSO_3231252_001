@@ -10,3 +10,14 @@ const botonCerrarSesion = document.getElementById('logout');
         
         window.location.href = 'index.html'; //Redirigir al inicio de sesión
     });
+
+  //Abrir el modal de "Ver Historia"
+const botonesVer = document.querySelectorAll('.btn-ver-historia');
+const modalHistoria = document.getElementById('modalHistoria');
+const botonesCerrar = document.querySelectorAll('.btn-cerrar');
+botonesVer.forEach(boton => {
+    boton.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        modalHistoria.showModal(); 
+    });
+});  
