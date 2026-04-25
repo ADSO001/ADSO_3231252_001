@@ -304,3 +304,16 @@ button.btn-blanco:hover {
     border-radius: 5px; 
     cursor: pointer; 
 }
+
+.campo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.campo-input input, .campo-input textarea {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fdfdfd;
+}

@@ -92,9 +92,9 @@
                             <span class="material-symbols-outlined icono-btn">history</span>
                             Ver historia clínica anterior
                         </button>
-                        <dialog id="modalHistoria" class="modal">
+                        <dialog id="modalHistoria" class="modal"> <!--historia clinica-->
                             <div class="modal-header">
-                                <h2>Creación de Historia Clínica</h2>
+                                <h2>Historia Clínica</h2>
                             </div>
                             <form method="dialog" class="modal-body">
                                 <div class="campo">
@@ -128,6 +128,49 @@
 
                                 <div class="modal-footer">
                                     <button type="submit" class="btn-cerrar">Cerrar</button>
+                                </div>
+                            </form>
+                        </dialog>
+                        <button type="button" class="btn-blanco btn-crear-historia">
+                            <span class="material-symbols-outlined icono-btn">add</span>
+                            Crear historia clínica
+                        </button>
+                        <dialog id="modalCrear" class="modal"><!--Crear historia-->
+                            <div class="modal-header">
+                                <h2>Creación de Historia Clínica</h2>
+                            </div>
+                            <form method="dialog" class="modal-body">
+                                <div class="campo">
+                                    <span class="label"><strong>Paciente:</strong></span>
+                                    <span class="valor">Juan Pérez García</span>
+                                </div>
+                                <div class="campo">
+                                    <span class="label"><strong>Fecha de elaboración:</strong></span>
+                                    <span class="valor">Miércoles, 4 de Marzo 2026.</span>
+                                </div>
+                                <div class="campo">
+                                    <span class="label"><strong>Elaborado por:</strong></span>
+                                    <span class="valor">Dr. María González</span>
+                                </div>
+                                <div class="campo">
+                                    <span class="label"><strong>Alergias:</strong></span>
+                                    <span class="valor">Ninguna</span>
+                                </div>
+                                <div class="campo-input">
+                                    <label for="motivo"><strong>Motivo de consulta:</strong></label>
+                                    <input type="text" id="motivo">
+                                </div>
+                                <div class="campo-input">
+                                    <label for="descripcion"><strong>Descripción:</strong></label>
+                                    <textarea id="descripcion" rows="4"></textarea>
+                                </div>
+                                <div class="campo-input">
+                                    <label for="descripcion"><strong>Resolución:</strong></label>
+                                    <textarea id="descripcion" rows="4"></textarea>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn-cerrar">Cerrar</button>
                                     <button type="submit" class="btn-guardar">Guardar</button>
                                 </div>
                             </form>
@@ -155,6 +198,10 @@
                         <button type="button" class="btn-blanco btn-ver-historia">
                             <span class="material-symbols-outlined icono-btn">history</span>
                             Ver historia clínica anterior
+                        </button>
+                        <button type="button" class="btn-blanco btn-crear-historia">
+                            <span class="material-symbols-outlined icono-btn">add</span>
+                            Crear historia clínica
                         </button>
                     </div>
                 </div>

@@ -21,3 +21,13 @@ botonesVer.forEach(boton => {
         modalHistoria.showModal(); 
     });
 });  
+
+//Abrir el modal de "Crear Historia"
+const botonesCrear = document.querySelectorAll('.btn-crear-historia');
+const modalCrear = document.getElementById('modalCrear');
+botonesCrear.forEach(boton => {
+    boton.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        modalCrear.showModal(); 
+    });
+});
