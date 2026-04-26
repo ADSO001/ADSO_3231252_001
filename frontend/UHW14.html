@@ -59,14 +59,13 @@
                 <span class="material-symbols-outlined icono-menu">folder</span>
                 Historial de citas
             </a>
-
         </section>
 
-        <section class="info">
+        <section class="info"><!--Informacion sobre citas y pacientes-->
             <h4>Agenda de la semana: Lunes, 2 de marzo a Sábado, 7 de marzo.</h4>
             <p class="subtitulo">Tus consultas programadas para esta semana</p>
 
-            <div id="lista-pacientes">
+            <div id="lista-pacientes"><!--Incluye todos los pacientes-->
 
                 <div class="tarjeta-paciente"><!--primer paciente-->
                     <div class="avatar">JP</div>
@@ -84,26 +83,79 @@
                             <span><strong>Alergias:</strong> Penicilina.</span>
                         </div>
                     </div>
+                    <div class="acciones"> <!--boton para ver historia clinica existente-->
+                        <button type="button" class="btn-blanco btn-ver-historia">
+                            <span class="material-symbols-outlined icono-btn">history</span>
+                            Ver historia clínica anterior
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tarjeta-paciente"><!--segundo paciente-->
+                    <div class="avatar">AL</div>
+                    <div class="datos">
+                        <div class="fila-nombre">
+                            <span class="nombre">Ana López Ruiz</span>
+                            <span class="etiqueta">Viernes, 6 de marzo - 10:40</span>
+                        </div>
+                        <p class="edad"><b>35 años</b></p>
+                        <div class="detalles-grid">
+                            <span><strong>Género:</strong> Femenino.</span>
+                            <span><strong>Email:</strong> ana.lopez@email.com</span>
+                            <span><strong>Teléfono:</strong> +57 300 555 0101.</span>
+                            <span><strong>Tipo de sangre:</strong> <span class="sangre">A+</span></span>
+                            <span><strong>Alergias:</strong> Ninguna.</span>
+                        </div>
+                    </div>
+                    <div class="acciones"> <!--botones para historias clinicas-->
+                        <button type="button" class="btn-blanco btn-ver-historia">
+                            <span class="material-symbols-outlined icono-btn">history</span>
+                            Ver historia clínica anterior
+                        </button>
+                        <dialog id="modalHistoria" class="modal"> <!--historia clinica-->
+                            <div class="modal-header">
+                                <h2>Historia Clínica</h2>
+                            </div>
+                            <form method="dialog" class="modal-body">
+                                <div class="campo">
+                                    <span class="label"><strong>Paciente:</strong></span>
+                                    <span class="valor">Juan Pérez García</span>
+                                </div>
+                                <div class="campo">
+                                    <span class="label"><strong>Fecha de elaboración:</strong></span>
+                                    <span class="valor">Miércoles, 4 de Marzo 2026.</span>
+                                </div>
+                                <div class="campo">
+                                    <span class="label"><strong>Elaborado por:</strong></span>
+                                    <span class="valor">Dr. María González</span>
+                                </div>
+                                <div class="campo">
+                                    <span class="label"><strong>Alergias:</strong></span>
+                                    <span class="valor">Ninguna</span>
+                                </div>
+                                <div class="campo">
+                                    <label for="motivo"><strong>Motivo de consulta:</strong></label>
+                                    <span class="valor">Ninguna</span>
+                                </div>
+                                <div class="campo">
+                                    <label for="descripcion"><strong>Descripción:</strong></label>
+                                    <span class="valor">Ninguna</span>
+                                </div>
+                                <div class="campo">
+                                    <label for="descripcion"><strong>Resolución:</strong></label>
+                                    <span class="valor">Ninguna</span>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn-cerrar">Cerrar</button>
+                                </div>
+                            </form>
+                        </dialog>
+                    </div>
                 </div>
             </div>
-
-            <div class="tarjeta-paciente"><!--segundo paciente-->
-                <div class="avatar">AL</div>
-                <div class="datos">
-                    <div class="fila-nombre">
-                        <span class="nombre">Ana López Ruiz</span>
-                        <span class="etiqueta">Viernes, 6 de marzo - 10:40</span>
-                    </div>
-                    <p class="edad"><b>35 años</b></p>
-                    <div class="detalles-grid">
-                        <span><strong>Género:</strong> Femenino.</span>
-                        <span><strong>Email:</strong> ana.lopez@email.com</span>
-                        <span><strong>Teléfono:</strong> +57 300 555 0101.</span>
-                        <span><strong>Tipo de sangre:</strong> <span class="sangre">A+</span></span>
-                        <span><strong>Alergias:</strong> Ninguna.</span>
-                    </div>
-                </div>
         </section>
+
     </main>
 
     <script src="js/UHW14.js"></script>
