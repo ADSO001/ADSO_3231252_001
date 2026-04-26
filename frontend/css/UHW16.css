@@ -185,3 +185,105 @@ body {
     width: 100%;
     font-size: 14px;
 }
+.grilla-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.tarjeta-doctor {
+    background-color: white;
+    border: 1px solid #eaeaea;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.caja-foto {
+    position: relative;
+    height: 180px;
+    background-color: #e0e0e0;
+}
+
+.foto-medico {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.etiqueta-especialidad {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.cuerpo-tarjeta {
+    padding: 25px;
+}
+
+.nombre-doc {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.licencia {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.lista-datos {
+    margin-bottom: 20px;
+}
+
+.fila-dato {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #444;
+}
+
+.icono-chico {
+    width: 16px;
+}
+
+.icono-chico img {
+    width: 100%;
+}
+
+.texto-claro {
+    color: #aaa;
+}
+
+.linea-divisora {
+    border: none;
+    border-top: 1px solid #eaeaea;
+    margin-bottom: 15px;
+}
+
+.titulo-horario {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.caja-dias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.dia-tag {
+    border: 1px solid #eaeaea;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #333;
+}
