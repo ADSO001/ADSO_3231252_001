@@ -177,6 +177,65 @@
 }
 
 
+.notificacion_sigcmi {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: aparecer 0.5s ease-out;
+}
+
+.error_alerta {
+    background-color: #d9534f; 
+    border-left: 5px solid #a94442;
+}
+
+.exito_alerta {
+    background-color: #5cb85c; 
+    border-left: 5px solid #3c763d;
+}
+
+@keyframes aparecer {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.notificacion_sigcmi {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 10000;
+    font-weight: bold;
+    animation: entrar_suave 0.4s ease-out;
+}
+
+.rojo_error {
+    background-color: #e74c3c;
+}
+
+.verde_exito {
+    background-color: #27ae60;
+}
+
+@keyframes entrar_suave {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+
 /* --- Responsivo Celular --- */
 @media (max-width: 1100px) {
     .zona_formulario { padding: 40px; }
