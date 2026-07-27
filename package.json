@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "css": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",
+    "build:css": "tailwindcss -i ./src/css/app.css -o ./public/css/output.css --minify",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -20,6 +23,11 @@
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/postcss": "^4.3.3",
+    "autoprefixer": "^10.5.4",
+    "nodemon": "^3.1.14",
+    "postcss": "^8.5.23",
+    "tailwindcss": "^4.3.3"
   }
 }
