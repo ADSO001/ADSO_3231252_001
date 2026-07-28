@@ -4,5 +4,6 @@ const formularioLogin = (req, res) => {
         tituloPagina: "Inicio de Sesión"
     });
 };
+
 export {formularioLogin}
 
