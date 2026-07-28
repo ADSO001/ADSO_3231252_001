@@ -4,6 +4,13 @@ const formularioLogin = (req, res) => {
         tituloPagina: "Inicio de Sesión"
     });
 };
+const formularioPaciente = (req, res) => {
+    res.render("pacientRegistration", {
+        tituloPagina: "Formulario de Registro - paciente"
+    });
+}
+export {formularioPaciente, formularioLogin}
 
-export {formularioLogin}
+
+
 

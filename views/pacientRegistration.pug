@@ -1,0 +1,127 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Crear Cuenta Paciente - SIGCMI
+    script(src="https://cdn.tailwindcss.com")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white")
+    div(class="flex min-h-screen flex-col md:flex-row")
+
+      //- Zona de la Imagen
+      div(class="relative w-full h-[300px] md:w-[40%] md:h-screen md:sticky md:top-0")
+        img(src="img/doctor2.jpg", alt="Doctor", class="w-full h-full object-cover block")
+
+      //- Zona del Formulario
+      div(class="w-full py-[40px] px-[20px] md:w-[60%] md:py-[50px] md:px-[80px]")
+
+        //- Cabecera: Botón Atrás y Logo
+        div(class="flex justify-between items-center mb-[40px]")
+          a(href="/login", class="no-underline text-white bg-black px-[16px] py-[8px] rounded-[6px] text-[14px] flex items-center gap-[8px] font-medium")
+            i(class="fa fa-arrow-left")
+            |  Atrás
+          img(src="img/logo.png", alt="Logo SIGCMI", class="h-[70px] object-contain")
+
+        //- Títulos
+        div(class="mb-[25px]")
+          h1(class="text-[28px] text-[#1a1a1a] flex items-center gap-[10px] font-bold m-0")
+            i(class="fa fa-users text-black")
+            |  Crear Nueva Cuenta
+          p(class="text-[#888] text-[14px] mt-[5px]") Completa el formulario para registrarte en SIGCMI
+
+        p(class="font-bold text-[14px] mb-[12px] text-[#333]") Tipo de Usuario
+
+        //- Selector Tipo de Usuario (Paciente Activo)
+        div(class="flex flex-col sm:flex-row gap-[20px] mb-[30px]")
+          a(href="/medicalRegistration", class="flex-1 no-underline block")
+            button(type="button", class="w-full p-[18px] border border-[#d1d5db] rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer hover:border-gray-400 transition-colors text-left")
+              i(class="fa fa-user-md text-[26px] text-black")
+              div
+                p(class="font-bold text-[15px] mb-[4px] text-black m-0") Médico
+                p(class="text-[#999] text-[13px] m-0") Registrarme como profesional
+
+          a(href="/pacientRegistration", class="flex-1 no-underline block")
+            button(type="button", class="w-full p-[18px] border-[2px] border-black rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer shadow-sm text-left")
+              i(class="fa fa-user text-[26px] text-black")
+              div
+                p(class="font-bold text-[15px] mb-[4px] text-black m-0") Paciente
+                p(class="text-[#999] text-[13px] m-0") Registrarme para agendar citas
+
+        h3(class="text-[18px] mt-[40px] mb-[25px] text-[#1a1a1a] border-b border-[#f0f0f0] pb-[10px] font-bold") Información Personal
+
+        //- Formulario de Campos de Paciente
+        form
+          div(class="grid grid-cols-1 gap-x-[20px] gap-y-[25px] md:grid-cols-2")
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Nombre
+              input(type="text", placeholder="Ingrese su nombre", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Apellido
+              input(type="text", placeholder="Ingrese su apellido", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Email
+              input(type="email", placeholder="Ingrese su correo electrónico", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de teléfono
+              input(type="text", placeholder="Teléfono", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Fecha de nacimiento
+              input(type="date", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Contraseña
+              input(type="password", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              p(class="text-[11px] text-[#999] mt-[6px] m-0") Mínimo 8 - 12 Caracteres. Debe contener mayúscula y especial.
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Confirmar contraseña
+              input(type="password", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Género
+              select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option Seleccionar
+                option Masculino
+                option Femenino
+                option Otro
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Tipo de documento
+              select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option Seleccionar
+                option Cédula de ciudadanía
+                option Tarjeta de identidad
+                option Registro civil
+                option Cédula de extranjería
+                option Pasaporte
+                option Permiso Especial de Permanencia (PEP)
+
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de documento
+              input(type="text", placeholder="Número", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Dirección
+              input(type="text", placeholder="Ingrese su dirección", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de teléfono de emergencia
+              input(type="text", placeholder="Teléfono de contacto", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+          //- Botón de Envío
+          div(class="mt-[30px] pb-[20px]")
+            a(href="index.html", class="no-underline block")
+              button(type="button", class="w-full bg-black text-white py-[16px] border-none rounded-[8px] text-[16px] font-bold cursor-pointer flex justify-center items-center gap-[10px] hover:bg-gray-800 transition-colors")
+                i(class="fa fa-user-plus")
+                |  Crear cuenta
+
+    script(src="script/UHW01.js")
