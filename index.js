@@ -1,22 +1,30 @@
 import express from "express";
-import usuariosRouter from "./routes/usuariosRoutes.js"
-import db from "./config/db.js"
+import path from "path";
+import { fileURLToPath } from "url";
+import usuariosRouter from "./routes/usuariosRoutes.js";
+import db from "./config/db.js";
 
-const app = express()
-app.use(express.static("public"))
+// Configuración para __dirname en proyectos con ES Modules (import)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Habilitar Pug
-app.set("view engine", "pug")
-app.set("views", "./views")
+const app = express();
+
+// 1. Habilitar archivos estáticos (aquí es donde busca la carpeta 'public' para el CSS)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 2. Habilitar Pug
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+  res.send('Hello World!');
+});
 
-app.use("/", usuariosRouter)
+app.use("/", usuariosRouter);
 
-const port = 3000
+const port = 3000;
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Servidor funcionando en el puerto ${port}`);
+});
