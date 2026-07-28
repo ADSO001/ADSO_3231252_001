@@ -9,7 +9,12 @@ const formularioPaciente = (req, res) => {
         tituloPagina: "Formulario de Registro - paciente"
     });
 }
-export {formularioPaciente, formularioLogin}
+const formularioContraseña = (req, res) => {
+    res.render("forgotPassword", {
+        tituloPagina: "Formulario de Recuperar Contraseña "
+    });
+}
+export {formularioPaciente, formularioLogin, formularioContraseña}
 
 
 
