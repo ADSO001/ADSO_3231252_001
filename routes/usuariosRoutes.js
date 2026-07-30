@@ -10,7 +10,4 @@ router.get("/forgotPassword", formularioContraseña)
 router.get("/patientPanel", patientPanel)
 
 
-    
-
-
 export default router;

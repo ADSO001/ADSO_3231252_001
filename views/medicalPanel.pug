@@ -1,0 +1,219 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title SIGCMI - Panel Médico
+    script(src="https://cdn.tailwindcss.com")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
+    link(rel="icon", href="icono.png", type="image/png")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white text-gray-800")
+    //- Encabezado / Barra superior
+    header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px]")
+      div(class="flex items-center")
+        img(src="img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
+        div(class="border border-gray-300 rounded-[8px] px-[15px] py-[5px] ml-[20px]")
+          p#nombreMedico(class="text-[14px] font-bold m-0") Dra. María González
+          p#especialidadMedico(class="text-[12px] text-gray-500 m-0") Medicina General
+
+      a(href="/login", class="no-underline ml-auto")
+        button#logout(type="button", class="bg-black text-white px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:opacity-70 transition-opacity")
+          i(class="fa-solid fa-right-from-bracket")
+          | Cerrar sesión
+
+    //- Contenido Principal
+    main(class="p-[20px]")
+      //- Tarjetas de métricas superiores
+      section(class="grid grid-cols-1 md:grid-cols-3 gap-[20px] mb-[20px]")
+        div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
+          i(class="fa fa-calendar-day absolute top-[10px] right-[10px] text-[22px] text-gray-500")
+          h3(class="text-[14px] font-bold mb-[5px]") Citas hoy
+          p#citasHoy(class="text-[28px] font-bold m-0") 0
+          p(class="text-[12px] text-gray-500 m-0") Citas programadas
+
+        div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
+          i(class="fa fa-clock absolute top-[10px] right-[10px] text-[22px] text-gray-500")
+          h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
+          p#proxCita(class="text-[28px] font-bold m-0") 0
+          p(class="text-[12px] text-gray-500 m-0") Esta semana y siguientes
+
+        div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
+          i(class="fa fa-folder-open absolute top-[10px] right-[10px] text-[22px] text-gray-500")
+          h3(class="text-[14px] font-bold mb-[5px]") Consultas totales
+          p#ConTotal(class="text-[28px] font-bold m-0") 0
+          p(class="text-[12px] text-gray-500 m-0") Registros creados
+
+      //- Pestañas de navegación funcional
+      section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
+        button#tabHoy(onclick="cambiarPestana('hoy')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]")
+          i(class="fa fa-calendar-day")
+          | Agenda de hoy
+
+        button#tabProximas(onclick="cambiarPestana('proximas')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]")
+          i(class="fa fa-clock")
+          | Próximas citas
+
+        button#tabHistorial(onclick="cambiarPestana('historial')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]")
+          i(class="fa fa-folder")
+          | Historial de citas
+
+      //- SECCIÓN 1: Agenda de hoy
+      section#seccionHoy(class="border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
+        h4(class="text-[18px] font-bold text-black mb-[2px]") Agenda del día
+        p(class="text-[14px] text-gray-500 mb-[20px]") Tus consultas programadas para hoy
+
+        div#lista-pacientes(class="flex flex-col gap-[15px]")
+          div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+            i(class="fa fa-user-clock text-[36px] text-gray-300 mb-[10px]")
+            p(class="text-gray-500 text-[14px] m-0") No hay citas programadas para el día de hoy.
+
+      //- SECCIÓN 2: Próximas Citas
+      section#seccionProximas(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
+        h4(class="text-[18px] font-bold text-black mb-[2px]") Próximas citas
+        p(class="text-[14px] text-gray-500 mb-[20px]") Consultas agendadas para los próximos días
+        
+        div#lista-proximas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+          i(class="fa fa-clock text-[36px] text-gray-300 mb-[10px]")
+          p(class="text-gray-500 text-[14px] m-0") Citas agendadas próximamente aparecerán aquí.
+
+      //- SECCIÓN 3: Historial de Citas
+      section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
+        h4(class="text-[18px] font-bold text-black mb-[2px]") Historial de Citas
+        p(class="text-[14px] text-gray-500 mb-[20px]") Registro completo de historias clínicas creadas
+        
+        div#lista-historial(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+          i(class="fa fa-folder-open text-[36px] text-gray-300 mb-[10px]")
+          p(class="text-gray-500 text-[14px] m-0") No hay consultas archivadas por el momento.
+
+    //- =======================================================================
+    //- IMPLEMENTACIÓN FUTURA: Plantilla de botones para renderizado dinámico JS
+    //- Descomentar esta sección cuando se integre la lógica dinámica en el script.
+    //- =======================================================================
+    //- template#plantilla-botones-historia
+    //-   div(class="flex flex-col gap-[10px] justify-center lg:w-[220px]")
+    //-     button.btn-ver-historia(type="button", class="w-full flex items-center gap-[8px] justify-start bg-white border border-gray-300 hover:bg-gray-200 text-black px-[12px] py-[8px] rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer shadow-sm")
+    //-       i(class="fa fa-history")
+    //-       | Ver historia clínica anterior
+    //-
+    //-     button.btn-crear-historia(type="button", class="w-full flex items-center gap-[8px] justify-start bg-white border border-gray-300 hover:bg-gray-200 text-black px-[12px] py-[8px] rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer shadow-sm")
+    //-       i(class="fa fa-plus")
+    //-       | Crear historia clínica
+
+    //- MODAL 1: Ver Historia Clínica
+    div#modalVerHistoria(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
+      div(class="bg-white w-full max-w-[550px] rounded-[15px] shadow-2xl overflow-hidden")
+        div(class="p-[20px] border-b border-gray-200 bg-gray-50")
+          h2(class="text-[18px] font-bold text-black m-0") Historia Clínica
+        
+        div(class="p-[20px] flex flex-col gap-[12px] text-[14px]")
+          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Paciente:
+            span#verPacienteNombre(class="text-gray-800") -
+          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Fecha de elaboración:
+            span#verFechaElaboracion(class="text-gray-800") -
+          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Elaborado por:
+            span#verMedicoNombre(class="text-gray-800") -
+          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Alergias:
+            span#verAlergias(class="text-gray-800") -
+          div(class="flex flex-col gap-[4px] border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Motivo de consulta:
+            p#verMotivo(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
+          div(class="flex flex-col gap-[4px] border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Descripción:
+            p#verDescripcion(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
+          div(class="flex flex-col gap-[4px]")
+            span(class="font-bold text-gray-700") Resolución:
+            p#verResolucion(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
+
+        div(class="p-[15px] border-t border-gray-200 flex justify-end bg-gray-50")
+          button(type="button", onclick="cerrarModalVerHistoria()", class="bg-gray-200 text-black px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-300 transition-colors cursor-pointer") Cerrar
+
+    //- MODAL 2: Crear Historia Clínica
+    div#modalCrearHistoria(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
+      div(class="bg-white w-full max-w-[550px] rounded-[15px] shadow-2xl overflow-hidden")
+        div(class="p-[20px] border-b border-gray-200 bg-gray-50")
+          h2(class="text-[18px] font-bold text-black m-0") Creación de Historia Clínica
+        
+        form(onsubmit="guardarHistoria(event)", class="p-[20px] flex flex-col gap-[15px] text-[14px]")
+          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
+            span(class="font-bold text-gray-700") Paciente:
+            span#crearPacienteNombre(class="text-gray-800") -
+          
+          div(class="flex flex-col gap-[5px]")
+            label(for="motivoConsulta", class="font-bold text-gray-700") Motivo de consulta:
+            input#motivoConsulta(type="text", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]", placeholder="Escriba el motivo...")
+
+          div(class="flex flex-col gap-[5px]")
+            label(for="descripcionConsulta", class="font-bold text-gray-700") Descripción:
+            textarea#descripcionConsulta(rows="3", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]", placeholder="Detalles de la consulta...")
+
+          div(class="flex flex-col gap-[5px]")
+            label(for="resolucionConsulta", class="font-bold text-gray-700") Resolución:
+            textarea#resolucionConsulta(rows="3", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]", placeholder="Diagnóstico / Tratamiento...")
+
+          div(class="flex justify-end gap-[10px] mt-[10px]")
+            button(type="button", onclick="cerrarModalCrearHistoria()", class="bg-gray-200 text-black px-[18px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-300 transition-colors cursor-pointer") Cancelar
+            button(type="submit", class="bg-black text-white px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-800 transition-colors cursor-pointer") Guardar
+
+    script.
+      function cambiarPestana(pestana) {
+        const seccionHoy = document.getElementById('seccionHoy');
+        const seccionProximas = document.getElementById('seccionProximas');
+        const seccionHistorial = document.getElementById('seccionHistorial');
+
+        const tabHoy = document.getElementById('tabHoy');
+        const tabProximas = document.getElementById('tabProximas');
+        const tabHistorial = document.getElementById('tabHistorial');
+
+        seccionHoy.classList.add('hidden');
+        seccionProximas.classList.add('hidden');
+        seccionHistorial.classList.add('hidden');
+
+        const estiloInactivo = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]";
+        const estiloActivo = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]";
+
+        tabHoy.className = estiloInactivo;
+        tabProximas.className = estiloInactivo;
+        tabHistorial.className = estiloInactivo;
+
+        if (pestana === 'hoy') {
+          seccionHoy.classList.remove('hidden');
+          tabHoy.className = estiloActivo;
+        } else if (pestana === 'proximas') {
+          seccionProximas.classList.remove('hidden');
+          tabProximas.className = estiloActivo;
+        } else {
+          seccionHistorial.classList.remove('hidden');
+          tabHistorial.className = estiloActivo;
+        }
+      }
+
+      function abrirModalVerHistoria(paciente) {
+        document.getElementById('verPacienteNombre').innerText = paciente || '-';
+        document.getElementById('modalVerHistoria').classList.remove('hidden');
+      }
+
+      function cerrarModalVerHistoria() {
+        document.getElementById('modalVerHistoria').classList.add('hidden');
+      }
+
+      function abrirModalCrearHistoria(paciente) {
+        document.getElementById('crearPacienteNombre').innerText = paciente || '-';
+        document.getElementById('modalCrearHistoria').classList.remove('hidden');
+      }
+
+      function cerrarModalCrearHistoria() {
+        document.getElementById('modalCrearHistoria').classList.add('hidden');
+      }
+
+      function guardarHistoria(event) {
+        event.preventDefault();
+        alert('Historia clínica guardada con éxito.');
+        cerrarModalCrearHistoria();
+      }

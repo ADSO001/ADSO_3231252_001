@@ -4,5 +4,10 @@ const formularioMedico = (req, res) => {
     });
 }
 
+const medicalPanel = (req, res) => {
+    res.render("medicalPanel", {
+        tituloPagina: "Panel del Médico"
+    });
+}
 
-export {formularioMedico}
+export {formularioMedico, medicalPanel}
