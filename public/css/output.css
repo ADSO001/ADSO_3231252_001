@@ -312,6 +312,9 @@
   .mb-\[65px\] {
     margin-bottom: 65px;
   }
+  .ml-\[5px\] {
+    margin-left: 5px;
+  }
   .ml-\[10px\] {
     margin-left: 10px;
   }
@@ -445,6 +448,9 @@
   .flex-col {
     flex-direction: column;
   }
+  .items-baseline {
+    align-items: baseline;
+  }
   .items-center {
     align-items: center;
   }
@@ -566,11 +572,17 @@
   .border-\[\#d1d5db\] {
     border-color: #d1d5db;
   }
+  .border-\[\#e0e0e0\] {
+    border-color: #e0e0e0;
+  }
   .border-\[\#f0f0f0\] {
     border-color: #f0f0f0;
   }
   .border-black {
     border-color: var(--color-black);
+  }
+  .border-gray-100 {
+    border-color: var(--color-gray-100);
   }
   .border-gray-200 {
     border-color: var(--color-gray-200);
@@ -824,6 +836,9 @@
   .text-\[\#555\] {
     color: #555;
   }
+  .text-\[\#666\] {
+    color: #666;
+  }
   .text-\[\#888\] {
     color: #888;
   }
@@ -832,6 +847,9 @@
   }
   .text-\[\#a0a0a0\] {
     color: #a0a0a0;
+  }
+  .text-\[\#aaa\] {
+    color: #aaa;
   }
   .text-black {
     color: var(--color-black);
@@ -1025,11 +1043,17 @@
     .md\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+    .md\:grid-cols-\[150px_1fr\] {
+      grid-template-columns: 150px 1fr;
+    }
     .md\:flex-row {
       flex-direction: row;
     }
     .md\:items-center {
       align-items: center;
+    }
+    .md\:gap-\[20px\] {
+      gap: 20px;
     }
     .md\:rounded-none {
       border-radius: 0;
@@ -1045,6 +1069,9 @@
     }
     .md\:py-\[50px\] {
       padding-block: 50px;
+    }
+    .md\:text-right {
+      text-align: right;
     }
     .md\:text-base {
       font-size: var(--text-base);
