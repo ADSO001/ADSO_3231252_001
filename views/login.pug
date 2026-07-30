@@ -3,77 +3,60 @@ html(lang="es")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title SIGCMI - Iniciar Sesión
+    title SIGCMI - #{tituloPagina}
     link(rel="stylesheet", href="/css/output.css")
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
     
   body(class="bg-white h-screen overflow-hidden font-sans m-0 p-0")
     
-    
     div#notificacion(class="fixed top-5 right-5 bg-[#0056b3] text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-2.5 transform translate-x-[120%] transition-transform duration-500 z-[1000]")
       i(class="fa fa-exclamation-circle text-xl")
       span#mensaje_notificacion
     
-    
     div(class="flex flex-col md:flex-row w-full h-screen overflow-hidden")
-      
       
       div(class="w-full h-[25vh] md:h-screen md:w-[45%] flex-shrink-0")
         img(src="/img/doctor2.jpg", alt="Ilustración Doctor", class="w-full h-full object-cover block")
         
-      
       div(class="w-full md:w-[55%] h-[75vh] md:h-screen overflow-y-auto flex flex-col items-center justify-center bg-white px-5 py-6 md:p-10 rounded-t-[25px] -mt-[25px] md:mt-0 md:rounded-none z-10 relative")
-        
         
         div(class="w-full max-w-[400px] text-left mb-3 hidden md:block")
           span(class="font-bold text-sm text-black") SIGCMI
           
-        
         div(class="w-full max-w-[400px] flex flex-col items-center text-center")
           
           img(src="/img/logo.png", alt="Logo SIGCMI", class="h-[50px] md:h-[65px] mb-2")
           
           p(class="text-[#a0a0a0] text-[13px] mb-4") Sistema Integral de Gestión de Citas Médicas
           
-          h2(class="text-[14px] md:text-base font-bold mb-3 w-full") Tipo de Usuario
+          //- Bloque de errores rediseñado en formato de cajas elegantes con icono
+          if errores
+            div(class="w-full max-w-[400px] mb-3 flex flex-col gap-2")
+              each error in errores
+                div(class="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded-r-lg text-xs font-semibold flex items-center gap-2.5 shadow-sm text-left w-full")
+                  i(class="fa fa-circle-exclamation text-red-500 text-sm flex-shrink-0")
+                  span= error.msg
+
+          h2(class="text-[14px] md:text-base font-bold mb-3 w-full text-left md:text-center") Iniciar sesión en SIGCMI
           
-          
-          div(class="w-full flex flex-col gap-3 mb-5")
-            a(href="/medicalPanel", class="w-full block")
-              button(class="w-full p-3 bg-[#f5f5f5] hover:bg-[#ebebeb] border-none rounded-[10px] flex items-center gap-4 cursor-pointer text-left shadow-sm transition-colors")
-                i(class="fa fa-user-md text-xl text-[#555]")
-                div(class="flex flex-col")
-                  span(class="font-bold text-black text-sm") Médico
-                  span(class="text-[#888] text-[11px]") Iniciar sesión como médico
-                  
-            a(href="/patientPanel", class="w-full block")
-              button(class="w-full p-3 bg-[#f5f5f5] hover:bg-[#ebebeb] border-none rounded-[10px] flex items-center gap-4 cursor-pointer text-left shadow-sm transition-colors")
-                i(class="fa fa-user text-xl text-[#555]")
-                div(class="flex flex-col")
-                  span(class="font-bold text-black text-sm") Paciente
-                  span(class="text-[#888] text-[11px]") Iniciar sesión como paciente
-                  
-          h2(class="text-[14px] md:text-base font-bold mb-3 w-full") Iniciar sesión en SIGCMI
-          
-          
-          div(class="w-full mb-3")
-            input#email(type="email", placeholder="Correo electrónico", class="w-full px-4 py-2.5 bg-[#f5f5f5] border-none rounded-lg text-sm outline-none shadow-inner")
+          form(method="POST" action="/login" class="w-full flex flex-col items-center")
             
-          div(class="w-full mb-3")
-            input#password(type="password", placeholder="Contraseña", class="w-full px-4 py-2.5 bg-[#f5f5f5] border-none rounded-lg text-sm outline-none shadow-inner")
+            input(type="hidden" name="_csrf" value=csrfToken)
             
-          a(href="/forgotPassword", class="text-xs text-[#007bff] hover:underline mb-5 w-full text-center block") ¿Has olvidado tu contraseña?
-          
-          
-          div(class="w-full flex flex-col gap-2.5 items-center pb-4")
-            a(href="/adminPanel", onclick="return validarLogin(event)", class="w-full block")
-              button(class="w-full max-w-full md:max-w-[400px] mx-auto p-3 bg-black text-white border-none rounded-[10px] font-bold cursor-pointer flex justify-center items-center gap-2 hover:opacity-90 transition-opacity")
+            div(class="w-full max-w-[400px] mb-3")
+              input#email(type="email", name="email", placeholder="Correo electrónico", value=usuario ? usuario.email : '', class="w-full px-4 py-2.5 bg-[#f5f5f5] border-none rounded-lg text-sm outline-none shadow-inner")
+              
+            div(class="w-full max-w-[400px] mb-3")
+              input#password(type="password", name="password", placeholder="Contraseña", class="w-full px-4 py-2.5 bg-[#f5f5f5] border-none rounded-lg text-sm outline-none shadow-inner")
+              
+            a(href="/forgotPassword", class="text-xs text-[#007bff] hover:underline mb-5 w-full text-center block") ¿Has olvidado tu contraseña?
+            
+            div(class="w-full flex flex-col gap-2.5 items-center pb-4")
+            
+              button(type="submit" class="w-full max-w-full md:max-w-[400px] mx-auto p-3 bg-black text-white border-none rounded-[10px] font-bold cursor-pointer flex justify-center items-center gap-2 hover:opacity-90 transition-opacity")
                 i(class="fa fa-users") 
                 | Iniciar sesión
                 
-            a(href="/medicalRegistration", class="w-full block")
-              button(class="w-full max-w-full md:max-w-[400px] mx-auto p-3 bg-black text-white border-none rounded-[10px] font-bold cursor-pointer flex justify-center items-center gap-2 hover:opacity-90 transition-opacity")
-                i(class="fa fa-user-plus") 
-                | Crear cuenta
-                
-  
+            a(href="/pacientRegistration", class="w-full max-w-full md:max-w-[400px] mx-auto p-3 bg-gray-200 text-black border-none rounded-[10px] font-bold cursor-pointer flex justify-center items-center gap-2 hover:bg-gray-300 transition-colors text-sm")
+              i(class="fa fa-user-plus") 
+              | Crear cuenta
