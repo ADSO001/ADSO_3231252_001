@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import usuariosRouter from "./routes/usuariosRoutes.js";
 import medicalRouter from "./routes/medicalRoutes.js";
+import adminRouter from "./routes/adminRoutes.js";
 import db from "./config/db.js";
 
 // Configuración para __dirname en proyectos con ES Modules (import)
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use("/", usuariosRouter);
 app.use("/", medicalRouter)
+app.use("/", adminRouter);
 
 const port = 3000;
 
