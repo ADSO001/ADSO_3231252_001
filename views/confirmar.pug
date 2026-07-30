@@ -1,10 +1,28 @@
-extends ./layout/includes/header
+doctype html
+html(lang="es")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title= tituloPagina
+        script(src="https://cdn.tailwindcss.com")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
 
-block contenido
-    .py-10
-        h1.text-4xl.my-10.font-extrabold.text-center SIGMI 
-            span.font-normal SENA
-        h2.text-center.text-2xl.font-extrabold=tituloPagina
+    body.min-h-screen.bg-gray-50
+        main.container.mx-auto.mt-10.px-2
+            .py-10
+                h1.text-4xl.my-10.font-extrabold.text-center SIGMI 
+                    span.font-normal SENA
+                h2.text-center.text-2xl.font-extrabold= tituloPagina
 
-    div(class="bg-white shadow py-8 px-4 rounded-lg max-w-md mx-auto")
-        p(class = error ? "bg-red-500" : "bg-green-500").py-2.px-5.rounded-lg.w-full.font-bold.text-center.text-white.uppercase= mensaje
+            div(class="max-w-md mx-auto my-10 px-4")
+                //- Tarjeta o contenedor principal
+                div(class="bg-white shadow-md rounded-lg p-6")
+                    
+                    //- Alerta / Mensaje 
+                    p.py-2.px-5.rounded-lg.w-full.font-bold.text-center.text-white.uppercase.bg-indigo-600= mensaje
+
+                    //- Botón de regreso centrado con separación superior
+                    div(class="mt-6 flex justify-center")
+                        a(href="/login" class="no-underline text-white bg-black hover:bg-gray-800 transition-colors px-[20px] py-[10px] rounded-[6px] text-[14px] flex items-center gap-[8px] font-medium shadow-sm")
+                            i(class="fa fa-arrow-left")
+                            |  Volver al Login

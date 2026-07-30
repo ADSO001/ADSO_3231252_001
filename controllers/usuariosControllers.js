@@ -20,7 +20,7 @@ const formularioRegistro = (req, res) => {
     });
 };
 
-const patientPanel = (req, res) => {
+const verPatientPanel = (req, res) => {
     res.render("patientPanel", {
         tituloPagina: "Panel del Paciente"
     });
@@ -88,14 +88,14 @@ const registrar = async (req, res) => {
             confirmado: false
         });
 
-        // Enviar correo de confirmación
+        // Enviar correo de confirmación de forma segura (sin bloquear si Mailtrap falla)
         emailRegistro({
             nombre: usuario.nombre,
             email: usuario.email,
             token: usuario.token
-        });
+        }).catch(error => console.log("Error enviando correo:", error));
 
-        // Mostrar pantalla de éxito
+        // Mostrar pantalla de éxito inmediatamente
         return res.render("templates/mensaje", {
             tituloPagina: "Cuenta Creada Correctamente",
             mensaje: "Hemos enviado un correo de confirmación, presiona en el enlace para activar tu cuenta."
@@ -105,6 +105,7 @@ const registrar = async (req, res) => {
         console.log(error);
     }
 };
+
 const confirmar = async(req, res) => {
     const {token} = req.params;
     const usuario = await Usuario.findOne({where: {token}});
@@ -208,8 +209,19 @@ const nuevaPassword = async(req, res) => {
     const {token} = req.params;
     const {password} = req.body;
 
+   
     const usuario = await Usuario.findOne({where: {token}});
 
+    
+    if(!usuario) {
+        return res.render("confirmar", {
+            tituloPagina: "Restablecer contraseña",
+            mensaje: "Hubo un error al validar tu información, intenta de nuevo",
+            error: true
+        });
+    }
+
+   
     const salt = await bcrypt.genSalt(10);
     usuario.password = await bcrypt.hash(password, salt);
     usuario.token = null; 
@@ -269,7 +281,7 @@ const autenticar = async(req, res) => {
         .cookie("_token", token, {
             httpOnly: true,
         })
-        .redirect("/patientPanel"); // Asegurado con la barra inicial para redireccionar bien la ruta
+        .redirect("/patientPanel");
 }
 
 export { 
@@ -281,6 +293,6 @@ export {
     comprobarToken, 
     nuevaPassword, 
     autenticar, 
-    patientPanel, 
+    verPatientPanel, 
     confirmar 
 };

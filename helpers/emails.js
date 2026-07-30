@@ -9,10 +9,11 @@ const emailRegistro = async (datos) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
-            connectionTimeout: 5000, // Tiempo máximo de espera: 5 segundos
+            connectionTimeout: 5000, 
             socketTimeout: 5000
         });
-
+await transporter.verify()
+console.log('Conexión SMPT correcta 👍')
         const { email, nombre, token } = datos
 
         await transporter.sendMail({
@@ -40,6 +41,7 @@ const emailOlvidePassword = async (datos) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
+            secure: false,
             connectionTimeout: 5000,
             socketTimeout: 5000
         });
@@ -57,6 +59,7 @@ const emailOlvidePassword = async (datos) => {
             <p>Si no la pediste, ignora el mensaje</p>
             `
         });
+        console.log('👍 correo enviado')
     } catch (error) {
         console.log("Error al enviar el correo de contraseña:", error);
     }

@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
-
+import csurf from "csurf";
 const protegerRuta = (req, res, next) => {
 
     const token = req.cookies._token;
 
     if (!token) {
-        return res.redirect("login");
+        return res.redirect("/login");
     }
 
     try {
@@ -23,7 +23,7 @@ const protegerRuta = (req, res, next) => {
 
         return res
             .clearCookie("_token")
-            .redirect("login");
+            .redirect("/login");
     }
 }
 
