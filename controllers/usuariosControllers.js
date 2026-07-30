@@ -14,7 +14,14 @@ const formularioContraseña = (req, res) => {
         tituloPagina: "Formulario de Recuperar Contraseña "
     });
 }
-export {formularioPaciente, formularioLogin, formularioContraseña}
+
+const patientPanel = (req, res) => {
+    res.render("patientPanel", {
+        tituloPagina: "Panel del Paciente"
+    });
+}
+
+export {formularioPaciente, formularioLogin, formularioContraseña, patientPanel}
 
 
 

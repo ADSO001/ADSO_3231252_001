@@ -1,11 +1,12 @@
 import express from "express";
 
-import {formularioMedico } from "../controllers/medicalControllers.js";
+import {formularioMedico, medicalPanel} from "../controllers/medicalControllers.js";
 
 const router = express.Router();
 
 
 router.get("/medicalRegistration", formularioMedico)
+router.get("/medicalPanel", medicalPanel)
 
 
 
