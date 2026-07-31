@@ -3,5 +3,22 @@ const formularioAdmin = (req, res) => {
         tituloPagina: "Panel de Administración"
     });
 };
+const formularioAdminAppointment = (req, res) => {
+    res.render("appointmentScheduleAdmin", {
+        tituloPagina: "Panel de Administración"
+    });
+};
+const formularioDoctorsHours = (req, res) => {
+    res.render("doctorsHours", {
+        tituloPagina: "Panel de Administración"
+    });
+};
 
-export {formularioAdmin}
+const formularioManagementSpecialities = (req, res) => {
+    res.render("managementSpecialities", {
+        tituloPagina: "Panel de Administración"
+    });
+};
+
+
+export {formularioAdmin, formularioAdminAppointment, formularioDoctorsHours, formularioManagementSpecialities }
