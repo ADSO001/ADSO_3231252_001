@@ -14,5 +14,11 @@ const formularioDoctorsHours = (req, res) => {
     });
 };
 
+const formularioManagementSpecialities = (req, res) => {
+    res.render("managementSpecialities", {
+        tituloPagina: "Panel de Administración"
+    });
+};
 
-export {formularioAdmin, formularioAdminAppointment, formularioDoctorsHours}
+
+export {formularioAdmin, formularioAdminAppointment, formularioDoctorsHours, formularioManagementSpecialities }

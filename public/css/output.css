@@ -305,6 +305,9 @@
   .mb-\[2px\] {
     margin-bottom: 2px;
   }
+  .mb-\[3px\] {
+    margin-bottom: 3px;
+  }
   .mb-\[4px\] {
     margin-bottom: 4px;
   }
@@ -371,11 +374,20 @@
   .inline-block {
     display: inline-block;
   }
+  .inline-flex {
+    display: inline-flex;
+  }
   .h-\[8px\] {
     height: 8px;
   }
+  .h-\[12px\] {
+    height: 12px;
+  }
   .h-\[14px\] {
     height: 14px;
+  }
+  .h-\[16px\] {
+    height: 16px;
   }
   .h-\[18px\] {
     height: 18px;
@@ -413,6 +425,9 @@
   .h-\[95px\] {
     height: 95px;
   }
+  .h-\[130px\] {
+    height: 130px;
+  }
   .h-\[250px\] {
     height: 250px;
   }
@@ -437,8 +452,14 @@
   .w-\[5\.3\%\] {
     width: 5.3%;
   }
+  .w-\[12px\] {
+    width: 12px;
+  }
   .w-\[14px\] {
     width: 14px;
+  }
+  .w-\[16px\] {
+    width: 16px;
   }
   .w-\[18px\] {
     width: 18px;
@@ -603,8 +624,14 @@
   .gap-x-\[20px\] {
     column-gap: 20px;
   }
+  .gap-y-\[6px\] {
+    row-gap: 6px;
+  }
   .gap-y-\[25px\] {
     row-gap: 25px;
+  }
+  .self-start {
+    align-self: flex-start;
   }
   .overflow-hidden {
     overflow: hidden;
@@ -848,6 +875,9 @@
   .px-\[12px\] {
     padding-inline: 12px;
   }
+  .px-\[14px\] {
+    padding-inline: 14px;
+  }
   .px-\[15px\] {
     padding-inline: 15px;
   }
@@ -875,6 +905,9 @@
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
   }
+  .py-\[2px\] {
+    padding-block: 2px;
+  }
   .py-\[3px\] {
     padding-block: 3px;
   }
@@ -883,6 +916,9 @@
   }
   .py-\[5px\] {
     padding-block: 5px;
+  }
+  .py-\[6px\] {
+    padding-block: 6px;
   }
   .py-\[8px\] {
     padding-block: 8px;
@@ -994,6 +1030,10 @@
   .text-\[36px\] {
     font-size: 36px;
   }
+  .leading-none {
+    --tw-leading: 1;
+    line-height: 1;
+  }
   .leading-relaxed {
     --tw-leading: var(--leading-relaxed);
     line-height: var(--leading-relaxed);
@@ -1089,6 +1129,9 @@
   .no-underline {
     text-decoration-line: none;
   }
+  .underline {
+    text-decoration-line: underline;
+  }
   .shadow-2xl {
     --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -1175,6 +1218,9 @@
     .hover\:bg-emerald-100:hover {
       background-color: var(--color-emerald-100);
     }
+    .hover\:bg-gray-50:hover {
+      background-color: var(--color-gray-50);
+    }
     .hover\:bg-gray-100:hover {
       background-color: var(--color-gray-100);
     }
@@ -1212,6 +1258,9 @@
   @media (width >= 40rem) {
     .sm\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sm\:grid-cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     .sm\:flex-row {
       flex-direction: row;
@@ -1286,6 +1335,12 @@
     }
     .md\:items-center {
       align-items: center;
+    }
+    .md\:items-start {
+      align-items: flex-start;
+    }
+    .md\:self-auto {
+      align-self: auto;
     }
     .md\:overflow-y-auto {
       overflow-y: auto;
