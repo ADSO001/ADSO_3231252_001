@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import Usuario from "../models/usuarios.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
-import csurf from "csurf";
 
 const formularioLogin = (req, res) => {
     res.render("login", {
@@ -27,23 +26,10 @@ const verPatientPanel = (req, res) => {
 }
 
 const registrar = async (req, res) => {
-    // 1. Validaciones completas con express-validator
-    await check("nombre").notEmpty().withMessage("El nombre es obligatorio").run(req);
-    await check("apellido").notEmpty().withMessage("El apellido es obligatorio").run(req);
-    await check("email").isEmail().withMessage("Ingrese un correo electrónico válido").run(req);
-    await check("telefono").notEmpty().withMessage("El teléfono es obligatorio").run(req);
-    await check("fecha_nacimiento").notEmpty().withMessage("La fecha de nacimiento es obligatoria").run(req);
-    await check("password").isLength({ min: 6 }).withMessage("La contraseña debe ser de al menos 6 caracteres").run(req);
-    await check("repeat_password").equals(req.body.password).withMessage("Las contraseñas no coinciden").run(req);
-    await check("genero").notEmpty().withMessage("Seleccione un género").run(req);
-    await check("tipo_documento").notEmpty().withMessage("Seleccione un tipo de documento").run(req);
-    await check("numero_documento").notEmpty().withMessage("El número de documento es obligatorio").run(req);
-    await check("direccion").notEmpty().withMessage("La dirección es obligatoria").run(req);
-    await check("telefono_emergencia").notEmpty().withMessage("El teléfono de emergencia es obligatorio").run(req);
-
+    // 1. Extraer errores de validación de express-validator
     let resultado = validationResult(req);
 
-    // Si hay errores, devolvemos la vista con los errores y los datos previamente escritos
+    // Si hay errores, devolvemos la vista con las alertas
     if (!resultado.isEmpty()) {
         return res.render("pacientRegistration", {
             tituloPagina: "Registro de Paciente",
@@ -59,19 +45,19 @@ const registrar = async (req, res) => {
         direccion, telefono_emergencia 
     } = req.body;
 
-    // 2. Verificar si el usuario ya existe por correo o documento
-    const existeUsuario = await Usuario.findOne({ where: { email } });
-    if (existeUsuario) {
-        return res.render("pacientRegistration", {
-            tituloPagina: "Registro de Paciente",
-            csrfToken: req.csrfToken(),
-            errores: [{ msg: "El usuario con este correo ya está registrado" }],
-            usuario: req.body
-        });
-    }
-
-    // 3. Almacenar el usuario en la base de datos
     try {
+        // 2. Verificar si el usuario ya existe
+        const existeUsuario = await Usuario.findOne({ where: { email } });
+        if (existeUsuario) {
+            return res.render("pacientRegistration", {
+                tituloPagina: "Registro de Paciente",
+                csrfToken: req.csrfToken(),
+                errores: [{ msg: "El usuario con este correo ya está registrado" }],
+                usuario: req.body
+            });
+        }
+
+        // 3. Crear usuario
         const usuario = await Usuario.create({
             nombre,
             apellido,
@@ -88,29 +74,35 @@ const registrar = async (req, res) => {
             confirmado: false
         });
 
-        // Enviar correo de confirmación de forma segura (sin bloquear si Mailtrap falla)
+        // 4. Enviar correo en segundo plano
         emailRegistro({
             nombre: usuario.nombre,
             email: usuario.email,
             token: usuario.token
-        }).catch(error => console.log("Error enviando correo:", error));
+        }).catch(error => console.error("Error enviando correo de registro:", error));
 
-        // Mostrar pantalla de éxito inmediatamente
+  
         return res.render("templates/mensaje", {
             tituloPagina: "Cuenta Creada Correctamente",
             mensaje: "Hemos enviado un correo de confirmación, presiona en el enlace para activar tu cuenta."
         });
 
     } catch (error) {
-        console.log(error);
+        console.error("Error en servidor/base de datos:", error);
+        return res.render("pacientRegistration", {
+            tituloPagina: "Registro de Paciente",
+            csrfToken: req.csrfToken(),
+            errores: [{ msg: "Ocurrió un error en el servidor, intenta de nuevo" }],
+            usuario: req.body
+        });
     }
 };
 
-const confirmar = async(req, res) => {
-    const {token} = req.params;
-    const usuario = await Usuario.findOne({where: {token}});
+const confirmar = async (req, res) => {
+    const { token } = req.params;
+    const usuario = await Usuario.findOne({ where: { token } });
 
-    if(!usuario) {
+    if (!usuario) {
         return res.render("confirmar", {
             tituloPagina: "Cuenta confirmada",
             mensaje: "Hubo un error al confirmar la cuenta",
@@ -124,61 +116,62 @@ const confirmar = async(req, res) => {
 
     res.render("confirmar", {
         tituloPagina: "Cuenta confirmada",
-        mensaje: "La cuenta se confirmo"
+        mensaje: "La cuenta se confirmó correctamente"
     });
 }
 
 const formularioOlvidePassword = (req, res) => {
     res.render("forgotPassword", {
-        tituloPagina: "Olvide la contraseña",
+        tituloPagina: "Olvidé la contraseña",
         csrfToken: req.csrfToken()
     });
 }
 
-const resetPassword = async(req, res) => {
-    await check("email").isEmail().withMessage("Esto no parece un correo").run(req);
+const resetPassword = async (req, res) => {
+    await check("email").isEmail().withMessage("Esto no parece un correo válido").run(req);
     
     let resultado = validationResult(req);
 
-    if(!resultado.isEmpty()) {
+    if (!resultado.isEmpty()) {
         return res.render("forgotPassword", {
-            tituloPagina: "Olvido la contraseña",
+            tituloPagina: "Olvidó la contraseña",
             errores: resultado.array(),
             csrfToken: req.csrfToken()
         });
     }
 
-    const {email} = req.body;
-    const usuario = await Usuario.findOne({where: {email}});
+    const { email } = req.body;
+    const usuario = await Usuario.findOne({ where: { email } });
     
-    if(!usuario) {
+    if (!usuario) {
         return res.render("forgotPassword", {
             tituloPagina: "Recuperar contraseña",
             csrfToken: req.csrfToken(),
-            errores: [{msg: "El email no existe"}]
+            errores: [{ msg: "El email no existe" }]
         });
     }
 
     usuario.token = generarId();
     await usuario.save();
 
+    // Envío asíncrono con manejo de errores
     emailOlvidePassword({
         nombre: usuario.nombre,
         email: usuario.email,
         token: usuario.token
-    });
+    }).catch(error => console.error("Error enviando correo de recuperación:", error));
 
     res.render("templates/mensaje", {
         tituloPagina: "Restablecer la contraseña",
-        mensaje: "Hemos enviado un correo electronico para restablecer"
+        mensaje: "Hemos enviado un correo electrónico con las instrucciones."
     });
 }
 
-const comprobarToken = async(req, res) => {
-    const {token} = req.params;
-    const usuario = await Usuario.findOne({where: {token}});
+const comprobarToken = async (req, res) => {
+    const { token } = req.params;
+    const usuario = await Usuario.findOne({ where: { token } });
 
-    if(!usuario){
+    if (!usuario) {
         return res.render("confirmar", {
             tituloPagina: "Restablecer contraseña",
             mensaje: "Hubo un error al validar el token",
@@ -192,13 +185,13 @@ const comprobarToken = async(req, res) => {
     });
 }
 
-const nuevaPassword = async(req, res) => {
-    await check("password").isLength({ min: 6}).withMessage("La contraseña debe tener minimo 6 caracteres").run(req);
-    await check("repeat_password").equals(req.body.password).withMessage("La contraseña no es igual").run(req);
+const nuevaPassword = async (req, res) => {
+    await check("password").isLength({ min: 6 }).withMessage("La contraseña debe tener mínimo 6 caracteres").run(req);
+    await check("repeat_password").equals(req.body.password).withMessage("Las contraseñas no coinciden").run(req);
 
     let resultado = validationResult(req);
 
-    if(!resultado.isEmpty()){
+    if (!resultado.isEmpty()) {
         return res.render("resetPassword", {
             tituloPagina: "Restablecer Contraseña",
             csrfToken: req.csrfToken(), 
@@ -206,14 +199,12 @@ const nuevaPassword = async(req, res) => {
         });
     }
 
-    const {token} = req.params;
-    const {password} = req.body;
+    const { token } = req.params;
+    const { password } = req.body;
 
-   
-    const usuario = await Usuario.findOne({where: {token}});
+    const usuario = await Usuario.findOne({ where: { token } });
 
-    
-    if(!usuario) {
+    if (!usuario) {
         return res.render("confirmar", {
             tituloPagina: "Restablecer contraseña",
             mensaje: "Hubo un error al validar tu información, intenta de nuevo",
@@ -221,7 +212,7 @@ const nuevaPassword = async(req, res) => {
         });
     }
 
-   
+    // Hashear la contraseña (si tu modelo no tiene hook automático)
     const salt = await bcrypt.genSalt(10);
     usuario.password = await bcrypt.hash(password, salt);
     usuario.token = null; 
@@ -230,17 +221,17 @@ const nuevaPassword = async(req, res) => {
 
     res.render("confirmar", {
         tituloPagina: "Contraseña restablecida",
-        mensaje: "La contraseña se cambio correctamente!"
+        mensaje: "¡La contraseña se cambió correctamente!"
     });
 }
 
-const autenticar = async(req, res) => {
+const autenticar = async (req, res) => {
     await check("email").isEmail().withMessage("El correo es obligatorio").run(req);
-    await check("password").notEmpty().withMessage("La contraseña no puede estar vacia").run(req);
+    await check("password").notEmpty().withMessage("La contraseña no puede estar vacía").run(req);
 
     let resultado = validationResult(req);
 
-    if(!resultado.isEmpty()) {
+    if (!resultado.isEmpty()) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
             csrfToken: req.csrfToken(),
@@ -248,34 +239,36 @@ const autenticar = async(req, res) => {
         });
     }
 
-    const {email, password} = req.body;
-    const usuario = await Usuario.findOne({where: {email}});
+    const { email, password } = req.body;
+    const usuario = await Usuario.findOne({ where: { email } });
 
-    if(!usuario){
+    if (!usuario) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
             csrfToken: req.csrfToken(),
-            errores: [{msg: "El usuario no existe"}]
+            errores: [{ msg: "El usuario no existe" }]
         });
     }
 
-    if(!usuario.confirmado) {
+    if (!usuario.confirmado) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
             csrfToken: req.csrfToken(),
-            errores: [{msg: "El usuario no esta confirmado"}]
+            errores: [{ msg: "Tu cuenta aún no ha sido confirmada. Revisa tu correo." }]
         });
     }
 
-    if(!usuario.verificarPassword(password)){
+    
+    const passwordCorrecto = await usuario.verificarPassword(password);
+    if (!passwordCorrecto) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
             csrfToken: req.csrfToken(),
-            errores: [{msg: "Contraseña incorrecta!"}]
+            errores: [{ msg: "Contraseña incorrecta" }]
         });
     }
 
-    const token = generarJWT({id: usuario.id, nombre: usuario.nombre});
+    const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
      
     return res
         .cookie("_token", token, {
