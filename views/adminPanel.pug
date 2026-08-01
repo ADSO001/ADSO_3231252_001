@@ -1,0 +1,181 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title SIGCMI - Panel Principal
+    script(src="https://cdn.tailwindcss.com")
+    //- Lucide Icons (CDN)
+    script(src="https://unpkg.com/lucide@latest")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white text-gray-800")
+    div(class="flex flex-col md:flex-row min-h-screen")
+      aside(class="w-full md:w-[260px] bg-white border-r border-gray-200 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto")
+        div(class="p-[20px] flex items-center gap-[10px] border-b border-gray-200")
+          div(class="w-[60px] h-[60px] max-w-[60px] max-h-[60px]")
+            img(src="img/logo.png", alt="logo", class="w-full h-full object-contain")
+          h1(class="text-[20px] font-bold") SIGCMI
+
+
+        nav(class="flex-1 p-[20px_10px] flex flex-col gap-[8px]")
+          a(href="/adminPanel", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#000000] rounded-[10px] text-[14px] font-bold bg-[#e0e0e0] no-underline")
+            i(data-lucide="layout-dashboard", class="w-[20px] h-[20px]")
+            | Panel principal
+
+          a(href="/appointmentScheduleAdmin", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+            i(data-lucide="calendar", class="w-[20px] h-[20px]")
+            | Agenda de citas
+
+          a(href="/patientManagement", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+            i(data-lucide="users", class="w-[20px] h-[20px]")
+            | Pacientes
+
+          a(href="", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+            i(data-lucide="stethoscope", class="w-[20px] h-[20px]")
+            | Médicos
+
+          a(href="/managementSpecialities", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+            i(data-lucide="user-check", class="w-[20px] h-[20px]")
+            | Verificar Médicos
+
+          a(href="/doctorsHours", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+            i(data-lucide="clock", class="w-[20px] h-[20px]")
+            | Horarios
+        div(class="p-[20px] border-t border-gray-200 flex flex-col gap-[15px]")
+          div(class="flex items-center gap-[10px]")
+            div(class="w-[35px] h-[35px] rounded-full bg-black text-white flex items-center justify-center")
+              i(data-lucide="user", class="w-[20px] h-[20px]")
+            div(class="flex flex-col")
+              span(class="text-[14px] font-bold text-gray-900") Admin
+              span(class="text-[12px] text-gray-500") Administrador
+
+          
+          a(href="/login", class="no-underline")
+            button(type="button", class="bg-black text-white px-[15px] py-[10px] rounded-[20px] flex items-center justify-center gap-[10px] font-bold text-[14px] w-fit cursor-pointer hover:opacity-80 transition-opacity border-none")
+              i(data-lucide="log-out", class="w-[18px] h-[18px]")
+              | Cerrar sesión
+
+      //- CONTENIDO PRINCIPAL
+      main(class="flex-1 p-[30px] bg-[#fafafa]")
+        
+        //- ENCABEZADO
+        header(class="mb-[30px]")
+          h2(class="text-[24px] font-bold mb-[5px] text-gray-900") Panel principal
+          p(class="text-[14px] text-gray-500 m-0") Resumen general del sistema de gestión de citas médicas
+
+        //- CUADRÍCULA ESTADÍSTICAS
+        section(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[20px] mb-[30px]")
+          div(class="bg-white border border-gray-200 rounded-[8px] p-[20px] flex flex-col gap-[15px]")
+            div(class="flex justify-between items-center text-[12px] font-bold text-[#555555]")
+              span Total pacientes
+              i(data-lucide="users", class="w-[20px] h-[20px]")
+            div(class="text-[28px] font-bold text-gray-900") 148
+
+          div(class="bg-white border border-gray-200 rounded-[8px] p-[20px] flex flex-col gap-[15px]")
+            div(class="flex justify-between items-center text-[12px] font-bold text-[#555555]")
+              span Médicos Activos
+              i(data-lucide="stethoscope", class="w-[20px] h-[20px]")
+            div(class="text-[28px] font-bold text-gray-900") 11
+
+          div(class="bg-white border border-gray-200 rounded-[8px] p-[20px] flex flex-col gap-[15px]")
+            div(class="flex justify-between items-center text-[12px] font-bold text-[#555555]")
+              span Citas Hoy
+              i(data-lucide="calendar", class="w-[20px] h-[20px]")
+            div(class="text-[28px] font-bold text-gray-900") 5
+
+          div(class="bg-white border border-gray-200 rounded-[8px] p-[20px] flex flex-col gap-[15px]")
+            div(class="flex justify-between items-center text-[12px] font-bold text-[#555555]")
+              span Citas del Mes
+              i(data-lucide="bar-chart-3", class="w-[20px] h-[20px]")
+            div(class="text-[28px] font-bold text-gray-900") 167
+
+        //- CUADRÍCULA RENDIMIENTO
+        section(class="grid grid-cols-1 lg:grid-cols-2 gap-[20px] mb-[30px]")
+          //- Tasas de Rendimiento
+          div(class="bg-white border border-gray-200 rounded-[8px] p-[20px]")
+            div(class="flex items-center gap-[10px] text-[14px] font-bold mb-[20px]")
+              i(data-lucide="flag", class="w-[20px] h-[20px]")
+              | Tasas de rendimiento
+
+            div(class="flex items-center gap-[15px] mb-[15px] text-[12px] text-gray-500")
+              span(class="w-[140px] shrink-0") Tasa de Confirmación
+              div(class="flex-1 h-[8px] bg-gray-100 rounded-[10px] overflow-hidden")
+                div(class="h-full bg-[#28a745] rounded-[10px] w-[87.5%]")
+              span(class="w-[40px] text-right font-bold text-gray-800") 87.5%
+
+            div(class="flex items-center gap-[15px] mb-[15px] text-[12px] text-gray-500")
+              span(class="w-[140px] shrink-0") Tasa de Inasistencia
+              div(class="flex-1 h-[8px] bg-gray-100 rounded-[10px] overflow-hidden")
+                div(class="h-full bg-[#a52a2a] rounded-[10px] w-[5.3%]")
+              span(class="w-[40px] text-right font-bold text-gray-800") 5.3%
+
+          //- Canales de Confirmación
+          div(class="bg-white border border-gray-200 rounded-[8px] p-[20px]")
+            div(class="flex items-center gap-[10px] text-[14px] font-bold mb-[20px]")
+              i(data-lucide="check-circle-2", class="w-[20px] h-[20px]")
+              | Canales de Confirmación
+
+            ul(class="list-none p-0 m-0 flex flex-col gap-[15px]")
+              li(class="flex justify-between text-[12px] text-gray-500")
+                span WhatsApp
+                span(class="font-semibold text-gray-700") 70%
+              li(class="flex justify-between text-[12px] text-gray-500")
+                span Email
+                span(class="font-semibold text-gray-700") 10%
+              li(class="flex justify-between text-[12px] text-gray-500")
+                span Teléfono
+                span(class="font-semibold text-gray-700") 10%
+              li(class="flex justify-between text-[12px] text-gray-500")
+                span Manual
+                span(class="font-semibold text-gray-700") 10%
+
+        //- SECCIÓN CITAS DE HOY
+        section(class="bg-white border border-gray-200 rounded-[8px] p-[20px]")
+          div(class="flex justify-between items-center mb-[20px]")
+            div(class="flex items-center gap-[10px] text-[14px] font-bold")
+              i(data-lucide="clock", class="w-[20px] h-[20px]")
+              | Citas de Hoy
+            div(class="text-[12px] text-gray-500") Lista de Citas (4)
+
+          div(class="flex flex-col gap-[15px]")
+            //- Cita 1
+            div(class="bg-[#f9f9f9] rounded-[8px] p-[15px] sm:p-[20px_40px] lg:p-[20px_100px] flex flex-col md:flex-row md:items-center justify-between gap-[15px]")
+              div(class="flex items-center gap-[10px] w-full md:w-[200px]")
+                span(class="font-bold text-[16px]") 9:00 am
+                span(class="px-[10px] py-[4px] rounded-[20px] text-[10px] font-bold bg-black text-white") Confirmado
+              div(class="flex flex-col gap-[3px] flex-1")
+                span(class="font-bold text-[14px] text-gray-900") Juan Pérez García
+                span(class="text-[12px] text-gray-500") Dra. María González
+                span(class="text-[12px] text-gray-400") Consulta de rutina
+              div(class="text-[12px] text-gray-400 text-left md:text-right w-full md:w-[250px]")
+                | Confirmado vía whatsapp
+
+            //- Cita 2
+            div(class="bg-[#f9f9f9] rounded-[8px] p-[15px] sm:p-[20px_40px] lg:p-[20px_100px] flex flex-col md:flex-row md:items-center justify-between gap-[15px]")
+              div(class="flex items-center gap-[10px] w-full md:w-[200px]")
+                span(class="font-bold text-[16px]") 10:00 am
+                span(class="px-[10px] py-[4px] rounded-[20px] text-[10px] font-bold bg-white text-black border border-gray-300 shadow-sm") Programado
+              div(class="flex flex-col gap-[3px] flex-1")
+                span(class="font-bold text-[14px] text-gray-900") Ana López Ruiz
+                span(class="text-[12px] text-gray-500") Dr. Carlos Rodríguez
+                span(class="text-[12px] text-gray-400") Revisión cardiológica
+              div(class="text-[12px] text-gray-400 text-left md:text-right w-full md:w-[250px]")
+                | Confirmado vía whatsapp - 3/3/2026 18:00
+
+            //- Cita 3
+            div(class="bg-[#f9f9f9] rounded-[8px] p-[15px] sm:p-[20px_40px] lg:p-[20px_100px] flex flex-col md:flex-row md:items-center justify-between gap-[15px]")
+              div(class="flex items-center gap-[10px] w-full md:w-[200px]")
+                span(class="font-bold text-[16px]") 11:00 am
+                span(class="px-[10px] py-[4px] rounded-[20px] text-[10px] font-bold bg-black text-white") Confirmado
+              div(class="flex flex-col gap-[3px] flex-1")
+                span(class="font-bold text-[14px] text-gray-900") Pedro Ramírez Torres
+                span(class="text-[12px] text-gray-500") Dra. Ana Martínez
+                span(class="text-[12px] text-gray-400") Control pediátrico
+              div(class="text-[12px] text-gray-400 text-left md:text-right w-full md:w-[250px]")
+                | Confirmado vía Email
+
+    //- Script para inicializar los íconos de Lucide
+    script.
+      lucide.createIcons();
