@@ -2,62 +2,60 @@ doctype html
 html(lang="es")
   head
     meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title SIGCMI - #{tituloPagina}
-    link(rel="stylesheet", href="/css/output.css")
-    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
-    
-  body(class="bg-white h-screen overflow-hidden font-sans m-0 p-0")
+    link(rel="stylesheet" href="/css/output.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white")
     
     div#notificacion(class="fixed top-5 right-5 bg-[#0056b3] text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-2.5 transform translate-x-[120%] transition-transform duration-500 z-[1000]")
       i(class="fa fa-exclamation-circle text-xl")
       span#mensaje_notificacion
-    
-    div(class="flex flex-col md:flex-row w-full h-screen overflow-hidden")
-      
-      div(class="w-full h-[25vh] md:h-screen md:w-[45%] flex-shrink-0")
-        img(src="/img/doctor2.jpg", alt="Ilustración Doctor", class="w-full h-full object-cover block")
-        
-      div(class="w-full md:w-[55%] h-[75vh] md:h-screen overflow-y-auto flex flex-col items-center justify-center bg-white px-5 py-6 md:p-10 rounded-t-[25px] -mt-[25px] md:mt-0 md:rounded-none z-10 relative")
-        
-       
-        div(class="absolute top-8 left-0 right-0 mx-auto w-full max-w-[400px] text-center hidden md:block")
-          span(class="font-extrabold text-sm md:text-base text-[#0066cc] uppercase tracking-widest") Sistema Integral de Gestión de Citas Médicas
-          
-        div(class="w-full max-w-[400px] flex flex-col items-center text-center")
-          
-         
-          img(src="/img/logo.png", alt="Logo SIGCMI", class="h-[100px] md:h-[130px] mb-16")
-          
-        
+
+    div(class="flex min-h-screen flex-col md:flex-row")
+
+      // Columna de la Imagen (100% del área)
+      div(class="w-full h-[300px] md:w-[45%] lg:w-[50%] md:h-screen md:sticky md:top-0 flex-shrink-0 overflow-hidden")
+        img(src="img/doctor2.jpg" alt="Doctor" class="w-full h-full object-cover block")
+
+      // Columna del Formulario
+      div(class="w-full py-[40px] px-[20px] md:w-[55%] lg:w-[50%] md:py-[50px] md:px-[80px] flex flex-col justify-center items-center bg-white")
+
+        div(class="w-full max-w-[400px] flex flex-col items-center")
+
+          span(class="block font-extrabold text-xs md:text-sm text-[#0066cc] uppercase tracking-widest text-center mb-5") Sistema Integral de Gestión de Citas Médicas
+
+          img(src="img/logo.png" alt="Logo SIGCMI" class="h-20 md:h-28 w-auto object-contain mb-6")
+
           if errores
-            div(class="w-full max-w-[400px] mb-3 flex flex-col gap-2")
+            div(class="w-full mb-4 flex flex-col gap-2")
               each error in errores
                 div(class="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded-r-lg text-xs font-semibold flex items-center gap-2.5 shadow-sm text-left w-full")
                   i(class="fa fa-circle-exclamation text-red-500 text-sm flex-shrink-0")
                   span= error.msg
 
-          h2(class="text-lg md:text-xl font-bold mb-4 w-full text-left md:text-center") Iniciar sesión en SIGCMI
-          
+          h2(class="text-lg md:text-xl font-bold mb-6 w-full text-center text-gray-800") Iniciar sesión en SIGCMI
+
           form(method="POST" action="/login" class="w-full flex flex-col items-center")
-            
+
             input(type="hidden" name="_csrf" value=csrfToken)
-            
-            div(class="w-full max-w-[400px] mb-3")
-              input#email(type="email", name="email", placeholder="Correo electrónico", value=usuario ? usuario.email : '', class="w-full px-4 py-3 bg-[#f5f5f5] border-none rounded-lg text-base outline-none shadow-inner")
-              
-            div(class="w-full max-w-[400px] mb-3")
-              input#password(type="password", name="password", placeholder="Contraseña", class="w-full px-4 py-3 bg-[#f5f5f5] border-none rounded-lg text-base outline-none shadow-inner")
-              
-           
-            a(href="/forgotPassword", class="text-base text-[#007bff] hover:underline mb-5 w-full text-center block font-medium") ¿Has olvidado tu contraseña?
-            
-            div(class="w-full flex flex-col gap-2.5 items-center pb-4")
-            
-              button(type="submit" class="w-full max-w-full md:max-w-[400px] mx-auto p-3.5 bg-black text-white border-none rounded-[10px] text-base font-bold cursor-pointer flex justify-center items-center gap-2 hover:opacity-90 transition-opacity")
-                i(class="fa fa-users") 
+
+            div(class="w-full mb-4")
+              input#email(type="email" name="email" placeholder="Correo electrónico" value=usuario ? usuario.email : '' class="w-full px-4 py-3 bg-[#f5f5f5] border-none rounded-lg text-base outline-none shadow-inner")
+
+            div(class="w-full mb-3")
+              input#password(type="password" name="password" placeholder="Contraseña" class="w-full px-4 py-3 bg-[#f5f5f5] border-none rounded-lg text-base outline-none shadow-inner")
+
+            a(href="/forgotPassword" class="text-sm text-[#007bff] hover:underline mb-6 text-center block font-medium transition-colors") ¿Has olvidado tu contraseña?
+
+            div(class="w-full flex flex-col gap-3 items-center")
+              button(type="submit" class="w-full p-3.5 bg-black text-white border-none rounded-lg text-base font-bold cursor-pointer flex justify-center items-center gap-2 hover:bg-gray-800 transition-colors shadow-md")
+                i(class="fa fa-users")
                 | Iniciar sesión
-                
-              a(href="/pacientRegistration", class="w-full max-w-full md:max-w-[400px] mx-auto p-3.5 bg-gray-200 text-black border-none rounded-[10px] text-base font-bold cursor-pointer flex justify-center items-center gap-2 hover:bg-gray-300 transition-colors")
-                i(class="fa fa-user-plus") 
+
+              a(href="/pacientRegistration" class="w-full p-3.5 bg-gray-100 text-gray-800 border-none rounded-lg text-base font-bold cursor-pointer flex justify-center items-center gap-2 hover:bg-gray-200 transition-colors text-center")
+                i(class="fa fa-user-plus")
                 | Crear cuenta
