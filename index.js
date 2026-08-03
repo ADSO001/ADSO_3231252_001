@@ -8,6 +8,8 @@ import medicalRouter from "./routes/medicalRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
 import db from "./config/db.js";
 
+import { Op } from "sequelize";
+
 const app = express();
 // Habilitar lectura de Forms (Del primero)
 app.use(express.urlencoded({extended: true}));
@@ -46,7 +48,7 @@ app.use("/", usuariosRouter);
 app.use("/", medicalRouter)
 app.use("/", adminRouter);
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Servidor funcionando en el puerto ${port}`);
