@@ -3,7 +3,7 @@ html(lang="es")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title SIGCMI - Pacientes
+    title SIGCMI - Gestión de Médicos
     script(src="https://cdn.tailwindcss.com")
     //- Lucide Icons (CDN)
     script(src="https://unpkg.com/lucide@latest")
@@ -29,11 +29,11 @@ html(lang="es")
             i(data-lucide="calendar", class="w-[20px] h-[20px]")
             | Agenda de citas
 
-          a(href="/patientManagement", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#000000] rounded-[10px] text-[14px] font-bold bg-[#e0e0e0] no-underline")
+          a(href="/patientManagement", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
             i(data-lucide="users", class="w-[20px] h-[20px]")
             | Pacientes
 
-          a(href="#", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+          a(href="/physicianManagement", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#000000] rounded-[10px] text-[14px] font-bold bg-[#e0e0e0] no-underline")
             i(data-lucide="stethoscope", class="w-[20px] h-[20px]")
             | Médicos
 
@@ -63,104 +63,121 @@ html(lang="es")
         
         //- ENCABEZADO Y BUSCADOR
         header(class="mb-[30px]")
-          h2(class="text-[24px] font-bold mb-[5px] text-gray-900") Pacientes
-          p(class="text-[14px] text-gray-500 m-0 mb-[25px]") Gestiona la información de todos los pacientes
+          h2(class="text-[24px] font-bold mb-[5px] text-gray-900") Gestión de Médicos
+          p(class="text-[14px] text-gray-500 m-0 mb-[25px]") Administra la información y horarios de los médicos de la plataforma
           
           div(class="relative max-w-[800px]")
             i(data-lucide="search", class="absolute left-[18px] top-1/2 -translate-y-1/2 w-[16px] h-[16px] text-gray-400")
-            input(type="text", class="w-full py-[12px] pr-[15px] pl-[45px] border border-gray-200 bg-white rounded-[10px] text-[14px] outline-none focus:border-gray-400 transition-colors", placeholder="Buscar por nombre, email o teléfono...")
+            input(type="text", class="w-full py-[12px] pr-[15px] pl-[45px] border border-gray-200 bg-white rounded-[10px] text-[14px] outline-none focus:border-gray-400 transition-colors", placeholder="Buscar por nombre, especialidad o email...")
 
-        //- LISTA DE TARJETAS DE PACIENTES
+        //- LISTA DE TARJETAS DE MÉDICOS
         div(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[20px]")
 
-          //- Tarjeta 1: Juan Pérez García
+          //- Tarjeta 1: Dr. María González
           div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
             div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") M
+              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 px-[8px] py-[2px] rounded-[4px] text-[10px] font-bold uppercase") Medicina general
               div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") JP
+                img(src="/img/doctora.png", class="w-[45px] h-[45px] rounded-full object-cover border border-gray-200 bg-[#f5f5f5]")
                 div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Juan Pérez García
-                  span(class="text-[12px] text-gray-400 font-medium") 40 años
+                  h3(class="text-[15px] font-bold text-gray-900 m-0") Dr. María González
+                  span(class="text-[11px] text-gray-400 font-mono") Pro-2024-001
               
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: juan.perez@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
+              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[15px]")
+                p(class="m-0") Email: maria.gonzalez@sigcmi.com
+                p(class="m-0") Teléfono: +1 234 567 8901
                 p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") O+
-                p(class="m-0") Alergias: Penicilina
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
+                  | Consulta: 
+                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") 50$
+                p(class="m-0 text-[11px] text-gray-500 font-medium mt-[4px]") Horario: Lun, Mié, Vie (08:00-14:00)
 
-          //- Tarjeta 2: Ana López Ruiz
-          div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
-            div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") F
-              div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") AL
-                div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Ana López Ruiz
-                  span(class="text-[12px] text-gray-400 font-medium") 35 años
-              
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: ana.lopez@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
-                p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") A+
-                p(class="m-0") Alergias: Ninguna conocida
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
+            div(class="grid grid-cols-2 gap-[8px] mt-[10px]")
+              button(type="button", onclick="abrirPopUp()", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
+                i(data-lucide="edit-3", class="w-[14px] h-[14px]")
+                | Editar
+              a(href="#", class="w-full py-[8px] rounded-[8px] bg-black text-white text-[12px] font-bold hover:opacity-85 transition-opacity cursor-pointer shadow-sm flex items-center justify-center gap-[6px] no-underline")
+                i(data-lucide="calendar", class="w-[14px] h-[14px]")
+                | Agenda
 
-          //- Tarjeta 3: Pedro Ramírez Torres
+          //- Tarjeta 2: Dr. Carlos Rodríguez
           div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
             div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") M
+              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 px-[8px] py-[2px] rounded-[4px] text-[10px] font-bold uppercase") Cardiología
               div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") PR
+                img(src="/img/doctor2.png", class="w-[45px] h-[45px] rounded-full object-cover border border-gray-200 bg-[#f5f5f5]")
                 div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Pedro Ramírez Torres
-                  span(class="text-[12px] text-gray-400 font-medium") 10 años
+                  h3(class="text-[15px] font-bold text-gray-900 m-0") Dr. Carlos Rodríguez
+                  span(class="text-[11px] text-gray-400 font-mono") Pro-2024-002
               
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: ramirez.familia@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
+              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[15px]")
+                p(class="m-0") Email: carlos.rodriguez@sigcmi.com
+                p(class="m-0") Teléfono: +1 234 567 8902
                 p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") B+
-                p(class="m-0") Alergias: Ninguna conocida
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
+                  | Consulta: 
+                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") 80$
+                p(class="m-0 text-[11px] text-gray-500 font-medium mt-[4px]") Horario: Mar, Jue, Vie
 
-          //- Tarjeta 4: Sofía Martínez Díaz
+            div(class="grid grid-cols-2 gap-[8px] mt-[10px]")
+              button(type="button", onclick="abrirPopUp()", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
+                i(data-lucide="edit-3", class="w-[14px] h-[14px]")
+                | Editar
+              a(href="#", class="w-full py-[8px] rounded-[8px] bg-black text-white text-[12px] font-bold hover:opacity-85 transition-opacity cursor-pointer shadow-sm flex items-center justify-center gap-[6px] no-underline")
+                i(data-lucide="calendar", class="w-[14px] h-[14px]")
+                | Agenda
+
+          //- Tarjeta 3: Dr. Roberto Silva
           div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
             div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") F
+              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 px-[8px] py-[2px] rounded-[4px] text-[10px] font-bold uppercase") Oftalmología
               div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") SM
+                img(src="/img/doctor3.png", class="w-[45px] h-[45px] rounded-full object-cover border border-gray-200 bg-[#f5f5f5]")
                 div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Sofía Martínez Díaz
-                  span(class="text-[12px] text-gray-400 font-medium") 47 años
+                  h3(class="text-[15px] font-bold text-gray-900 m-0") Dr. Roberto Silva
+                  span(class="text-[11px] text-gray-400 font-mono") Pro-2024-004
               
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: sofia.martinez@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
+              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[15px]")
+                p(class="m-0") Email: roberto.silva@sigcmi.com
+                p(class="m-0") Teléfono: +1 234 567 8904
                 p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") AB+
-                p(class="m-0") Alergias: Látex, Polen
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
+                  | Consulta: 
+                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") 70$
+                p(class="m-0 text-[11px] text-gray-500 font-medium mt-[4px]") Horario: Lun, Jue, Vie
+
+            div(class="grid grid-cols-2 gap-[8px] mt-[10px]")
+              button(type="button", onclick="abrirPopUp()", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
+                i(data-lucide="edit-3", class="w-[14px] h-[14px]")
+                | Editar
+              a(href="#", class="w-full py-[8px] rounded-[8px] bg-black text-white text-[12px] font-bold hover:opacity-85 transition-opacity cursor-pointer shadow-sm flex items-center justify-center gap-[6px] no-underline")
+                i(data-lucide="calendar", class="w-[14px] h-[14px]")
+                | Agenda
+
+    //- ================= POP-UP MODAL =================
+    div#ventanaEdicion(class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4")
+      div(class="bg-white rounded-[16px] max-w-md w-full p-[24px] shadow-2xl space-y-[15px] border border-gray-200")
+        div
+          h3(class="text-[18px] font-bold text-gray-900 m-0") Editar Médico
+          p(class="text-[13px] text-gray-500 m-0 mt-[4px]") Modifica la información del doctor
+
+        div(class="space-y-[10px]")
+          input(type="text", placeholder="Nueva especialidad...", class="w-full p-[10px] border border-gray-200 rounded-[8px] text-[13px] outline-none focus:border-gray-400")
+          input(type="text", placeholder="Nuevo teléfono...", class="w-full p-[10px] border border-gray-200 rounded-[8px] text-[13px] outline-none focus:border-gray-400")
+          input(type="text", placeholder="Nuevo correo...", class="w-full p-[10px] border border-gray-200 rounded-[8px] text-[13px] outline-none focus:border-gray-400")
+          input(type="text", placeholder="Nuevo precio de consulta...", class="w-full p-[10px] border border-gray-200 rounded-[8px] text-[13px] outline-none focus:border-gray-400")
+
+        div(class="flex gap-[10px] pt-[8px]")
+          button(type="button", onclick="cerrarPopUp()", class="flex-1 py-[10px] border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold text-[13px] rounded-[8px] transition-colors cursor-pointer") Cancelar
+          button(type="button", onclick="cerrarPopUp()", class="flex-1 py-[10px] bg-black hover:opacity-85 text-white font-bold text-[13px] rounded-[8px] transition-opacity cursor-pointer border-none") Guardar
 
     //- Script para inicializar los íconos de Lucide
     script.
+      function abrirPopUp() {
+        const modal = document.getElementById('ventanaEdicion');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      function cerrarPopUp() {
+        const modal = document.getElementById('ventanaEdicion');
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
       lucide.createIcons();
