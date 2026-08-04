@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from "express";
 import { check } from "express-validator";
 import { 
@@ -12,10 +13,16 @@ import {
   comprobarToken, 
   nuevaPassword 
 } from "../controllers/usuariosControllers.js";
+=======
+
+import express from "express";
+import { formularioLogin, autenticar, verPatientPanel, registrar, confirmar, formularioRegistro, resetPassword, formularioOlvidePassword, comprobarToken, nuevaPassword } from "../controllers/usuariosControllers.js";
+>>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
 import protegerRuta from "../middleware/protegerRuta.js"; 
 
 const router = express.Router();
 
+<<<<<<< HEAD
 router.get("/login", formularioLogin);
 router.post("/login", autenticar);
 
@@ -49,6 +56,23 @@ router.post("/forgotPassword", resetPassword);
 
 router.get("/forgotPassword/:token", comprobarToken);
 router.post("/forgotPassword/:token", nuevaPassword);
+=======
+router.get("/login", formularioLogin)
+router.post("/login", autenticar);
+
+router.get("/pacientRegistration", formularioRegistro)
+router.post("/pacientRegistration", registrar)
+
+router.get("/confirmar/:token", confirmar)
+
+router.get("/forgotPassword", formularioOlvidePassword)
+router.post("/forgotPassword", resetPassword)
+
+
+router.get("/forgotPassword/:token", comprobarToken)
+router.post("/forgotPassword/:token", nuevaPassword)
+
+>>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
 
 router.get("/patientPanel", protegerRuta, verPatientPanel);
 

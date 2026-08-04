@@ -49,11 +49,14 @@ const Usuario = db.define('usuarios', {
         type: DataTypes.STRING,
         allowNull: false
     },
+<<<<<<< HEAD
     rol: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'paciente'
     },
+=======
+>>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
     token: DataTypes.STRING,
     confirmado: DataTypes.BOOLEAN
 }, {

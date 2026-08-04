@@ -22,6 +22,16 @@ app.use(cookieParser());
 // Habilitar el CSURF (Del primero)
 app.use(csurf({cookie: true}));
 
+const app = express();
+// Habilitar lectura de Forms (Del primero)
+app.use(express.urlencoded({extended: true}));
+
+// Habilitar Cookie Parser (Del primero)
+app.use(cookieParser());
+
+// Habilitar el CSURF (Del primero)
+app.use(csurf({cookie: true}));
+
 // Configuración para __dirname en proyectos con ES Modules (import)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +43,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 try {
   await db.authenticate();
+<<<<<<< HEAD
   await db.sync({ alter: true });
+=======
+  await db.sync();
+>>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
   console.log("La conexion es exitosa");
 } catch (error) {
   console.error("No se puede conectar", error);

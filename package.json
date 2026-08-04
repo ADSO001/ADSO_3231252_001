@@ -17,6 +17,10 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
+<<<<<<< HEAD
+=======
+    "cookieparser": "^0.1.0",
+>>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
     "cors": "^2.8.6",
     "csrf-csrf": "^4.0.3",
     "csurf": "^1.11.0",
@@ -24,6 +28,10 @@
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
+<<<<<<< HEAD
+=======
+    "mysql2": "^3.23.1",
+>>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
     "nodemailer": "^9.0.3",
     "pg": "^8.22.0",
     "pg-hstore": "^2.3.4",
