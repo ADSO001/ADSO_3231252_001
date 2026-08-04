@@ -1,4 +1,5 @@
 import { check, validationResult } from "express-validator";
+import { Op } from "sequelize";
 import bcrypt from "bcryptjs";
 import Usuario from "../models/usuarios.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
@@ -23,13 +24,12 @@ const verPatientPanel = (req, res) => {
     res.render("patientPanel", {
         tituloPagina: "Panel del Paciente"
     });
-}
+};
 
 const registrar = async (req, res) => {
-    // 1. Extraer errores de validación de express-validator
+    // 1. Extraer errores de express-validator
     let resultado = validationResult(req);
 
-    // Si hay errores, devolvemos la vista con las alertas
     if (!resultado.isEmpty()) {
         return res.render("pacientRegistration", {
             tituloPagina: "Registro de Paciente",
@@ -46,18 +46,30 @@ const registrar = async (req, res) => {
     } = req.body;
 
     try {
-        // 2. Verificar si el usuario ya existe
-        const existeUsuario = await Usuario.findOne({ where: { email } });
+        // 2. Verificar si ya existe un usuario con ESE CORREO o ESE DOCUMENTO
+        const existeUsuario = await Usuario.findOne({ 
+            where: { 
+                [Op.or]: [
+                    { email },
+                    { numero_documento }
+                ]
+            } 
+        });
+
         if (existeUsuario) {
+            const msgError = existeUsuario.email === email 
+                ? "El correo electrónico ya se encuentra registrado" 
+                : "El número de documento ya se encuentra registrado";
+
             return res.render("pacientRegistration", {
                 tituloPagina: "Registro de Paciente",
                 csrfToken: req.csrfToken(),
-                errores: [{ msg: "El usuario con este correo ya está registrado" }],
+                errores: [{ msg: msgError }],
                 usuario: req.body
             });
         }
 
-        // 3. Crear usuario
+        // 3. Crear el usuario en la Base de Datos
         const usuario = await Usuario.create({
             nombre,
             apellido,
@@ -74,25 +86,35 @@ const registrar = async (req, res) => {
             confirmado: false
         });
 
-        // 4. Enviar correo en segundo plano
+        // 4. Enviar correo de confirmación
         emailRegistro({
             nombre: usuario.nombre,
             email: usuario.email,
             token: usuario.token
         }).catch(error => console.error("Error enviando correo de registro:", error));
 
-  
         return res.render("templates/mensaje", {
             tituloPagina: "Cuenta Creada Correctamente",
             mensaje: "Hemos enviado un correo de confirmación, presiona en el enlace para activar tu cuenta."
         });
 
     } catch (error) {
-        console.error("Error en servidor/base de datos:", error);
+        console.error("Error detallado en el servidor:", error);
+
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.render("pacientRegistration", {
+                tituloPagina: "Registro de Paciente",
+                csrfToken: req.csrfToken(),
+                errores: [{ msg: "El correo o el número de documento ya están en uso." }],
+                usuario: req.body
+            });
+        }
+
+        // Muestra el error real en pantalla si algo más falla (ej. formato de fecha o tipo de dato)
         return res.render("pacientRegistration", {
             tituloPagina: "Registro de Paciente",
             csrfToken: req.csrfToken(),
-            errores: [{ msg: "Ocurrió un error en el servidor, intenta de nuevo" }],
+            errores: [{ msg: `Error del servidor: ${error.message || error}` }],
             usuario: req.body
         });
     }
@@ -118,14 +140,14 @@ const confirmar = async (req, res) => {
         tituloPagina: "Cuenta confirmada",
         mensaje: "La cuenta se confirmó correctamente"
     });
-}
+};
 
 const formularioOlvidePassword = (req, res) => {
     res.render("forgotPassword", {
         tituloPagina: "Olvidé la contraseña",
         csrfToken: req.csrfToken()
     });
-}
+};
 
 const resetPassword = async (req, res) => {
     await check("email").isEmail().withMessage("Esto no parece un correo válido").run(req);
@@ -154,7 +176,6 @@ const resetPassword = async (req, res) => {
     usuario.token = generarId();
     await usuario.save();
 
-    // Envío asíncrono con manejo de errores
     emailOlvidePassword({
         nombre: usuario.nombre,
         email: usuario.email,
@@ -165,7 +186,7 @@ const resetPassword = async (req, res) => {
         tituloPagina: "Restablecer la contraseña",
         mensaje: "Hemos enviado un correo electrónico con las instrucciones."
     });
-}
+};
 
 const comprobarToken = async (req, res) => {
     const { token } = req.params;
@@ -183,7 +204,7 @@ const comprobarToken = async (req, res) => {
         tituloPagina: "Escribe tu nueva contraseña",
         csrfToken: req.csrfToken()
     });
-}
+};
 
 const nuevaPassword = async (req, res) => {
     await check("password").isLength({ min: 6 }).withMessage("La contraseña debe tener mínimo 6 caracteres").run(req);
@@ -212,7 +233,6 @@ const nuevaPassword = async (req, res) => {
         });
     }
 
-    // Hashear la contraseña (si tu modelo no tiene hook automático)
     const salt = await bcrypt.genSalt(10);
     usuario.password = await bcrypt.hash(password, salt);
     usuario.token = null; 
@@ -223,7 +243,7 @@ const nuevaPassword = async (req, res) => {
         tituloPagina: "Contraseña restablecida",
         mensaje: "¡La contraseña se cambió correctamente!"
     });
-}
+};
 
 const autenticar = async (req, res) => {
     await check("email").isEmail().withMessage("El correo es obligatorio").run(req);
@@ -258,7 +278,6 @@ const autenticar = async (req, res) => {
         });
     }
 
-    
     const passwordCorrecto = await usuario.verificarPassword(password);
     if (!passwordCorrecto) {
         return res.render("login", {
@@ -269,13 +288,13 @@ const autenticar = async (req, res) => {
     }
 
     const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
-     
+      
     return res
         .cookie("_token", token, {
             httpOnly: true,
         })
         .redirect("/patientPanel");
-}
+};
 
 export { 
     formularioLogin, 
