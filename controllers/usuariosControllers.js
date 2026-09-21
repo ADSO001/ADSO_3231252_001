@@ -262,6 +262,7 @@ const autenticar = async (req, res) => {
     const { email, password } = req.body;
     const usuario = await Usuario.findOne({ where: { email } });
 
+
     if (!usuario) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
@@ -270,6 +271,14 @@ const autenticar = async (req, res) => {
         });
     }
 
+ 
+    console.log("DATOS DEL USUARIO EN LOGIN:", {
+        email: usuario.email,
+        rol: usuario.rol,
+        confirmado: usuario.confirmado
+    });
+
+   
     if (!usuario.confirmado) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
@@ -278,6 +287,7 @@ const autenticar = async (req, res) => {
         });
     }
 
+    
     const passwordCorrecto = await usuario.verificarPassword(password);
     if (!passwordCorrecto) {
         return res.render("login", {
@@ -287,13 +297,35 @@ const autenticar = async (req, res) => {
         });
     }
 
-    const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
-      
-    return res
-        .cookie("_token", token, {
-            httpOnly: true,
-        })
-        .redirect("/patientPanel");
+    if (usuario.rol === 'medico' && usuario.estado_aprobacion !== 'aprobado') {
+        return res.render("login", {
+            tituloPagina: "Iniciar Sesión",
+            csrfToken: req.csrfToken(),
+            errores: [{ msg: "Tu cuenta de médico aún está en revisión por un administrador." }]
+        });
+    }
+
+    
+    const token = generarJWT({ 
+        id: usuario.id, 
+        nombre: usuario.nombre,
+        rol: usuario.rol 
+    });
+
+
+    res.cookie("_token", token, {
+        httpOnly: true,
+    });
+
+    if (usuario.rol === 'admin') {
+        return res.redirect("/adminPanel");
+    }
+
+    if (usuario.rol === 'medico') {
+        return res.redirect("/medicalPanel");
+    }
+
+    return res.redirect("/patientPanel");
 };
 
 export { 
