@@ -30,4 +30,10 @@ const upload = multer({
     }
 });
 
-export default upload;
+// Usamos upload.fields para capturar ambos archivos con nombres distintos de forma segura
+const uploadMedicalFiles = upload.fields([
+    { name: 'documento_verificacion', maxCount: 1 },
+    { name: 'foto', maxCount: 1 }
+]);
+
+export default uploadMedicalFiles;

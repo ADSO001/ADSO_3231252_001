@@ -1,6 +1,7 @@
 import express from 'express';
 import upload from '../middleware/subirDocumento.js';
 import rutaMedico from '../middleware/rutaMedico.js';
+import uploadMedicalFiles from '../middleware/subirDocumento.js';
 import { 
     formularioMedico, 
     medicalPanel, 
@@ -10,17 +11,18 @@ import {
 
 const router = express.Router();
 
-// Formulario de registro (GET) - Nota: unificamos o separamos correctamente por método
+// Formulario de registro (GET)
 router.get('/medicalRegistration', formularioRegistroMedico);
 
 // Procesamiento de registro (POST) -> Multer procesa el stream multipart primero
 router.post('/medicalRegistration', (req, res, next) => {
-    upload.single('documento_verificacion')(req, res, (err) => {
+    uploadMedicalFiles(req, res, (err) => {
         if (err) {
-            // Maneja posibles errores del filtro de Multer (ej. tipo de archivo o peso > 5MB)
+            const csrfTokenSeguro = typeof req.csrfToken === 'function' ? req.csrfToken() : (req.body && req.body._csrf ? req.body._csrf : '');
+
             return res.render('medicalRegistration', {
                 pagina: 'Registro de Médico - SIGCMI',
-                csrfToken: req.csrfToken(),
+                csrfToken: csrfTokenSeguro,
                 errores: [{ msg: err.message }],
                 usuario: req.body
             });

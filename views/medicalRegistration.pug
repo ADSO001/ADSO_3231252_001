@@ -139,6 +139,20 @@ html(lang="es")
               p(class="text-[13px] font-semibold mb-[8px] text-[13px] text-[#333]") Años de experiencia
               input(type="number" name="experiencia" value= usuario ? usuario.experiencia : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Valor por consulta ($)
+              input(type="number" step="0.01" name="precio_consulta" placeholder="Ej: 50.00" value= usuario ? usuario.precio_consulta : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Horarios de atención
+              input(type="text" name="horarios" placeholder="Ej: Lun-Vie: 8:00 AM - 2:00 PM" value= usuario ? usuario.horarios : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+          div(class="my-[20px]")
+            p(class="font-bold text-[14px] mb-[6px] text-[#333]") Foto de perfil del médico
+            p(class="text-[#999] text-[12px] mb-[12px]") Sube una fotografía profesional (JPG, PNG)
+            div(class="w-full p-[15px] border border-dashed border-[#b0b0b0] rounded-[6px] bg-[#fafafa] flex items-center")
+              input(type="file" name="foto" class="w-full text-[13px] text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer")
+
           div(class="my-[30px]")
             p(class="font-bold text-[14px] mb-[6px] text-[#333]") Documento de verificación profesional
             p(class="text-[#999] text-[12px] mb-[12px]") Sube una copia de tu título médico, cédula profesional o certificado (PDF, JPG, PNG - Máx. 5MB)

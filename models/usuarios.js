@@ -47,11 +47,11 @@ const Usuario = db.define('usuarios', {
     },
     rol: {
         type: DataTypes.STRING,
-        defaultValue: 'paciente' // 'paciente', 'medico', 'admin'
+        defaultValue: 'paciente' 
     },
     estado_aprobacion: {
         type: DataTypes.STRING,
-        defaultValue: 'aprobado' // 'pendiente', 'aprobado', 'rechazado'
+        defaultValue: 'aprobado' 
     },
     confirmado: {
         type: DataTypes.BOOLEAN,
@@ -60,8 +60,7 @@ const Usuario = db.define('usuarios', {
     token: {
         type: DataTypes.STRING
     },
-
-    // Campos exclusivos para Médicos (para Pacientes quedan null)
+    // Campos exclusivos para Médicos
     especialidad: {
         type: DataTypes.STRING,
         allowNull: true
@@ -77,6 +76,20 @@ const Usuario = db.define('usuarios', {
     documento_verificacion: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    
+    foto: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    horarios: {
+        type: DataTypes.STRING, 
+        allowNull: true
+
+    },
+    precio_consulta: {
+        type: DataTypes.DECIMAL(10, 2), 
+        allowNull: true
     }
 }, {
     hooks: {
@@ -87,9 +100,8 @@ const Usuario = db.define('usuarios', {
     }
 });
 
-// Método personalizado para verificar contraseñas
 Usuario.prototype.verificarPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-export default Usuario; 
+export default Usuario;

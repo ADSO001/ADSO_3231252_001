@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import Usuario from "../models/usuarios.js";
+// Importamos los helpers de email (asegúrate de que la ruta relativa coincida con tu carpeta)
+import { emailMedicoAprobado, emailMedicoRechazado } from "../helpers/emails.js";
 
 const formularioAdmin = (req, res) => {
     res.render("adminPanel", {
@@ -27,9 +29,23 @@ const formulariopatientManagement = (req, res) => {
 };
 
 const managementDoctors = async (req, res) => {
-    res.render("physicianManagement", {
-        tituloPagina: "Panel de Administración"
-    });
+    try {
+        const medicosAprobados = await Usuario.findAll({
+            where: {
+                rol: 'medico',
+                estado_aprobacion: 'aprobado'
+            }
+        });
+
+        res.render("physicianManagement", {
+            tituloPagina: "Gestión de Médicos",
+            usuario: req.usuario,
+            medicos: medicosAprobados
+        });
+    } catch (error) {
+        console.error("Error al cargar los médicos aprobados:", error);
+        res.redirect("/adminPanel");
+    }
 };
 
 // Renderizar solicitudes pendientes en managementSpecialities.pug
@@ -43,7 +59,7 @@ const confirmDoctors = async (req, res) => {
             }
         });
 
-        // 2. Médicos ya aprobados (necesario para la tarjeta de estadísticas/listado)
+        // 2. Médicos ya aprobados
         const medicosAprobados = await Usuario.findAll({
             where: {
                 rol: 'medico',
@@ -51,7 +67,7 @@ const confirmDoctors = async (req, res) => {
             }
         });
 
-        // 3. Renderizar la vista pasando ambas listas y el token CSRF
+        // 3. Renderizar la vista
         res.render("managementSpecialities", {
             tituloPagina: "Aprobación de Médicos",
             usuario: req.usuario,
@@ -76,6 +92,12 @@ const aprobarMedico = async (req, res) => {
         if (medico) {
             medico.estado_aprobacion = 'aprobado';
             await medico.save();
+
+            // Enviar correo de notificación al médico
+            await emailMedicoAprobado({
+                email: medico.email,
+                nombre: `${medico.nombre} ${medico.apellido}`
+            });
         }
 
         return res.redirect("/managementSpecialities");
@@ -85,15 +107,23 @@ const aprobarMedico = async (req, res) => {
     }
 };
 
-// Acción: Rechazar Médico (con borrado físico del archivo)
+// Acción: Rechazar Médico (con envío de correo y borrado físico del archivo/registro)
 const rechazarMedico = async (req, res) => {
     const { id } = req.params;
+    const { motivo } = req.body; // Viene del formulario dentro del modal
 
     try {
         const medico = await Usuario.findOne({ where: { id, rol: 'medico' } });
 
         if (medico) {
-            // Si el médico tiene un documento guardado en servidor, lo borramos de la carpeta
+            // 1. Enviar el correo con el motivo antes de borrar el registro
+            await emailMedicoRechazado({
+                email: medico.email,
+                nombre: `${medico.nombre} ${medico.apellido}`,
+                motivo: motivo || "No se detallaron motivos específicos."
+            });
+
+            // 2. Borrar archivo físico si existe
             if (medico.documento_verificacion) {
                 const rutaDocumento = path.join(process.cwd(), 'public', 'uploads', 'documentos', medico.documento_verificacion);
                 
@@ -102,7 +132,7 @@ const rechazarMedico = async (req, res) => {
                 }
             }
 
-            // Borramos el registro de la BD
+            // 3. Borrar el registro de la BD
             await medico.destroy();
         }
 

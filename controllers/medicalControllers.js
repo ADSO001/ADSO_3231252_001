@@ -21,9 +21,9 @@ const formularioRegistroMedico = (req, res) => {
 // Procesar el registro del médico
 const registrarMedico = async (req, res) => {
     console.log("BODY RECIBIDO:", req.body);
-    console.log("ARCHIVO RECIBIDO:", req.file);
+    console.log("ARCHIVOS RECIBIDOS:", req.files);
 
-    // 1. Validaciones de campos de texto
+    // 1. Validaciones de campos de texto (incluyendo precio_consulta y horarios si se requieren)
     await check('nombre').notEmpty().withMessage('El nombre es obligatorio').run(req);
     await check('apellido').notEmpty().withMessage('El apellido es obligatorio').run(req);
     await check('tipo_documento').notEmpty().withMessage('Selecciona el tipo de documento').run(req);
@@ -37,20 +37,32 @@ const registrarMedico = async (req, res) => {
     await check('especialidad').notEmpty().withMessage('Selecciona tu especialidad').run(req);
     await check('tarjeta_profesional').notEmpty().withMessage('La tarjeta profesional es obligatoria').run(req);
     await check('experiencia').isInt({ min: 0 }).withMessage('Ingresa un número válido de años de experiencia').run(req);
+    await check('precio_consulta').notEmpty().withMessage('El valor por consulta es obligatorio').run(req);
+    await check('horarios').notEmpty().withMessage('Los horarios de atención son obligatorios').run(req);
 
     let resultado = validationResult(req);
 
-    const eliminarArchivoSiExiste = () => {
-        if (req.file) {
-            const rutaArchivo = path.join(process.cwd(), 'public/uploads/documentos', req.file.filename);
-            if (fs.existsSync(rutaArchivo)) {
-                fs.unlinkSync(rutaArchivo);
+    // Helper para eliminar ambos archivos en caso de error
+    const eliminarArchivosSiExisten = () => {
+        if (req.files) {
+            if (req.files['documento_verificacion']) {
+                const rutaDoc = path.join(process.cwd(), 'public/uploads/documentos', req.files['documento_verificacion'][0].filename);
+                if (fs.existsSync(rutaDoc)) fs.unlinkSync(rutaDoc);
+            }
+            if (req.files['foto']) {
+                const rutaFoto = path.join(process.cwd(), 'public/uploads/documentos', req.files['foto'][0].filename);
+                if (fs.existsSync(rutaFoto)) fs.unlinkSync(rutaFoto);
             }
         }
     };
 
-    // 2. Si no adjuntó archivo de verificación
-    if (!req.file) {
+    // 2. Extraer archivos de req.files
+    const documentoVerificacion = req.files && req.files['documento_verificacion'] ? req.files['documento_verificacion'][0].filename : null;
+    const fotoPerfil = req.files && req.files['foto'] ? req.files['foto'][0].filename : null;
+
+    // 3. Validar si adjuntó el documento de verificación obligatoriamente
+    if (!documentoVerificacion) {
+        eliminarArchivosSiExisten();
         return res.render('medicalRegistration', {
             pagina: 'Registro de Médico - SIGCMI',
             csrfToken: obtenerCsrfToken(req),
@@ -59,9 +71,9 @@ const registrarMedico = async (req, res) => {
         });
     }
 
-    // 3. Si hay errores en las validaciones de texto
+    // 4. Si hay errores en las validaciones de texto
     if (!resultado.isEmpty()) {
-        eliminarArchivoSiExiste();
+        eliminarArchivosSiExisten();
         return res.render('medicalRegistration', {
             pagina: 'Registro de Médico - SIGCMI',
             csrfToken: obtenerCsrfToken(req),
@@ -73,13 +85,14 @@ const registrarMedico = async (req, res) => {
     const { 
         nombre, apellido, tipo_documento, numero_documento, 
         genero, telefono, direccion, email, password, 
-        especialidad, tarjeta_profesional, experiencia 
+        especialidad, tarjeta_profesional, experiencia,
+        precio_consulta, horarios
     } = req.body;
 
-    // 4. Verificar si el correo ya existe
+    // 5. Verificar si el correo ya existe
     const existeUsuario = await Usuario.findOne({ where: { email } });
     if (existeUsuario) {
-        eliminarArchivoSiExiste();
+        eliminarArchivosSiExisten();
         return res.render('medicalRegistration', {
             pagina: 'Registro de Médico - SIGCMI',
             csrfToken: obtenerCsrfToken(req),
@@ -105,7 +118,10 @@ const registrarMedico = async (req, res) => {
             especialidad,
             tarjeta_profesional,
             experiencia,
-            documento_verificacion: req.file.filename
+            precio_consulta,
+            horarios,
+            documento_verificacion: documentoVerificacion,
+            foto: fotoPerfil
         });
 
         return res.render('templates/mensaje', {
@@ -115,7 +131,7 @@ const registrarMedico = async (req, res) => {
 
     } catch (error) {
         console.error("Error al registrar médico:", error);
-        eliminarArchivoSiExiste();
+        eliminarArchivosSiExisten();
         return res.render('medicalRegistration', {
             pagina: 'Registro de Médico - SIGCMI',
             csrfToken: obtenerCsrfToken(req),
