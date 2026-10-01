@@ -10,45 +10,33 @@ import db from "./config/db.js";
 import Cita from "./models/Cita.js";
 import './models/index.js';
 
-import { Op } from "sequelize";
-
 const app = express();
-// Habilitar lectura de Forms (Del primero)
-app.use(express.urlencoded({extended: true}));
 
-// Habilitar Cookie Parser (Del primero)
+// 1. Habilitar lectura de formularios estándar
+app.use(express.urlencoded({ extended: true }));
+
+// 2. Habilitar Cookie Parser
 app.use(cookieParser());
 
-// Habilitar el CSURF (Del primero)
-app.use(csurf({cookie: true}));
+// 3. CSURF Middleware con excepción para multipart/form-data
+// Evita que csurf rompa peticiones POST multipart antes de que Multer las procese
+app.use((req, res, next) => {
+  if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
+    return next(); // Pasa directo a las rutas donde Multer procesará el archivo
+  }
+  csurf({ cookie: true })(req, res, next);
+});
 
-const app = express();
-// Habilitar lectura de Forms (Del primero)
-app.use(express.urlencoded({extended: true}));
-
-// Habilitar Cookie Parser (Del primero)
-app.use(cookieParser());
-
-// Habilitar el CSURF (Del primero)
-app.use(csurf({cookie: true}));
-
-// Configuración para __dirname en proyectos con ES Modules (import)
+// Configuración de __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 try {
   await db.authenticate();
-<<<<<<< HEAD
   await db.sync({ alter: true });
-=======
-  await db.sync();
->>>>>>> 2af96a9dfbc67ce97f989d2d3f19a44c4294099a
-  console.log("La conexion es exitosa");
+  console.log("La conexión a la BD es exitosa");
 } catch (error) {
   console.error("No se puede conectar", error);
 }
@@ -61,11 +49,11 @@ app.get('/', (req, res) => {
 });
 
 app.use("/", usuariosRouter);
-app.use("/", medicalRouter)
+app.use("/", medicalRouter);
 app.use("/", adminRouter);
 
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Servidor funcionando en el puerto ${port}`);
-}); 
+});

@@ -13,7 +13,7 @@ html(lang="es")
   body(class="m-0 p-0 box-border bg-white text-gray-800")
     div(class="flex flex-col md:flex-row min-h-screen")
       
-      //- BARRA LATERAL (SIDEBAR - Exacta al Panel Principal)
+      //- BARRA LATERAL (SIDEBAR)
       aside(class="w-full md:w-[260px] bg-white border-r border-gray-200 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto")
         div(class="p-[20px] flex items-center gap-[10px] border-b border-gray-200")
           div(class="w-[60px] h-[60px] max-w-[60px] max-h-[60px]")
@@ -33,7 +33,7 @@ html(lang="es")
             i(data-lucide="users", class="w-[20px] h-[20px]")
             | Pacientes
 
-          a(href="", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
+          a(href="/physicianManagement", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#555555] rounded-[10px] text-[14px] font-bold bg-[#f5f5f5] hover:bg-[#e8e8e8] no-underline transition-colors")
             i(data-lucide="stethoscope", class="w-[20px] h-[20px]")
             | Médicos
 
@@ -50,7 +50,7 @@ html(lang="es")
             div(class="w-[35px] h-[35px] rounded-full bg-black text-white flex items-center justify-center")
               i(data-lucide="user", class="w-[20px] h-[20px]")
             div(class="flex flex-col")
-              span(class="text-[14px] font-bold text-gray-900") Admin
+              span(class="text-[14px] font-bold text-gray-900")= usuario ? usuario.nombre : 'Admin'
               span(class="text-[12px] text-gray-500") Administrador
 
           a(href="/login", class="no-underline")
@@ -64,9 +64,9 @@ html(lang="es")
         //- ENCABEZADO
         header(class="mb-[30px]")
           h2(class="text-[24px] font-bold mb-[5px] text-gray-900") Verificación de Médicos
-          p(class="text-[14px] text-gray-500 m-0") Revisa y aprueba las solicitudes de registro de médicos
+          p(class="text-[14px] text-gray-500 m-0") Revisa la información profesional, la foto y aprueba o rechaza las solicitudes
 
-        //- TARJETAS DE RESUMEN / ESTADÍSTICAS
+        //- TARJETAS DE RESUMEN / ESTADÍSTICAS DINÁMICAS
         section(class="grid grid-cols-1 sm:grid-cols-3 gap-[20px] mb-[30px]")
           
           //- Pendientes
@@ -75,7 +75,7 @@ html(lang="es")
               span(class="text-[14px] font-bold text-gray-800") Pendientes
               i(data-lucide="clock", class="w-[20px] h-[20px] text-gray-700")
             div
-              div(class="text-[28px] font-bold text-gray-900 leading-none mb-[5px]") 2
+              div(class="text-[28px] font-bold text-gray-900 leading-none mb-[5px]")= medicosPendientes ? medicosPendientes.length : 0
               span(class="text-[13px] text-gray-400 font-medium") Solicitudes por revisar
 
           //- Verificados
@@ -84,158 +84,169 @@ html(lang="es")
               span(class="text-[14px] font-bold text-gray-800") Verificados
               i(data-lucide="check-circle-2", class="w-[20px] h-[20px] text-gray-700")
             div
-              div(class="text-[28px] font-bold text-gray-900 leading-none mb-[5px]") 1
+              div(class="text-[28px] font-bold text-gray-900 leading-none mb-[5px]")= medicosAprobados ? medicosAprobados.length : 0
               span(class="text-[13px] text-gray-400 font-medium") Médicos aprobados
 
-          //- Rechazados
+          //- Total
           div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] flex flex-col justify-between h-[130px]")
             div(class="flex justify-between items-start")
-              span(class="text-[14px] font-bold text-gray-800") Rechazados
-              i(data-lucide="x-circle", class="w-[20px] h-[20px] text-gray-700")
+              span(class="text-[14px] font-bold text-gray-800") Total Solicitudes
+              i(data-lucide="users", class="w-[20px] h-[20px] text-gray-700")
             div
-              div(class="text-[28px] font-bold text-gray-900 leading-none mb-[5px]") 0
-              span(class="text-[13px] text-gray-400 font-medium") Solicitudes rechazadas
+              div(class="text-[28px] font-bold text-gray-900 leading-none mb-[5px]")= (medicosPendientes ? medicosPendientes.length : 0) + (medicosAprobados ? medicosAprobados.length : 0)
+              span(class="text-[13px] text-gray-400 font-medium") Registros procesados
 
         //- LISTA DE SOLICITUDES DE VERIFICACIÓN
         section
           div(class="mb-[20px]")
             h3(class="text-[16px] font-bold text-gray-900 m-0 mb-[3px]") Solicitudes de Verificación
-            p(class="text-[13px] text-gray-400 m-0") Revisa la documentación y aprueba o rechaza las solicitudes
+            p(class="text-[13px] text-gray-400 m-0") Revisa la documentación, foto, honorarios y decide sobre el alta del profesional
 
           div(class="flex flex-col gap-[20px]")
             
-            //- Tarjeta 1: Dr. Carlos Rodríguez
-            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm")
-              div(class="flex flex-col md:flex-row md:items-start justify-between gap-[15px] mb-[15px]")
-                div(class="flex items-center gap-[10px]")
-                  h4(class="text-[16px] font-bold text-gray-900 m-0") Dr. Carlos Rodríguez
-                  span(class="inline-flex items-center gap-[4px] px-[10px] py-[2px] rounded-[12px] text-[11px] font-semibold bg-gray-200 text-gray-700")
-                    i(data-lucide="clock", class="w-[12px] h-[12px]")
-                    | Pendiente
+            if medicosPendientes && medicosPendientes.length
+              each medico in medicosPendientes
+                div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col md:flex-row gap-[20px] items-start")
+                  
+                  //- FOTO DE PERFIL DEL MÉDICO
+                  div(class="w-[90px] h-[90px] rounded-[10px] bg-gray-100 border border-gray-200 overflow-hidden shrink-0 mx-auto md:mx-0")
+                    img(src= medico.foto ? `/uploads/documentos/${medico.foto}` : "img/doctor1.png", alt=`Dr. ${medico.nombre}`, class="w-full h-full object-cover")
 
-                //- Botones de acción
-                div(class="flex items-center gap-[10px] self-start md:self-auto")
-                  button(type="button", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm")
-                    i(data-lucide="check-circle-2", class="w-[14px] h-[14px]")
-                    | Aprobar
-                  button(type="button", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm")
-                    i(data-lucide="x-circle", class="w-[14px] h-[14px]")
-                    | Rechazar
+                  //- INFORMACIÓN PRINCIPAL
+                  div(class="flex-1 w-full")
+                    div(class="flex flex-col md:flex-row md:items-start justify-between gap-[15px] mb-[12px]")
+                      div(class="flex items-center gap-[10px] flex-wrap")
+                        h4(class="text-[16px] font-bold text-gray-900 m-0")= `Dr. ${medico.nombre} ${medico.apellido}`
+                        span(class="inline-flex items-center gap-[4px] px-[10px] py-[2px] rounded-[12px] text-[11px] font-semibold bg-gray-200 text-gray-700")
+                          i(data-lucide="clock", class="w-[12px] h-[12px]")
+                          | Pendiente
 
-              p(class="text-[14px] text-gray-500 m-0 mb-[15px]") Cardiología
+                      //- Botones de acción dinámicos
+                      div(class="flex items-center gap-[10px] self-start md:self-auto")
+                        form(method="POST" action=`/aprobar-medico/${medico.id}`)
+                          input(type="hidden" name="_csrf" value=csrfToken)
+                          button(type="submit", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer shadow-sm")
+                            i(data-lucide="check-circle-2", class="w-[14px] h-[14px] text-green-600")
+                            | Aprobar
 
-              div(class="grid grid-cols-1 md:grid-cols-2 gap-y-[6px] gap-x-[20px] text-[13px] mb-[20px]")
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Email:
-                  a(href="mailto:juan.perez@email.com", class="text-gray-600 underline hover:text-black") juan.perez@email.com
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Teléfono:
-                  span(class="text-gray-600") ++57 300 3213443
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Licencia:
-                  span(class="text-gray-800 font-bold") 1234
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Cédula:
-                  span(class="text-gray-600") CP-789012
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Experiencia:
-                  span(class="text-gray-800 font-bold") 8 años
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Aplicado:
-                  span(class="text-gray-600") 28/2/2026
+                        button(
+                          type="button", 
+                          onclick=`abrirModalRechazo(${medico.id}, 'Dr. ${medico.nombre} ${medico.apellido}')`, 
+                          class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer shadow-sm"
+                        )
+                          i(data-lucide="x-circle", class="w-[14px] h-[14px] text-red-600")
+                          | Rechazar
 
-              a(href="#", class="inline-flex items-center gap-[8px] text-[13px] text-gray-500 hover:text-black no-underline font-medium")
-                i(data-lucide="folder", class="w-[16px] h-[16px]")
-                | Ver documento de verificación
+                    p(class="text-[13px] font-semibold text-black mb-[12px]")= medico.especialidad || 'Medicina General'
 
-            //- Tarjeta 2: Dr. Ana Martínez
-            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm")
-              div(class="flex flex-col md:flex-row md:items-start justify-between gap-[15px] mb-[15px]")
-                div(class="flex items-center gap-[10px]")
-                  h4(class="text-[16px] font-bold text-gray-900 m-0") Dr. Ana Martínez
-                  span(class="inline-flex items-center gap-[4px] px-[10px] py-[2px] rounded-[12px] text-[11px] font-semibold bg-gray-200 text-gray-700")
-                    i(data-lucide="clock", class="w-[12px] h-[12px]")
-                    | Pendiente
+                    //- DETALLES DEL MÉDICO (INCLUYENDO NUEVOS CAMPOS)
+                    div(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-[8px] gap-x-[20px] text-[13px] mb-[15px]")
+                      div(class="flex items-center gap-[5px]")
+                        span(class="text-gray-400 font-medium") Email:
+                        a(href=`mailto:${medico.email}`, class="text-gray-600 underline hover:text-black")= medico.email
+                      
+                      div(class="flex items-center gap-[5px]")
+                        span(class="text-gray-400 font-medium") Teléfono:
+                        span(class="text-gray-600")= medico.telefono || 'No registrado'
+                      
+                      div(class="flex items-center gap-[5px]")
+                        span(class="text-gray-400 font-medium") Documento:
+                        span(class="text-gray-800 font-bold")= medico.numero_documento || 'Sin número'
+                      
+                      div(class="flex items-center gap-[5px]")
+                        span(class="text-gray-400 font-medium") Tarjeta Profesional:
+                        span(class="text-gray-600")= medico.tarjeta_profesional || 'No registrada'
 
-                //- Botones de acción
-                div(class="flex items-center gap-[10px] self-start md:self-auto")
-                  button(type="button", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm")
-                    i(data-lucide="check-circle-2", class="w-[14px] h-[14px]")
-                    | Aprobar
-                  button(type="button", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm")
-                    i(data-lucide="x-circle", class="w-[14px] h-[14px]")
-                    | Rechazar
+                      div(class="flex items-center gap-[5px]")
+                        span(class="text-gray-400 font-medium") Valor Consulta:
+                        span(class="text-gray-900 font-bold")= medico.precio_consulta ? `$${medico.precio_consulta}` : 'No especificado'
 
-              p(class="text-[14px] text-gray-500 m-0 mb-[15px]") Pediatría
+                      div(class="col-span-full flex items-center gap-[5px]")
+                        span(class="text-gray-400 font-medium") Horarios:
+                        span(class="text-gray-700 bg-gray-50 px-2 py-0.5 rounded border border-gray-200")= medico.horarios || 'No especificados'
 
-              div(class="grid grid-cols-1 md:grid-cols-2 gap-y-[6px] gap-x-[20px] text-[13px] mb-[20px]")
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Email:
-                  a(href="mailto:ana.martinez@email.com", class="text-gray-600 underline hover:text-black") ana.martinez@email.com
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Teléfono:
-                  span(class="text-gray-600") ++57 300 3213443
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Licencia:
-                  span(class="text-gray-800 font-bold") 4321
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Cédula:
-                  span(class="text-gray-600") CP-789012
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Experiencia:
-                  span(class="text-gray-800 font-bold") 5 años
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Aplicado:
-                  span(class="text-gray-600") 28/2/2026
+                    //- ENLACE AL DOCUMENTO DE VERIFICACIÓN
+                    div(class="pt-2 border-t border-gray-100")
+                      if medico.documento_verificacion
+                        a(href=`/uploads/documentos/${medico.documento_verificacion}`, target="_blank", class="inline-flex items-center gap-[8px] text-[13px] text-gray-600 hover:text-black no-underline font-medium")
+                          i(data-lucide="folder", class="w-[16px] h-[16px] text-gray-500")
+                          | Ver documento de verificación profesional
+                      else
+                        span(class="text-[13px] text-gray-400 italic") Sin documento adjunto
 
-              a(href="#", class="inline-flex items-center gap-[8px] text-[13px] text-gray-500 hover:text-black no-underline font-medium")
-                i(data-lucide="folder", class="w-[16px] h-[16px]")
-                | Ver documento de verificación
+            else
+              //- Estado vacío si no hay médicos por revisar
+              div(class="bg-white border border-gray-200 rounded-[12px] p-[30px] text-center shadow-sm")
+                i(data-lucide="user-check", class="w-[32px] h-[32px] text-gray-400 mx-auto mb-[10px]")
+                h4(class="text-[16px] font-bold text-gray-700 m-0") No hay solicitudes pendientes
+                p(class="text-[13px] text-gray-400 mt-[5px]") Todos los médicos han sido revisados y autorizados.
 
-            //- Tarjeta 3: Dr. Luis González
-            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm")
-              div(class="flex flex-col md:flex-row md:items-start justify-between gap-[15px] mb-[15px]")
-                div(class="flex items-center gap-[10px]")
-                  h4(class="text-[16px] font-bold text-gray-900 m-0") Dr. Luis González
-                  span(class="inline-flex items-center gap-[4px] px-[10px] py-[2px] rounded-[12px] text-[11px] font-bold bg-black text-white")
-                    i(data-lucide="user-check", class="w-[12px] h-[12px]")
-                    | Verificado
+    //- POP-UP MODAL DE RECHAZO
+    div#modalRechazo(class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4")
+      div(class="bg-white rounded-[12px] shadow-xl max-w-md w-full p-[24px] relative border border-gray-200")
+        
+        //- Encabezado Modal
+        div(class="flex justify-between items-center pb-[12px] border-b border-gray-200 mb-[16px]")
+          div(class="flex items-center gap-[8px]")
+            i(data-lucide="alert-circle", class="w-[20px] h-[20px] text-red-600")
+            h3(class="text-[18px] font-bold text-gray-900 m-0") Rechazar Solicitud
+          button(type="button", onclick="cerrarModalRechazo()", class="text-gray-400 hover:text-gray-600 text-[20px] font-bold cursor-pointer border-none bg-transparent flex items-center justify-center")
+            i(data-lucide="x", class="w-[20px] h-[20px]")
 
-                //- Botones de acción
-                div(class="flex items-center gap-[10px] self-start md:self-auto")
-                  button(type="button", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm")
-                    i(data-lucide="check-circle-2", class="w-[14px] h-[14px]")
-                    | Aprobar
-                  button(type="button", class="flex items-center gap-[5px] px-[14px] py-[6px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm")
-                    i(data-lucide="x-circle", class="w-[14px] h-[14px]")
-                    | Rechazar
+        //- Formulario de Rechazo
+        form#formRechazarMedico(method="POST", action="")
+          if csrfToken
+            input(type="hidden", name="_csrf", value=csrfToken)
 
-              p(class="text-[14px] text-gray-500 m-0 mb-[15px]") Dermatología
+          p(class="text-[14px] text-gray-600 mb-[16px] m-0")
+            | Vas a rechazar la solicitud de: 
+            strong#nombreMedicoModal(class="text-gray-900 font-bold")
 
-              div(class="grid grid-cols-1 md:grid-cols-2 gap-y-[6px] gap-x-[20px] text-[13px] mb-[20px]")
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Email:
-                  a(href="mailto:luis.gonzalez@email.com", class="text-gray-600 underline hover:text-black") luis.gonzalez@email.com
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Teléfono:
-                  span(class="text-gray-600") ++57 300 3213443
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Licencia:
-                  span(class="text-gray-800 font-bold") 9876
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Cédula:
-                  span(class="text-gray-600") CP-789012
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Experiencia:
-                  span(class="text-gray-800 font-bold") 12 años
-                div(class="flex items-center gap-[5px]")
-                  span(class="text-gray-400 font-medium") Aplicado:
-                  span(class="text-gray-600") 28/2/2026
+          div(class="mb-[20px]")
+            label(for="motivo", class="block text-[12px] font-bold text-gray-700 mb-[6px] uppercase tracking-wider") Motivo del rechazo
+            textarea#motivo(
+              name="motivo" 
+              rows="4" 
+              required=true 
+              placeholder="Escribe la razón detallada del rechazo (ej: Tarjeta profesional vencida, documento ilegible, etc.)..."
+              class="w-full p-[10px] border border-gray-300 rounded-[8px] text-[13px] outline-none focus:border-red-500 transition-colors resize-none"
+            )
 
-              a(href="#", class="inline-flex items-center gap-[8px] text-[13px] text-gray-500 hover:text-black no-underline font-medium")
-                i(data-lucide="folder", class="w-[16px] h-[16px]")
-                | Ver documento de verificación
+          //- Botones de acción
+          div(class="flex justify-end gap-[10px]")
+            button(
+              type="button", 
+              onclick="cerrarModalRechazo()", 
+              class="px-[16px] py-[8px] bg-gray-100 text-gray-700 text-[13px] font-bold rounded-[8px] hover:bg-gray-200 transition-colors cursor-pointer border-none"
+            ) Cancelar
 
-    //- Script para inicializar los íconos de Lucide
+            button(
+              type="submit", 
+              class="px-[16px] py-[8px] bg-red-600 text-white text-[13px] font-bold rounded-[8px] hover:bg-red-700 transition-colors shadow-sm cursor-pointer border-none flex items-center gap-[6px]"
+            )
+              i(data-lucide="x-circle", class="w-[16px] h-[16px]")
+              | Confirmar Rechazo
+
+    //- Script para inicializar íconos y controlar el Modal
     script.
       lucide.createIcons();
+
+      function abrirModalRechazo(idMedico, nombreCompleto) {
+        const modal = document.getElementById('modalRechazo');
+        const form = document.getElementById('formRechazarMedico');
+        const spanNombre = document.getElementById('nombreMedicoModal');
+        
+        form.action = `/rechazar-medico/${idMedico}`;
+        spanNombre.textContent = nombreCompleto;
+        
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function cerrarModalRechazo() {
+        const modal = document.getElementById('modalRechazo');
+        const textarea = document.getElementById('motivo');
+        
+        if (textarea) textarea.value = '';
+        modal.classList.add('hidden');
+      }
