@@ -9,7 +9,8 @@ const db = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: "mysql",
+    dialect: "postgres",
+    logging: process.env.NODE_ENV === "test" ? false : console.log,
     define: {
       timestamps: true,
     },
@@ -19,7 +20,6 @@ const db = new Sequelize(
       acquire: 30000,
       idle: 10000,
     },
-    operatorAliases: true,
   }
 );
 

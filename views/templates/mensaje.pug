@@ -1,9 +1,12 @@
-extends ../layout/includes/header
-
-block contenido
-    .py-10
-        h1.text-4xl.my-10.font-extrabold.text-center SIGMI
-            span.font-normal SENA
-        h2.text-center.text-2xl.font-extrabold=tituloPagina
-
-        p.text-xl.font-bold.text-center.my-10= mensaje
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= tituloPagina
+    script(src="https://cdn.tailwindcss.com")
+  body(class="m-0 p-0 box-border bg-gray-50 flex items-center justify-center min-h-screen")
+    div(class="max-w-md w-full bg-white p-8 rounded-xl shadow-md text-center")
+      h1(class="text-2xl font-bold text-gray-900 mb-4")= tituloPagina
+      p(class="text-gray-600 text-sm mb-6")= mensaje
+      a(href="/login", class="inline-block bg-black text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors") Iniciar Sesión

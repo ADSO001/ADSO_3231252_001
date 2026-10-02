@@ -14,7 +14,7 @@ html(lang="es")
 
       //- Zona de la Imagen
       div(class="relative w-full h-[300px] md:w-[40%] md:h-screen md:sticky md:top-0")
-        img(src="img/doctor2.jpg", alt="Doctor", class="w-full h-full object-cover block")
+        img(src="/img/doctor2.jpg", alt="Doctor", class="w-full h-full object-cover block")
 
       //- Zona del Formulario
       div(class="w-full py-[40px] px-[20px] md:w-[60%] md:py-[50px] md:px-[80px]")
@@ -24,7 +24,7 @@ html(lang="es")
           a(href="/login", class="no-underline text-white bg-black px-[16px] py-[8px] rounded-[6px] text-[14px] flex items-center gap-[8px] font-medium")
             i(class="fa fa-arrow-left")
             |  Atrás
-          img(src="img/logo.png", alt="Logo SIGCMI", class="h-[70px] object-contain")
+          img(src="/img/logo.png", alt="Logo SIGCMI", class="h-[70px] object-contain")
 
         //- Títulos
         div(class="mb-[25px]")
@@ -33,9 +33,17 @@ html(lang="es")
             |  Crear Nueva Cuenta
           p(class="text-[#888] text-[14px] mt-[5px]") Completa el formulario para registrarte en SIGCMI
 
+        //- Bloque de Errores en Cajas Elegantes
+        if errores
+          div(class="w-full mb-6 flex flex-col gap-2")
+            each error in errores
+              div(class="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded-r-lg text-xs font-semibold flex items-center gap-2.5 shadow-sm text-left w-full")
+                i(class="fa fa-circle-exclamation text-red-500 text-sm flex-shrink-0")
+                span= error.msg
+
         p(class="font-bold text-[14px] mb-[12px] text-[#333]") Tipo de Usuario
 
-        //- Selector Tipo de Usuario (Paciente Activo)
+        //- Selector Tipo de Usuario
         div(class="flex flex-col sm:flex-row gap-[20px] mb-[30px]")
           a(href="/medicalRegistration", class="flex-1 no-underline block")
             button(type="button", class="w-full p-[18px] border border-[#d1d5db] rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer hover:border-gray-400 transition-colors text-left")
@@ -53,75 +61,74 @@ html(lang="es")
 
         h3(class="text-[18px] mt-[40px] mb-[25px] text-[#1a1a1a] border-b border-[#f0f0f0] pb-[10px] font-bold") Información Personal
 
-        //- Formulario de Campos de Paciente
-        form
+        //- Formulario con método POST y token CSRF
+        form(method="POST" action="/pacientRegistration")
+          input(type="hidden" name="_csrf" value=csrfToken)
+
           div(class="grid grid-cols-1 gap-x-[20px] gap-y-[25px] md:grid-cols-2")
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Nombre
-              input(type="text", placeholder="Ingrese su nombre", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="text", name="nombre", placeholder="Ingrese su nombre", value=usuario ? usuario.nombre : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Apellido
-              input(type="text", placeholder="Ingrese su apellido", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="text", name="apellido", placeholder="Ingrese su apellido", value=usuario ? usuario.apellido : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div(class="col-span-1 md:col-span-2")
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Email
-              input(type="email", placeholder="Ingrese su correo electrónico", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="email", name="email", placeholder="Ingrese su correo electrónico", value=usuario ? usuario.email : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de teléfono
-              input(type="text", placeholder="Teléfono", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="text", name="telefono", placeholder="Teléfono", value=usuario ? usuario.telefono : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Fecha de nacimiento
-              input(type="date", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+              input(type="date", name="fecha_nacimiento", value=usuario ? usuario.fecha_nacimiento : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Contraseña
-              input(type="password", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
-              p(class="text-[11px] text-[#999] mt-[6px] m-0") Mínimo 8 - 12 Caracteres. Debe contener mayúscula y especial.
+              input(type="password", name="password", placeholder="Mínimo 6 caracteres", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              p(class="text-[11px] text-[#999] mt-[6px] m-0") Mínimo 6 caracteres.
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Confirmar contraseña
-              input(type="password", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="password", name="repeat_password", placeholder="Repite tu contraseña", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Género
-              select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
-                option Seleccionar
-                option Masculino
-                option Femenino
-                option Otro
+              select(name="genero", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option(value="") Seleccionar
+                option(value="Masculino", selected=usuario && usuario.genero === 'Masculino') Masculino
+                option(value="Femenino", selected=usuario && usuario.genero === 'Femenino') Femenino
+                option(value="Otro", selected=usuario && usuario.genero === 'Otro') Otro
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Tipo de documento
-              select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
-                option Seleccionar
-                option Cédula de ciudadanía
-                option Tarjeta de identidad
-                option Registro civil
-                option Cédula de extranjería
-                option Pasaporte
-                option Permiso Especial de Permanencia (PEP)
+              select(name="tipo_documento", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option(value="") Seleccionar
+                option(value="Cédula de ciudadanía", selected=usuario && usuario.tipo_documento === 'Cédula de ciudadanía') Cédula de ciudadanía
+                option(value="Tarjeta de identidad", selected=usuario && usuario.tipo_documento === 'Tarjeta de identidad') Tarjeta de identidad
+                option(value="Registro civil", selected=usuario && usuario.tipo_documento === 'Registro civil') Registro civil
+                option(value="Cédula de extranjería", selected=usuario && usuario.tipo_documento === 'Cédula de extranjería') Cédula de extranjería
+                option(value="Pasaporte", selected=usuario && usuario.tipo_documento === 'Pasaporte') Pasaporte
+                option(value="Permiso Especial de Permanencia (PEP)", selected=usuario && usuario.tipo_documento === 'Permiso Especial de Permanencia (PEP)') Permiso Especial de Permanencia (PEP)
 
             div
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de documento
-              input(type="text", placeholder="Número", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="text", name="numero_documento", placeholder="Número", value=usuario ? usuario.numero_documento : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div(class="col-span-1 md:col-span-2")
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Dirección
-              input(type="text", placeholder="Ingrese su dirección", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="text", name="direccion", placeholder="Ingrese su dirección", value=usuario ? usuario.direccion : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
             div(class="col-span-1 md:col-span-2")
               p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de teléfono de emergencia
-              input(type="text", placeholder="Teléfono de contacto", class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              input(type="text", name="telefono_emergencia", placeholder="Teléfono de contacto", value=usuario ? usuario.telefono_emergencia : '', class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-          //- Botón de Envío
+          //- Botón de Envío Real (type="submit")
           div(class="mt-[30px] pb-[20px]")
-            a(href="index.html", class="no-underline block")
-              button(type="button", class="w-full bg-black text-white py-[16px] border-none rounded-[8px] text-[16px] font-bold cursor-pointer flex justify-center items-center gap-[10px] hover:bg-gray-800 transition-colors")
-                i(class="fa fa-user-plus")
-                |  Crear cuenta
-
-    script(src="script/UHW01.js")
+            button(type="submit", class="w-full bg-black text-white py-[16px] border-none rounded-[8px] text-[16px] font-bold cursor-pointer flex justify-center items-center gap-[10px] hover:bg-gray-800 transition-colors")
+              i(class="fa fa-user-plus")
+              |  Crear cuenta

@@ -3,7 +3,7 @@ html(lang="es")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Crear Cuenta Médico - SIGCMI
+    title Registro Médico - SIGCMI
     link(rel="stylesheet" href="/css/output.css")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
     style.
@@ -12,21 +12,17 @@ html(lang="es")
   body(class="m-0 p-0 box-border bg-white")
     div(class="flex min-h-screen flex-col md:flex-row")
 
-     
       div(class="relative w-full h-[300px] md:w-[40%] md:h-screen md:sticky md:top-0")
         img(src="img/doctor2.jpg" alt="Doctor" class="w-full h-full object-cover block")
 
-     
       div(class="w-full py-[40px] px-[20px] md:w-[60%] md:py-[50px] md:px-[80px]")
 
-        
         div(class="flex justify-between items-center mb-[40px]")
           a(href="/login" class="no-underline text-white bg-black px-[16px] py-[8px] rounded-[6px] text-[14px] flex items-center gap-[8px] font-medium")
             i(class="fa fa-arrow-left")
             |  Atrás
           img(src="img/logo.png" alt="Logo SIGCMI" class="h-[70px] object-contain")
 
-        
         div(class="mb-[25px]")
           h1(class="text-[28px] text-[#1a1a1a] flex items-center gap-[10px] font-bold m-0")
             i(class="fa fa-users text-black")
@@ -35,124 +31,138 @@ html(lang="es")
 
         p(class="font-bold text-[14px] mb-[12px] text-[#333]") Tipo de Usuario
 
-       
         div(class="flex flex-col sm:flex-row gap-[20px] mb-[30px]")
-          a(href="ccmedico.html" class="flex-1 no-underline block")
-            button(class="w-full p-[18px] border-[2px] border-black rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer shadow-sm text-left")
+          a(href="/medicalRegistration" class="flex-1 no-underline block")
+            button(type="button" class="w-full p-[18px] border-[2px] border-black rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer shadow-sm text-left")
               i(class="fa fa-user-md text-[26px] text-black")
               div
                 p(class="font-bold text-[15px] mb-[4px] text-black m-0") Médico
                 p(class="text-[#999] text-[13px] m-0") Registrarme como profesional
 
           a(href="/pacientRegistration" class="flex-1 no-underline block")
-            button(class="w-full p-[18px] border border-[#d1d5db] rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer hover:border-gray-400 transition-colors text-left")
+            button(type="button" class="w-full p-[18px] border border-[#d1d5db] rounded-[8px] bg-white flex items-center gap-[15px] cursor-pointer hover:border-gray-400 transition-colors text-left")
               i(class="fa fa-user text-[26px] text-black")
               div
                 p(class="font-bold text-[15px] mb-[4px] text-black m-0") Paciente
                 p(class="text-[#999] text-[13px] m-0") Registrarme para agendar citas
 
-     
         div(class="bg-white rounded-[8px] border border-[#7fb5e9] p-[15px] flex gap-[12px] items-start mb-[30px]")
           i(class="fa fa-info-circle text-[16px] text-black mt-[2px]")
           p(class="text-[13px] text-[#555] leading-relaxed m-0") Como médico, tu cuenta requerirá verificación administrativa antes de ser activada. Deberás proporcionar documentación que acredite tu título profesional.
 
-        h3(class="text-[18px] mt-[40px] mb-[25px] text-[#1a1a1a] border-b border-[#f0f0f0] pb-[10px] font-bold") Información Personal
+        if errores && errores.length > 0
+          div(class="mb-6 space-y-2")
+            each error in errores
+              p(class="bg-red-500 text-white text-xs font-bold p-3 rounded-md text-center")= typeof error === 'string' ? error : (error.msg || error.message || JSON.stringify(error))
 
-     
-        div(class="grid grid-cols-1 gap-x-[20px] gap-y-[25px] md:grid-cols-2")
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Nombre
-            input(type="text" placeholder="Ingrese su nombre" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+        form(method="POST" action="/medicalRegistration" enctype="multipart/form-data" noValidate)
+          input(type="hidden" name="_csrf" value=csrfToken)
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Apellido
-            input(type="text" placeholder="Ingrese su apellido" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+          h3(class="text-[18px] mt-[20px] mb-[25px] text-[#1a1a1a] border-b border-[#f0f0f0] pb-[10px] font-bold") Información Personal
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Tipo de documento
-            select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
-              option Seleccionar
-              option Cédula de ciudadanía
-              option Tarjeta de identidad
-              option Registro civil
-              option Cédula de extranjería
-              option Pasaporte
-              option Permiso Especial de Permanencia (PEP)
+          div(class="grid grid-cols-1 gap-x-[20px] gap-y-[25px] md:grid-cols-2")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Nombre
+              input(type="text" name="nombre" value= usuario ? usuario.nombre : '' placeholder="Ingrese su nombre" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de documento
-            input(type="text" placeholder="Número" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Apellido
+              input(type="text" name="apellido" value= usuario ? usuario.apellido : '' placeholder="Ingrese su apellido" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Género
-            select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
-              option Seleccionar
-              option Masculino
-              option Femenino
-              option Otro
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Tipo de documento
+              select(name="tipo_documento" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option(value="" disabled selected=(!usuario || !usuario.tipo_documento)) Seleccionar
+                option(value="Cédula de ciudadanía" selected=(usuario && usuario.tipo_documento === "Cédula de ciudadanía")) Cédula de ciudadanía
+                option(value="Tarjeta de identidad" selected=(usuario && usuario.tipo_documento === "Tarjeta de identidad")) Tarjeta de identidad
+                option(value="Registro civil" selected=(usuario && usuario.tipo_documento === "Registro civil")) Registro civil
+                option(value="Cédula de extranjería" selected=(usuario && usuario.tipo_documento === "Cédula de extranjería")) Cédula de extranjería
+                option(value="Pasaporte" selected=(usuario && usuario.tipo_documento === "Pasaporte")) Pasaporte
+                option(value="Permiso Especial de Permanencia (PEP)" selected=(usuario && usuario.tipo_documento === "Permiso Especial de Permanencia (PEP)")) Permiso Especial de Permanencia (PEP)
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Teléfono
-            input(type="text" placeholder="Teléfono" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de documento
+              input(type="text" name="numero_documento" value= usuario ? usuario.numero_documento : '' placeholder="Número" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Contraseña
-            input(type="password" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
-            p(class="text-[11px] text-[#999] mt-[6px] m-0") Mínimo 8 - 12 Caracteres. Debe contener una letra mayúscula y un carácter especial.
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Género
+              select(name="genero" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option(value="" disabled selected=(!usuario || !usuario.genero)) Seleccionar
+                option(value="Masculino" selected=(usuario && usuario.genero === "Masculino")) Masculino
+                option(value="Femenino" selected=(usuario && usuario.genero === "Femenino")) Femenino
+                option(value="Otro" selected=(usuario && usuario.genero === "Otro")) Otro
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Confirmar contraseña
-            input(type="password" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Teléfono
+              input(type="text" name="telefono" value= usuario ? usuario.telefono : '' placeholder="Teléfono" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-          div(class="col-span-1 md:col-span-2")
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Dirección
-            input(type="text" placeholder="Ingrese su dirección" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Contraseña
+              input(type="password" name="password" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+              p(class="text-[11px] text-[#999] mt-[6px] m-0") Mínimo 8 Caracteres.
 
-          div(class="col-span-1 md:col-span-2")
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Email
-            input(type="email" placeholder="Correo electrónico" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Confirmar contraseña
+              input(type="password" name="repetir_password" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-        h3(class="text-[18px] mt-[40px] mb-[25px] text-[#1a1a1a] border-b border-[#f0f0f0] pb-[10px] font-bold") Información Profesional
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Dirección
+              input(type="text" name="direccion" value= usuario ? usuario.direccion : '' placeholder="Ingrese su dirección" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-       
-        div(class="grid grid-cols-1 gap-x-[20px] gap-y-[25px] md:grid-cols-2")
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Especialidad
-            select(class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
-              option Seleccionar
-              option Medicina General
-              option Dermatología
-              option Pediatría
-              option Cardiología
-              option Ginecología
-              option Oftalmología
-              option Traumatología
-              option Odontología
-              option Neurología
-              option Psiquiatría
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Email
+              input(type="email" name="email" value= usuario ? usuario.email : '' placeholder="Correo electrónico" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de tarjeta profesional
-            input(type="text" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+          h3(class="text-[18px] mt-[40px] mb-[25px] text-[#1a1a1a] border-b border-[#f0f0f0] pb-[10px] font-bold") Información Profesional
 
-          div
-            p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Años de experiencia
-            input(type="number" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+          div(class="grid grid-cols-1 gap-x-[20px] gap-y-[25px] md:grid-cols-2")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Especialidad
+              select(name="especialidad" class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white text-gray-600 cursor-pointer")
+                option(value="" disabled selected=(!usuario || !usuario.especialidad)) Seleccionar
+                option(value="Medicina General" selected=(usuario && usuario.especialidad === "Medicina General")) Medicina General
+                option(value="Dermatología" selected=(usuario && usuario.especialidad === "Dermatología")) Dermatología
+                option(value="Pediatría" selected=(usuario && usuario.especialidad === "Pediatría")) Pediatría
+                option(value="Cardiología" selected=(usuario && usuario.especialidad === "Cardiología")) Cardiología
+                option(value="Ginecología" selected=(usuario && usuario.especialidad === "Ginecología")) Ginecología
+                option(value="Oftalmología" selected=(usuario && usuario.especialidad === "Oftalmología")) Oftalmología
+                option(value="Traumatología" selected=(usuario && usuario.especialidad === "Traumatología")) Traumatología
+                option(value="Odontología" selected=(usuario && usuario.especialidad === "Odontología")) Odontología
+                option(value="Neurología" selected=(usuario && usuario.especialidad === "Neurología")) Neurología
+                option(value="Psiquiatría" selected=(usuario && usuario.especialidad === "Psiquiatría")) Psiquiatría
 
-       
-        div(class="my-[30px]")
-          p(class="font-bold text-[14px] mb-[6px] text-[#333]") Documento de verificación profesional
-          p(class="text-[#999] text-[12px] mb-[12px]") Sube una copia de tu título médico, cédula profesional o certificado de especialidad (PDF, JPG, PNG - Máx. 5MB)
-          div(class="w-full p-[15px] border border-dashed border-[#b0b0b0] rounded-[6px] bg-[#fafafa] flex items-center")
-            input(type="file" class="w-full text-[13px] text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Número de tarjeta profesional
+              input(type="text" name="tarjeta_profesional" value= usuario ? usuario.tarjeta_profesional : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-       
-        div(class="bg-white rounded-[8px] border border-[#7fb5e9] p-[15px] flex gap-[12px] items-start mb-[25px]")
-          i(class="fa fa-clock text-[16px] text-black mt-[2px]")
-          p(class="text-[13px] text-[#555] leading-relaxed m-0") Nuestro equipo administrativo revisará tu documentación en un plazo de 24-48 horas. Te notificaremos por email cuando tu cuenta sea aprobada.
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[13px] text-[#333]") Años de experiencia
+              input(type="number" name="experiencia" value= usuario ? usuario.experiencia : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
 
-       
-        a(href="index.html" class="no-underline block pb-[20px]")
-          button(class="w-full bg-black text-white py-[16px] border-none rounded-[8px] text-[16px] font-bold cursor-pointer flex justify-center items-center gap-[10px] hover:bg-gray-800 transition-colors")
+            div
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Valor por consulta ($)
+              input(type="number" step="0.01" name="precio_consulta" placeholder="Ej: 50.00" value= usuario ? usuario.precio_consulta : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+            div(class="col-span-1 md:col-span-2")
+              p(class="text-[13px] font-semibold mb-[8px] text-[#333]") Horarios de atención
+              input(type="text" name="horarios" placeholder="Ej: Lun-Vie: 8:00 AM - 2:00 PM" value= usuario ? usuario.horarios : '' class="w-full p-[12px] border border-[#d1d5db] rounded-[6px] text-[14px] outline-none focus:border-black bg-white")
+
+          div(class="my-[20px]")
+            p(class="font-bold text-[14px] mb-[6px] text-[#333]") Foto de perfil del médico
+            p(class="text-[#999] text-[12px] mb-[12px]") Sube una fotografía profesional (JPG, PNG)
+            div(class="w-full p-[15px] border border-dashed border-[#b0b0b0] rounded-[6px] bg-[#fafafa] flex items-center")
+              input(type="file" name="foto" class="w-full text-[13px] text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer")
+
+          div(class="my-[30px]")
+            p(class="font-bold text-[14px] mb-[6px] text-[#333]") Documento de verificación profesional
+            p(class="text-[#999] text-[12px] mb-[12px]") Sube una copia de tu título médico, cédula profesional o certificado (PDF, JPG, PNG - Máx. 5MB)
+            div(class="w-full p-[15px] border border-dashed border-[#b0b0b0] rounded-[6px] bg-[#fafafa] flex items-center")
+              input(type="file" name="documento_verificacion" class="w-full text-[13px] text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer")
+
+          div(class="bg-white rounded-[8px] border border-[#7fb5e9] p-[15px] flex gap-[12px] items-start mb-[25px]")
+            i(class="fa fa-clock text-[16px] text-black mt-[2px]")
+            p(class="text-[13px] text-[#555] leading-relaxed m-0") Nuestro equipo administrativo revisará tu documentación en un plazo de 24-48 horas.
+
+          button(type="submit" class="w-full bg-black text-white py-[16px] border-none rounded-[8px] text-[16px] font-bold cursor-pointer flex justify-center items-center gap-[10px] hover:bg-gray-800 transition-colors mb-[20px]")
             i(class="fa fa-user-plus")
             |  Crear cuenta

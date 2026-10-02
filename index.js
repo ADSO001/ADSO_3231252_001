@@ -1,34 +1,23 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import usuariosRouter from "./routes/usuariosRoutes.js";
-import medicalRouter from "./routes/medicalRoutes.js";
-import adminRouter from "./routes/adminRoutes.js";
+import app from "./app.js";
 import db from "./config/db.js";
+import Cita from "./models/Cita.js";
+import './models/index.js';
 
-// Configuración para __dirname en proyectos con ES Modules (import)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const port = process.env.PORT || 3000;
 
-const app = express();
+// Solo se autentica, sincroniza y levanta el puerto si NO estamos ejecutando los tests
+if (process.env.NODE_ENV !== 'test') {
+  try {
+    await db.authenticate();
+    await db.sync({ alter: true });
+    console.log("La conexión a la BD es exitosa");
 
+    app.listen(port, () => {
+      console.log(`Servidor funcionando en el puerto ${port}`);
+    });
+  } catch (error) {
+    console.error("No se puede conectar", error);
+  }
+}
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.use("/", usuariosRouter);
-app.use("/", medicalRouter)
-app.use("/", adminRouter);
-
-const port = 3000;
-
-app.listen(port, () => {
-  console.log(`Servidor funcionando en el puerto ${port}`);
-});
+export default app;
