@@ -9,7 +9,8 @@ const db = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: "postgres", // <-- CAMBIADO: Estaba en "mysql"
+    dialect: "postgres",
+    logging: process.env.NODE_ENV === "test" ? false : console.log,
     define: {
       timestamps: true,
     },
