@@ -149,7 +149,8 @@ const formularioMedico = (req, res) => {
 
 const medicalPanel = (req, res) => {
     res.render("medicalPanel", {
-        tituloPagina: "Panel del Médico"
+        tituloPagina: "Panel del Médico",
+        medico: req.usuario
     });
 };
 

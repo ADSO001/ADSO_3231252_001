@@ -16,8 +16,8 @@ html(lang="es")
       div(class="flex items-center")
         img(src="img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
         div(class="border border-gray-300 rounded-[8px] px-[15px] py-[5px] ml-[20px]")
-          p#nombreMedico(class="text-[14px] font-bold m-0") Dra. María González
-          p#especialidadMedico(class="text-[12px] text-gray-500 m-0") Medicina General
+          p#nombreMedico(class="text-[14px] font-bold m-0")= medico ? `Dr. ${medico.nombre}` : 'Dr. Médico'
+          p#especialidadMedico(class="text-[12px] text-gray-500 m-0")= medico && medico.especialidad ? medico.especialidad : 'Medicina General'
 
       a(href="/login", class="no-underline ml-auto")
         button#logout(type="button", class="bg-black text-white px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:opacity-70 transition-opacity")
