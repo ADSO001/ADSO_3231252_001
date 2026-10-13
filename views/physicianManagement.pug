@@ -78,7 +78,7 @@ html(lang="es")
         div(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[25px]")
           if medicos && medicos.length > 0
             each medico in medicos
-              div(class="bg-white border border-gray-200 rounded-[8px] overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-shadow")
+              div(class="tarjeta-medico bg-white border border-gray-200 rounded-[8px] overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-shadow")
                 div(class="relative h-[180px] bg-gray-100")
                   img(src= medico.foto ? `/uploads/documentos/${medico.foto}` : "img/doctor1.png", alt=`Dr. ${medico.nombre}`, class="w-full h-full object-cover")
                   span(class="absolute top-[15px] right-[15px] bg-white px-[12px] py-[6px] rounded-[20px] text-[12px] font-bold text-gray-800 shadow-sm")= medico.especialidad || 'Especialista'
@@ -117,3 +117,22 @@ html(lang="es")
     //- Inicialización de iconos Lucide y scripts
     script.
       lucide.createIcons();
+
+      const inputBusqueda = document.querySelector('input[type="text"]');
+      
+      if (inputBusqueda) {
+        inputBusqueda.addEventListener('input', (e) => {
+          const textoBusqueda = e.target.value.toLowerCase().trim();
+          const tarjetas = document.querySelectorAll('.tarjeta-medico');
+
+          tarjetas.forEach(tarjeta => {
+            const contenido = tarjeta.textContent.toLowerCase();
+            
+            if (contenido.includes(textoBusqueda)) {
+              tarjeta.style.display = 'flex';
+            } else {
+              tarjeta.style.display = 'none';
+            }
+          });
+        });
+      }
