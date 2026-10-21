@@ -20,14 +20,55 @@ const formularioRegistro = (req, res) => {
     });
 };
 
-const verPatientPanel = (req, res) => {
-    res.render("patientPanel", {
-        tituloPagina: "Panel del Paciente"
-    });
+const verPatientPanel = async (req, res) => {
+    try {
+        const { especialidad } = req.query;
+        
+        let condiciones = {
+            rol: 'medico',
+            estado_aprobacion: 'aprobado'
+        };
+
+        if (especialidad && especialidad.trim() !== '') {
+            condiciones.especialidad = especialidad;
+        }
+
+        const medicos = await Usuario.findAll({
+            where: condiciones
+        });
+
+        const medicosDisponibles = await Usuario.findAll({
+            attributes: ['especialidad'],
+            where: {
+                rol: 'medico',
+                estado_aprobacion: 'aprobado',
+                especialidad: { [Op.not]: null }
+            },
+            group: ['especialidad']
+        });
+        
+        const especialidades = medicosDisponibles.map(m => m.especialidad);
+
+        res.render("patientPanel", {
+            tituloPagina: "Panel del Paciente",
+            usuario: req.usuario,
+            medicos,
+            especialidades,
+            especialidadSeleccionada: especialidad || ''
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.render("patientPanel", {
+            tituloPagina: "Panel del Paciente",
+            usuario: req.usuario,
+            medicos: [],
+            especialidades: []
+        });
+    }
 };
 
 const registrar = async (req, res) => {
-    // 1. Extraer errores de express-validator
     let resultado = validationResult(req);
 
     if (!resultado.isEmpty()) {
@@ -46,7 +87,6 @@ const registrar = async (req, res) => {
     } = req.body;
 
     try {
-        // 2. Verificar si ya existe un usuario con ESE CORREO o ESE DOCUMENTO
         const existeUsuario = await Usuario.findOne({ 
             where: { 
                 [Op.or]: [
@@ -69,7 +109,6 @@ const registrar = async (req, res) => {
             });
         }
 
-        // 3. Crear el usuario en la Base de Datos
         const usuario = await Usuario.create({
             nombre,
             apellido,
@@ -86,12 +125,11 @@ const registrar = async (req, res) => {
             confirmado: false
         });
 
-        // 4. Enviar correo de confirmación
         emailRegistro({
             nombre: usuario.nombre,
             email: usuario.email,
             token: usuario.token
-        }).catch(error => console.error("Error enviando correo de registro:", error));
+        }).catch(error => console.error(error));
 
         return res.render("templates/mensaje", {
             tituloPagina: "Cuenta Creada Correctamente",
@@ -99,7 +137,7 @@ const registrar = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error detallado en el servidor:", error);
+        console.error(error);
 
         if (error.name === 'SequelizeUniqueConstraintError') {
             return res.render("pacientRegistration", {
@@ -110,7 +148,6 @@ const registrar = async (req, res) => {
             });
         }
 
-        // Muestra el error real en pantalla si algo más falla (ej. formato de fecha o tipo de dato)
         return res.render("pacientRegistration", {
             tituloPagina: "Registro de Paciente",
             csrfToken: req.csrfToken(),
@@ -180,7 +217,7 @@ const resetPassword = async (req, res) => {
         nombre: usuario.nombre,
         email: usuario.email,
         token: usuario.token
-    }).catch(error => console.error("Error enviando correo de recuperación:", error));
+    }).catch(error => console.error(error));
 
     res.render("templates/mensaje", {
         tituloPagina: "Restablecer la contraseña",
@@ -262,7 +299,6 @@ const autenticar = async (req, res) => {
     const { email, password } = req.body;
     const usuario = await Usuario.findOne({ where: { email } });
 
-
     if (!usuario) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
@@ -271,14 +307,6 @@ const autenticar = async (req, res) => {
         });
     }
 
- 
-    console.log("DATOS DEL USUARIO EN LOGIN:", {
-        email: usuario.email,
-        rol: usuario.rol,
-        confirmado: usuario.confirmado
-    });
-
-   
     if (!usuario.confirmado) {
         return res.render("login", {
             tituloPagina: "Iniciar Sesión",
@@ -287,7 +315,6 @@ const autenticar = async (req, res) => {
         });
     }
 
-    
     const passwordCorrecto = await usuario.verificarPassword(password);
     if (!passwordCorrecto) {
         return res.render("login", {
@@ -305,13 +332,11 @@ const autenticar = async (req, res) => {
         });
     }
 
-    
     const token = generarJWT({ 
         id: usuario.id, 
         nombre: usuario.nombre,
         rol: usuario.rol 
     });
-
 
     res.cookie("_token", token, {
         httpOnly: true,

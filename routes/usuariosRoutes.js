@@ -21,7 +21,6 @@ router.post("/login", autenticar);
 
 router.get("/pacientRegistration", formularioRegistro);
 
-
 router.post("/pacientRegistration", [
   check("nombre").notEmpty().withMessage("El nombre es obligatorio"),
   check("apellido").notEmpty().withMessage("El apellido es obligatorio"),
