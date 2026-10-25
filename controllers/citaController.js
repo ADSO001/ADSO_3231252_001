@@ -13,27 +13,32 @@ const agendarCita = async (req, res) => {
         }
 
         // Comprobar que el médico exista y tenga el rol correcto
-        const medico = await Usuario.findOne({
-            where: {
-                id: medicoId,
-                rol: "medico"
-            }
-        });
+        
+const medico = await Usuario.findOne({
+    where: {
+        id: medicoId,
+        rol: "medico"
+    }
+});
 
-        if (!medico) {
-            console.error("El médico seleccionado no existe:", medicoId);
-            return res.redirect("/patientPanel?error=medico");
-        }
+if (!medico) {
+    return res.redirect("/patientPanel?error=medico");
+}
 
-        // Guardar la cita vinculando al paciente y al médico
-        await Cita.create({
-            fecha,
-            hora,
-            motivo: motivo.trim(),
-            estado: "Pendiente",
-            usuarioId: pacienteId,
-            medicoId: medico.id
-        });
+if (!medico.especialidad) {
+    return res.redirect("/patientPanel?error=especialidad");
+}
+
+await Cita.create({
+    fecha,
+    hora,
+    motivo: motivo.trim(),
+    estado: "pendiente",
+    usuarioId: pacienteId,
+    medicoId: medico.id,
+    especialidad: medico.especialidad
+});
+
 
         console.log(
             `Cita creada: paciente ${pacienteId}, médico ${medico.id}, fecha ${fecha}`

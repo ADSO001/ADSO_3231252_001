@@ -1,16 +1,39 @@
-import Usuario from './Usuarios.js';
-import Cita from './cita.js';
 
-Usuario.hasMany(Cita, { 
-  foreignKey: { name: 'usuario_id', allowNull: false }, 
-  onDelete: 'CASCADE' 
+import Usuario from "./usuarios.js";
+import Cita from "./cita.js";
+
+Usuario.hasMany(Cita, {
+    as: "citasPaciente",
+    foreignKey: {
+        name: "usuarioId",
+        field: "usuario_id"
+    },
+    onDelete: "CASCADE"
 });
 
-Cita.belongsTo(Usuario, { 
-  foreignKey: { name: 'usuario_id', allowNull: false } 
+Cita.belongsTo(Usuario, {
+    as: "paciente",
+    foreignKey: {
+        name: "usuarioId",
+        field: "usuario_id"
+    }
 });
 
-export {
-  Usuario,
-  Cita
-};
+Usuario.hasMany(Cita, {
+    as: "citasMedico",
+    foreignKey: {
+        name: "medicoId",
+        field: "medico_id"
+    },
+    onDelete: "CASCADE"
+});
+
+Cita.belongsTo(Usuario, {
+    as: "medico",
+    foreignKey: {
+        name: "medicoId",
+        field: "medico_id"
+    }
+});
+
+export { Usuario, Cita };
