@@ -19,6 +19,12 @@ const formularioRegistro = (req, res) => {
         csrfToken: req.csrfToken()
     });
 };
+const vistaPrincipal = (req, res) => {
+    res.render("mainview", {
+        tituloPagina: "Inicio",
+        csrfToken: req.csrfToken()
+    });
+};
 
 const verPatientPanel = async (req, res) => {
     try {
@@ -363,5 +369,6 @@ export {
     nuevaPassword, 
     autenticar, 
     verPatientPanel, 
-    confirmar 
+    confirmar,
+    vistaPrincipal 
 };

@@ -1,0 +1,101 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= tituloPagina ? tituloPagina : "SIGCMI - Sistema de Gestión Médica"
+    script(src="https://cdn.tailwindcss.com")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css", crossorigin="anonymous", referrerpolicy="no-referrer")
+    style.
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white text-gray-800 min-h-screen flex flex-col justify-between font-sans selection:bg-black selection:text-white")
+
+    //- ENCABEZADO / NAVBAR SUPERIOR FIJO
+    header(class="w-full bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100")
+      div(class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center")
+        div(class="flex items-center gap-3")
+          img(src="/img/logo.png", alt="Logo SIGCMI", class="h-[40px] object-contain")
+          span(class="text-[18px] font-bold tracking-wider text-gray-900") SIGCMI
+
+        div(class="flex items-center gap-6")
+          nav(class="hidden md:flex items-center gap-6 text-[14px] font-medium text-gray-600")
+            a(href="#funciones", class="hover:text-black transition-colors no-underline") Funciones
+            a(href="#especialidades", class="hover:text-black transition-colors no-underline") Especialidades
+            a(href="#acerca", class="hover:text-black transition-colors no-underline") Acerca de
+
+          div(class="flex items-center gap-3")
+            a(href="/login", class="text-[14px] font-bold text-gray-700 hover:text-black px-4 py-2 rounded-lg transition-colors no-underline") Iniciar sesión
+
+    //- SECCIÓN PRINCIPAL (HERO SECTION)
+    main(class="w-full")
+      section(class="max-w-4xl mx-auto px-6 py-20 md:py-28 flex flex-col items-center text-center")
+        div(class="max-w-2xl")
+          span(class="bg-gray-100 text-gray-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block") Plataforma Médica Integral
+          h1(class="text-[38px] md:text-[50px] font-extrabold leading-tight mb-6 text-gray-900")
+            | Tu salud y agenda médica en un solo lugar.
+          
+          p(class="text-gray-600 text-[16px] md:text-[18px] mb-10 leading-relaxed")
+            | Conecta pacientes y profesionales de la salud de forma ágil. Agenda citas, consulta especialistas y gestiona historiales clínicos bajo un entorno seguro y confiable.
+
+          div(class="flex flex-col sm:flex-row justify-center items-center gap-4 w-full")
+            a(href="/pacientRegistration", class="w-full sm:w-auto bg-black text-white px-7 py-3.5 rounded-[10px] text-[15px] font-bold hover:bg-gray-800 transition-all shadow-sm no-underline")
+              | Regístrate como Paciente
+            a(href="/medicalRegistration", class="w-full sm:w-auto bg-white text-black border border-gray-300 px-7 py-3.5 rounded-[10px] text-[15px] font-bold hover:bg-gray-50 transition-all shadow-sm no-underline")
+              | Regístrate como Médico
+
+      //- SECCIÓN 1: FUNCIONES (Actualizada para Pacientes y Médicos)
+      section(id="funciones", class="w-full bg-gray-50 py-20 px-6 border-t border-gray-100")
+        div(class="max-w-5xl mx-auto")
+          div(class="text-center max-w-xl mx-auto mb-16")
+            h2(class="text-3xl font-bold text-gray-900 mb-3") Funciones Principales
+            p(class="text-gray-500 text-sm") Descubre las herramientas diseñadas a la medida para pacientes y profesionales médicos.
+
+          div(class="grid grid-cols-1 md:grid-cols-2 gap-8")
+            // Tarjeta 1: Funciones del Paciente
+            div(class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-start")
+              div(class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-lg font-bold mb-6")
+                i(class="fa fa-hospital-user")
+              h3(class="text-xl font-bold text-gray-900 mb-3") Pacientes
+              ul(class="text-gray-600 text-sm leading-relaxed space-y-2 list-disc list-inside")
+                li Crear y agendar citas médicas de forma rápida.
+                li Ver y filtrar médicos especialistas disponibles en la plataforma.
+                li Consultar tu historia clínica y el estado actual de tus citas.
+                li Registro seguro y confirmación de cuenta automatizada.
+
+            // Tarjeta 2: Funciones del Médico
+            div(class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-start")
+              div(class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg font-bold mb-6")
+                i(class="fa fa-user-doctor")
+              h3(class="text-xl font-bold text-gray-900 mb-3") Médicos
+              ul(class="text-gray-600 text-sm leading-relaxed space-y-2 list-disc list-inside")
+                li Gestionar y agendar las citas médicas asignadas.
+                li Administrar la agenda profesional desde el panel de control.
+                li Ver listados de pacientes y acceder a sus historiales clínicos.
+                li Proceso de validación administrativa de credenciales y títulos.
+
+      //- SECCIÓN 2: ESPECIALIDADES (Con todas las especialidades solicitadas)
+      section(id="especialidades", class="w-full bg-white py-20 px-6")
+        div(class="max-w-6xl mx-auto")
+          div(class="text-center max-w-xl mx-auto mb-16")
+            h2(class="text-3xl font-bold text-gray-900 mb-3") Especialidades Médicas
+            p(class="text-gray-500 text-sm") Contamos con profesionales verificados en diversas áreas de la salud para tu atención integral.
+
+          div(class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4")
+            - const especialidades = ['Medicina General', 'Dermatología', 'Pediatría', 'Cardiología', 'Ginecología', 'Oftalmología', 'Traumatología', 'Odontología', 'Neurología', 'Psiquiatría']
+            each esp in especialidades
+              div(class="bg-gray-50 border border-gray-200 p-5 rounded-xl text-center hover:border-black transition-all cursor-pointer flex flex-col items-center justify-center gap-2")
+                i(class="fa fa-stethoscope text-xl text-gray-700")
+                span(class="text-sm font-bold text-gray-900")= esp
+
+      //- SECCIÓN 3: ACERCA DE
+      section(id="acerca", class="w-full bg-gray-50 py-20 px-6 border-t border-gray-100")
+        div(class="max-w-3xl mx-auto text-center")
+          h2(class="text-3xl font-bold text-gray-900 mb-6") Acerca de SIGCMI
+          p(class="text-gray-600 text-base leading-relaxed mb-4")
+            | SIGCMI es una plataforma tecnológica desarrollada bajo un enfoque moderno de gestión clínica y administrativa. Su propósito principal es simplificar la interacción entre los pacientes y los profesionales de la salud, ofreciendo un entorno seguro para el registro, la validación de credenciales médicas y el control centralizado de citas.
+
+    //- PIE DE PÁGINA LIMPIO
+    footer(class="w-full border-t border-gray-200 bg-white py-8 text-center text-gray-400 text-xs")
+      p &copy; 2026 SIGCMI - Sistema de Gestión Clínica y Médica. Todos los derechos reservados.
