@@ -1,0 +1,48 @@
+extends layout/index
+
+block contenido
+  .container.py-4
+    .d-flex.justify-content-between.align-items-center.mb-4
+      h2.fw-bold Registro de Historia Clínica
+      a.btn.btn-outline-secondary(href="/medical-panel") Volver al Panel
+
+    if patient
+      .card.mb-4.shadow-sm
+        .card-header.bg-primary.text-white.fw-bold Datos del Paciente
+        .card-body
+          .row
+            .col-md-4
+              p.mb-1 **Nombre:** #{patient.name} #{patient.lastName}
+            .col-md-4
+              p.mb-1 **Documento:** #{patient.documentType} #{patient.documentNumber}
+            .col-md-4
+              p.mb-1 **Edad:** #{patient.age} años
+
+    form(action=`/medical-record/save/${appointment.id}` method="POST")
+      input(type="hidden" name="patientId" value=patient ? patient.id : '')
+      
+      .card.shadow-sm.mb-4
+        .card-body
+          .mb-3
+            label.form-label.fw-bold(for="consultationReason") Motivo de Consulta
+            textarea#consultationReason.form-control(name="consultationReason" rows="2" required placeholder="Sintomatología descrita por el paciente...")
+
+          .mb-3
+            label.form-label.fw-bold(for="currentIllness") Enfermedad Actual
+            textarea#currentIllness.form-control(name="currentIllness" rows="3" required placeholder="Evolución del cuadro clínico...")
+
+          .mb-3
+            label.form-label.fw-bold(for="physicalExam") Examen Físico y Signos Vitales
+            textarea#physicalExam.form-control(name="physicalExam" rows="3" placeholder="Tensión arterial, frecuencia cardíaca, peso...")
+
+          .mb-3
+            label.form-label.fw-bold(for="diagnosis") Diagnóstico
+            textarea#diagnosis.form-control(name="diagnosis" rows="2" required placeholder="Diagnóstico principal...")
+
+          .mb-3
+            label.form-label.fw-bold(for="treatment") Plan de Tratamiento
+            textarea#treatment.form-control(name="treatment" rows="3" required placeholder="Medicamentos, indicaciones, recomendaciones...")
+
+      .d-flex.justify-content-end.gap-2
+        a.btn.btn-secondary(href="/medical-panel") Cancelar
+        button.btn.btn-success(type="submit") Guardar Historia Clínica
