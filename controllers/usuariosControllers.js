@@ -1,9 +1,9 @@
 import { check, validationResult } from "express-validator";
 import { Op } from "sequelize";
 import bcrypt from "bcryptjs";
-import Usuario from "../models/usuarios.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
+import { Cita, Usuario } from "../models/index.js";
 
 const formularioLogin = (req, res) => {
     res.render("login", {
@@ -20,11 +20,69 @@ const formularioRegistro = (req, res) => {
     });
 };
 
-const verPatientPanel = (req, res) => {
-    res.render("patientPanel", {
-        tituloPagina: "Panel del Paciente"
-    });
+
+const verPatientPanel = async (req, res) => {
+    console.log("1. Entró a verPatientPanel");
+
+    try {
+        console.log("2. Usuario:", req.usuario?.id);
+
+        const pacienteId = req.usuario.id;
+
+        console.log("3. Consultando citas y médicos");
+
+        // Aquí debe continuar tu código actual:
+        // las consultas de Cita.findAll y Usuario.findAll,
+        // y el res.render que ya tienes.
+
+
+        const [citas, medicos] = await Promise.all([
+            
+            Cita.findAll({
+                where: { usuarioId: pacienteId },
+                include: [{
+                    model: Usuario,
+                    as: "medico",
+                    attributes: ["id", "nombre", "apellido", "email"]
+                }],
+                order: [
+                    ["fecha", "ASC"],
+                    ["hora", "ASC"]
+                ]
+            }),
+
+            Usuario.findAll({
+                where: {
+                    rol: "medico",
+                    estado_aprobacion: "aprobado"
+                },
+                attributes: [
+                    "id",
+                    "nombre",
+                    "apellido",
+                    "especialidad"
+                ],
+                order: [["nombre", "ASC"]]
+            })
+        ]);
+
+        return res.render("patientPanel", {
+            tituloPagina: "Panel del Paciente",
+            pagina: "Mi Panel - Mis Citas",
+            usuario: req.usuario,
+            citas,
+            medicos,
+            csrfToken: req.csrfToken()
+        });
+
+    } catch (error) {
+        console.error("Error al cargar el panel del paciente:", error);
+        return res.status(500).send(
+            "No fue posible cargar el panel del paciente."
+        );
+    }
 };
+
 
 const registrar = async (req, res) => {
     // 1. Extraer errores de express-validator
