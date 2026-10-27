@@ -32,12 +32,12 @@ html(lang="es")
 
                 div(class="border border-gray-300 rounded-[8px] p-[15px]")
                     h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
-                    p#numCitas(class="text-[28px] font-bold m-0") 0
+                    p#numCitas(class="text-[28px] font-bold m-0")= citas ? citas.length : 0
                     p(class="text-[12px] text-gray-500 m-0") Citas programadas
 
                 div(class="border border-gray-300 rounded-[8px] p-[15px]")
                     h3(class="text-[14px] font-bold mb-[5px]") Historial médico
-                    p#numHistorial(class="text-[28px] font-bold m-0") 0
+                    p#numHistorial(class="text-[28px] font-bold m-0")= historial ? historial.length : 0
                     p(class="text-[12px] text-gray-500 m-0") Registros guardados
 
             section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
@@ -79,7 +79,7 @@ html(lang="es")
                                     span(class="absolute top-[10px] right-[10px] bg-white px-[10px] py-[4px] rounded-[15px] text-[11px] font-bold text-gray-800")= medico.especialidad || 'Especialista'
                                 
                                 div(class="p-[15px] flex flex-col flex-1")
-                                    h3(class="text-[16px] font-bold text-gray-900 mb-[4px]")= `Dr. ${medico.nombre} ${medico.apellido}`
+                                    h3(class="text-[16px] font-bold text-gray-900 mb-[4px]")= `Dr. ${medico.nombre} ${medico.apellido || ''}`
                                     
                                     div(class="flex flex-col gap-[6px] mb-[15px] mt-[10px]")
                                         div(class="flex items-center gap-[8px] text-[12px] text-gray-600")
@@ -101,7 +101,7 @@ html(lang="es")
                                             span(class="text-[11px] text-gray-400 italic") No especificado
                                     
                                     div(class="mt-auto")
-                                        button(type="button" class="w-full bg-black text-white py-[8px] rounded-[6px] font-bold text-[12px] hover:opacity-80 transition-opacity cursor-pointer border-none flex items-center justify-center gap-[6px]")
+                                        button(type="button" onclick=`seleccionarMedicoModal('${medico.id}')` class="w-full bg-black text-white py-[8px] rounded-[6px] font-bold text-[12px] hover:opacity-80 transition-opacity cursor-pointer border-none flex items-center justify-center gap-[6px]")
                                             i(class="fa fa-calendar-check")
                                             | Ver horarios y seleccionar
 
@@ -110,27 +110,57 @@ html(lang="es")
                             i(class="fa fa-user-md text-[36px] text-gray-300 mb-[10px]")
                             p(class="text-[14px] m-0") No hay médicos disponibles para la especialidad seleccionada.
 
+            //- SECCIÓN 2: MIS CITAS (CONSULTADAS DE POSTGRESQL)
             section#seccionCitas(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white")
                 div(class="flex justify-between items-center mb-[25px]")
                     div
-                        h2(class="text-[18px] font-bold text-black mb-[5px]") Agenda del Día
-                        p(class="text-[14px] text-gray-500 m-0") Tus consultas programadas para hoy
+                        h2(class="text-[18px] font-bold text-black mb-[5px]") Agenda de Citas
+                        p(class="text-[14px] text-gray-500 m-0") Tus consultas programadas registradas en el sistema
 
                 div#listaCitas(class="flex flex-col gap-[15px]")
-                    div#mensajeVacioCitas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
-                        i(class="fa fa-calendar-xmark text-[36px] text-gray-300 mb-[10px]")
-                        p(class="text-gray-500 text-[14px] m-0") No tienes citas programadas por el momento.
+                    if citas && citas.length > 0
+                        each cita in citas
+                            div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
+                                div(class="w-full md:w-auto")
+                                    div(class="flex items-center mb-[12px]")
+                                        p(class="font-bold text-[15px] m-0")= cita.fecha
+                                            span(class="text-gray-400 font-normal ml-[10px]")= cita.hora
+                                        span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-yellow-500 text-white font-bold")= cita.status === 'PENDING' ? 'Pendiente' : cita.status
+                                    div(class="flex flex-col gap-[5px] text-[14px]")
+                                        div(class="flex")
+                                            span(class="text-gray-400 w-[75px]") Motivo:
+                                            span(class="font-bold text-gray-800")= cita.motivo || 'Consulta Médica'
+                    else
+                        div#mensajeVacioCitas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+                            i(class="fa fa-calendar-xmark text-[36px] text-gray-300 mb-[10px]")
+                            p(class="text-gray-500 text-[14px] m-0") No tienes citas programadas por el momento.
 
+            //- SECCIÓN 3: HISTORIAL MÉDICO
             section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white")
                 div(class="mb-[20px]")
                     h2(class="text-[18px] font-bold text-black mb-[5px]") Historial Médico
-                    p(class="text-[14px] text-gray-500 m-0") Tus registros y diagnósticos
+                    p(class="text-[14px] text-gray-500 m-0") Tus registros y diagnósticos clínicos registrados por los médicos
 
                 div#listaHistorial(class="flex flex-col gap-[15px]")
-                    div#mensajeVacioHistorial(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px] bg-white")
-                        i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
-                        p(class="text-gray-500 text-[14px] m-0") No hay registros en el historial médico por el momento.
+                    if historial && historial.length > 0
+                        each item in historial
+                            div(class="p-[20px] border border-gray-200 rounded-[12px] bg-gray-50 shadow-sm")
+                                div(class="flex justify-between items-center mb-[10px]")
+                                    p(class="font-bold text-[15px] text-black m-0")= `Consulta del ${new Date(item.createdAt).toLocaleDateString('es-CO')}`
+                                    span(class="bg-green-100 text-green-800 text-[12px] font-bold px-[10px] py-[3px] rounded-[10px]") Atendida
+                                p(class="text-[13px] text-gray-600 mb-[4px]")
+                                    strong Motivo: 
+                                    span= item.consultation_reason
+                                if item.diagnosis_description
+                                    p(class="text-[13px] text-gray-600 m-0")
+                                        strong Diagnóstico: 
+                                        span= item.diagnosis_description
+                    else
+                        div#mensajeVacioHistorial(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px] bg-white")
+                            i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
+                            p(class="text-gray-500 text-[14px] m-0") No hay registros en el historial médico por el momento.
 
+        //- MODAL PARA PROGRAMAR CITA
         div#modalCrearCita(class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-[20px]")
             div(class="bg-[#d1d1d1] w-full max-w-[480px] p-[30px] rounded-[15px] shadow-2xl relative")
                 h3(class="text-[22px] font-bold text-black mb-[20px] flex items-center gap-[10px]")
@@ -138,13 +168,15 @@ html(lang="es")
                     | Programar Nueva Cita
 
                 form#formNuevaCita(class="flex flex-col gap-[15px]")
+                    input#csrfToken(type="hidden", name="_csrf", value=csrfToken)
+                    
                     div
                         label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Médico / Especialista
                         select#medico(required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none")
                             option(value="" disabled selected) Seleccione un especialista
                             if medicos && medicos.length > 0
                                 each m in medicos
-                                    option(value=`Dr. ${m.nombre} - ${m.especialidad}`)= `Dr. ${m.nombre} (${m.especialidad})`
+                                    option(value=m.id)= `Dr. ${m.nombre} (${m.especialidad || 'General'})`
 
                     div(class="grid grid-cols-2 gap-[15px]")
                         div
@@ -202,55 +234,53 @@ html(lang="es")
                 document.getElementById('modalCrearCita').classList.remove('hidden');
             }
 
+            function seleccionarMedicoModal(medicoId) {
+                document.getElementById('medico').value = medicoId;
+                abrirModalCrear();
+            }
+
             function cerrarModalCrear() {
                 document.getElementById('modalCrearCita').classList.add('hidden');
                 document.getElementById('formNuevaCita').reset();
             }
 
-            document.getElementById('formNuevaCita').addEventListener('submit', function(e) {
+            // ENVÍO REAL MEDIANTE PETICIÓN HTTP POST A LA BASE DE DATOS
+            document.getElementById('formNuevaCita').addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                const medico = document.getElementById('medico').value;
+                const doctor_id = document.getElementById('medico').value;
                 const fecha = document.getElementById('fecha').value;
                 const hora = document.getElementById('hora').value;
                 const motivo = document.getElementById('motivo').value;
+                const _csrf = document.getElementById('csrfToken') ? document.getElementById('csrfToken').value : '';
 
-                const mensajeVacio = document.getElementById('mensajeVacioCitas');
-                if (mensajeVacio) mensajeVacio.style.display = 'none';
+                try {
+                    const response = await fetch('/agendar-cita', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'CSRF-Token': _csrf
+                        },
+                        body: JSON.stringify({
+                            _csrf,
+                            doctor_id,
+                            fecha,
+                            hora,
+                            motivo
+                        })
+                    });
 
-                const contenedor = document.getElementById('listaCitas');
-                const tarjeta = document.createElement('div');
-                tarjeta.className = "flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm";
+                    const data = await response.json();
 
-                tarjeta.innerHTML = `
-                    <div class="w-full md:w-auto">
-                        <div class="flex items-center mb-[12px]">
-                            <p class="font-bold text-[15px] m-0">${fecha} <span class="text-gray-400 font-normal ml-[10px]">${hora}</span></p>
-                            <span class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-black text-white">Confirmada</span>
-                        </div>
-                        <div class="flex flex-col gap-[5px] text-[14px]">
-                            <div class="flex"><span class="text-gray-400 w-[75px]">Médico:</span><span class="font-bold text-gray-800">${medico}</span></div>
-                            <div class="flex"><span class="text-gray-400 w-[75px]">Motivo:</span><span class="font-bold text-gray-800">${motivo}</span></div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-[10px] w-full md:w-auto">
-                        <button type="button" onclick="this.closest('.shadow-sm').remove(); actualizarContador(-1);" class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black border border-black text-white cursor-pointer hover:opacity-70 transition-opacity">Cancelar cita</button>
-                    </div>
-                `;
-
-                contenedor.appendChild(tarjeta);
-                actualizarContador(1);
-                cerrarModalCrear();
-                cambiarPestana('citas');
-            });
-
-            function actualizarContador(valor) {
-                const numCitas = document.getElementById('numCitas');
-                let actual = parseInt(numCitas.innerText) || 0;
-                actual = Math.max(0, actual + valor);
-                numCitas.innerText = actual;
-
-                if (actual === 0) {
-                    document.getElementById('mensajeVacioCitas').style.display = 'block';
+                    if (response.ok && data.success) {
+                        alert('Cita agendada correctamente.');
+                        cerrarModalCrear();
+                        window.location.reload(); // Recarga la página recuperando los datos desde PostgreSQL
+                    } else {
+                        alert(data.message || 'Error al agendar la cita.');
+                    }
+                } catch (error) {
+                    console.error('Error al agendar:', error);
+                    alert('Error de conexión con el servidor.');
                 }
-            }
+            });

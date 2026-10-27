@@ -1,62 +1,70 @@
-// Renderizar el formulario de historia clínica
-exports.showMedicalRecordForm = async (req, res) => {
+import db from '../config/db.js';
+
+const createMedicalRecord = async (req, res) => {
+    const connection = await db.getConnection();
+
     try {
-        const { appointmentId } = req.params;
+        const {
+            appointment_id,
+            consultation_reason,
+            symptoms_anamnesis,
+            diagnosis_code,
+            diagnosis_description,
+            treatment_plan
+        } = req.body;
 
-        // Ajusta la consulta según tus modelos/tablas de la BD
-        const [rows] = await db.query(
-            `SELECT a.id, a.patient_id, p.name, p.lastName, p.documentType, p.documentNumber, p.age
-             FROM appointments a
-             JOIN patients p ON a.patient_id = p.id
-             WHERE a.id = ?`, 
-            [appointmentId]
-        );
+        const doctor_id = req.usuario ? req.usuario.id : (req.user ? req.user.id : null);
 
-        if (rows.length === 0) {
-            return res.status(404).render('error', { message: 'Cita no encontrada' });
+        if (!appointment_id || !consultation_reason) {
+            return res.status(400).json({ success: false, message: 'Faltan datos obligatorios.' });
         }
 
-        const data = rows[0];
-
-        res.render('createMedicalRecord', {
-            pageTitle: 'Elaborar Historia Clínica',
-            appointment: { id: data.id },
-            patient: {
-                id: data.patient_id,
-                name: data.name,
-                lastName: data.lastName,
-                documentType: data.documentType,
-                documentNumber: data.documentNumber,
-                age: data.age
-            }
-        });
-    } catch (error) {
-        console.error('Error al cargar el formulario:', error);
-        res.status(500).render('error', { message: 'Error al abrir la historia clínica' });
-    }
-};
-
-// Guardar la historia clínica
-exports.saveMedicalRecord = async (req, res) => {
-    try {
-        const { appointmentId } = req.params;
-        const doctorId = req.session.user.id; // ID del médico autenticado
-        const { patientId, consultationReason, currentIllness, physicalExam, diagnosis, treatment } = req.body;
-
-        // Insertar en la tabla de historias clínicas
-        await db.query(
-            `INSERT INTO medical_records 
-                (patient_id, doctor_id, appointment_id, consultation_reason, current_illness, physical_exam, diagnosis, treatment, created_at) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
-            [patientId, doctorId, appointmentId, consultationReason, currentIllness, physicalExam, diagnosis, treatment]
+        // Obtener el patient_id de la cita
+        const [[cita]] = await connection.query(
+            `SELECT patient_id FROM appointments WHERE id = ?`,
+            [appointment_id]
         );
 
-        // Actualizar el estado de la cita
-        await db.query(`UPDATE appointments SET status = 'Completed' WHERE id = ?`, [appointmentId]);
+        if (!cita) {
+            return res.status(404).json({ success: false, message: 'La cita no existe.' });
+        }
 
-        res.redirect('/medical-panel?success=record_saved');
+        await connection.beginTransaction();
+
+        // 1. Insertar la historia clínica
+        await connection.execute(
+            `INSERT INTO medical_histories 
+            (appointment_id, patient_id, doctor_id, consultation_reason, symptoms_anamnesis, diagnosis_code, diagnosis_description, treatment_plan)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                appointment_id,
+                cita.patient_id,
+                doctor_id,
+                consultation_reason,
+                symptoms_anamnesis || '',
+                diagnosis_code || 'Z00.0',
+                diagnosis_description || '',
+                treatment_plan || ''
+            ]
+        );
+
+        // 2. Marcar la cita como COMPLETADA para que pase al historial
+        await connection.execute(
+            `UPDATE appointments SET status = 'COMPLETED' WHERE id = ?`,
+            [appointment_id]
+        );
+
+        await connection.commit();
+
+        return res.status(200).json({ success: true, message: 'Historia clínica registrada exitosamente.' });
+
     } catch (error) {
+        await connection.rollback();
         console.error('Error al guardar historia clínica:', error);
-        res.status(500).render('error', { message: 'Error al guardar la historia clínica' });
+        return res.status(500).json({ success: false, message: 'Error en el servidor al guardar.' });
+    } finally {
+        connection.release();
     }
 };
+
+export { createMedicalRecord };

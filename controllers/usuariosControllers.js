@@ -359,6 +359,36 @@ const autenticar = async (req, res) => {
     return res.redirect("/patientPanel");
 };
 
+const agendarCitaPaciente = async (req, res) => {
+    try {
+        const { doctor_id, fecha, hora, motivo } = req.body;
+        const patientId = req.usuario ? req.usuario.id : (req.user ? req.user.id : null);
+
+        if (!doctor_id || !fecha || !hora) {
+            return res.status(400).render('patientPanel', {
+                pageTitle: 'Panel de Paciente',
+                error: 'Por favor complete todos los campos obligatorios.'
+            });
+        }
+
+        // Guardar la cita directamente en PostgreSQL
+        await Appointment.create({
+            patient_id: patientId,
+            doctor_id: doctor_id,
+            fecha: fecha,
+            hora: hora,
+            motivo: motivo || '',
+            status: 'PENDING'
+        });
+
+        // Redireccionar al panel para refrescar la lista de citas desde la BD
+        res.redirect('/patientpanel');
+    } catch (error) {
+        console.error('Error al agendar la cita:', error);
+        res.status(500).send('Error interno al agendar la cita.');
+    }
+};
+
 export { 
     formularioLogin, 
     registrar, 
@@ -370,5 +400,6 @@ export {
     autenticar, 
     verPatientPanel, 
     confirmar,
-    vistaPrincipal 
+    vistaPrincipal,
+    agendarCitaPaciente
 };

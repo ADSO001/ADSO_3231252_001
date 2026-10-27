@@ -1,48 +1,71 @@
 extends layout/index
 
 block contenido
-  .container.py-4
-    .d-flex.justify-content-between.align-items-center.mb-4
-      h2.fw-bold Registro de Historia Clínica
-      a.btn.btn-outline-secondary(href="/medical-panel") Volver al Panel
+  .container.mt-4
+    h2.mb-4 Crear Historia Clínica
+    
+    if error
+      .alert.alert-danger= error
 
-    if patient
-      .card.mb-4.shadow-sm
-        .card-header.bg-primary.text-white.fw-bold Datos del Paciente
-        .card-body
-          .row
-            .col-md-4
-              p.mb-1 **Nombre:** #{patient.name} #{patient.lastName}
-            .col-md-4
-              p.mb-1 **Documento:** #{patient.documentType} #{patient.documentNumber}
-            .col-md-4
-              p.mb-1 **Edad:** #{patient.age} años
+    .card.mb-4
+      .card-body
+        h5.card-title Datos de la Consulta
+        p
+          strong Cita ID: 
+          span= appointment ? appointment.appointment_id : ''
+        p
+          strong Paciente: 
+          span= appointment ? appointment.patient_name : ''
 
-    form(action=`/medical-record/save/${appointment.id}` method="POST")
-      input(type="hidden" name="patientId" value=patient ? patient.id : '')
-      
-      .card.shadow-sm.mb-4
-        .card-body
-          .mb-3
-            label.form-label.fw-bold(for="consultationReason") Motivo de Consulta
-            textarea#consultationReason.form-control(name="consultationReason" rows="2" required placeholder="Sintomatología descrita por el paciente...")
+    form(action="/medical-record/create", method="POST")
+      input(type="hidden", name="appointment_id", value=appointment ? appointment.appointment_id : '')
+      input(type="hidden", name="patient_id", value=appointment ? appointment.patient_id : '')
 
-          .mb-3
-            label.form-label.fw-bold(for="currentIllness") Enfermedad Actual
-            textarea#currentIllness.form-control(name="currentIllness" rows="3" required placeholder="Evolución del cuadro clínico...")
+      .mb-3
+        label.form-label(for="consultation_reason") Motivo de Consulta (*)
+        textarea#consultation_reason.form-control(name="consultation_reason", rows="3", required=true)
 
-          .mb-3
-            label.form-label.fw-bold(for="physicalExam") Examen Físico y Signos Vitales
-            textarea#physicalExam.form-control(name="physicalExam" rows="3" placeholder="Tensión arterial, frecuencia cardíaca, peso...")
+      .mb-3
+        label.form-label(for="symptoms_anamnesis") Anamnesis / Síntomas
+        textarea#symptoms_anamnesis.form-control(name="symptoms_anamnesis", rows="3")
 
-          .mb-3
-            label.form-label.fw-bold(for="diagnosis") Diagnóstico
-            textarea#diagnosis.form-control(name="diagnosis" rows="2" required placeholder="Diagnóstico principal...")
+      .row.g-3.mb-3
+        .col-md-4
+          label.form-label(for="diagnosis_code") Código Diagnóstico (CIE-10) (*)
+          input#diagnosis_code.form-control(type="text", name="diagnosis_code", placeholder="Ej. K35.8", required=true)
+        .col-md-8
+          label.form-label(for="diagnosis_description") Descripción del Diagnóstico
+          input#diagnosis_description.form-control(type="text", name="diagnosis_description", placeholder="Ej. Apendicitis aguda")
 
-          .mb-3
-            label.form-label.fw-bold(for="treatment") Plan de Tratamiento
-            textarea#treatment.form-control(name="treatment" rows="3" required placeholder="Medicamentos, indicaciones, recomendaciones...")
+      .mb-4
+        label.form-label(for="treatment_plan") Plan de Tratamiento
+        textarea#treatment_plan.form-control(name="treatment_plan", rows="3")
+
+      h4.mt-4 Prescripción de Medicamentos
+      #medications-container
+        .row.g-2.mb-2.medication-row
+          .col-md-3
+            input.form-control(type="text", name="medication_name", placeholder="Medicamento")
+          .col-md-2
+            input.form-control(type="text", name="dosage", placeholder="Dosis")
+          .col-md-2
+            input.form-control(type="text", name="frequency", placeholder="Frecuencia")
+          .col-md-2
+            input.form-control(type="text", name="duration", placeholder="Duración")
+          .col-md-3
+            input.form-control(type="text", name="instructions", placeholder="Indicaciones")
+
+      button#add-med-btn.btn.btn-secondary.btn-sm.mt-2.mb-4(type="button") + Agregar Otro Medicamento
 
       .d-flex.justify-content-end.gap-2
-        a.btn.btn-secondary(href="/medical-panel") Cancelar
-        button.btn.btn-success(type="submit") Guardar Historia Clínica
+        a.btn.btn-outline-secondary(href="/medical/panel") Cancelar
+        button.btn.btn-primary(type="submit") Guardar y Finalizar Consulta
+
+    script.
+      document.getElementById('add-med-btn').addEventListener('click', function() {
+        const container = document.getElementById('medications-container');
+        const firstRow = container.querySelector('.medication-row');
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelectorAll('input').forEach(input => input.value = '');
+        container.appendChild(newRow);
+      });

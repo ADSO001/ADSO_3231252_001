@@ -1,9 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { renderCreateMedicalRecord, createMedicalRecord } from '../controllers/medicalRecordController.js';
+import protegerRuta from '../middleware/protegerRuta.js';
+import rutaMedico from '../middleware/rutaMedico.js';
+
 const router = express.Router();
-const medicalRecordController = require('../controllers/medicalRecordController');
-const authMiddleware = require('../middleware/authMiddleware'); // Ajusta según tu middleware
 
-router.get('/create/:appointmentId', authMiddleware, medicalRecordController.showMedicalRecordForm);
-router.post('/save/:appointmentId', authMiddleware, medicalRecordController.saveMedicalRecord);
+router.get('/create/:appointmentId', protegerRuta, rutaMedico, renderCreateMedicalRecord);
+router.post('/create', protegerRuta, rutaMedico, createMedicalRecord);
 
-module.exports = router;
+export default router;

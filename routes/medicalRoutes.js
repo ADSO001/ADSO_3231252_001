@@ -6,7 +6,9 @@ import {
     formularioMedico, 
     medicalPanel, 
     formularioRegistroMedico, 
-    registrarMedico 
+    registrarMedico,
+    formularioCrearHistoriaClinica,
+    guardarHistoriaClinica
 } from '../controllers/medicalControllers.js';
 
 const router = express.Router();
@@ -36,5 +38,15 @@ router.get('/formularioMedico', formularioMedico);
 
 // Panel médico protegido con el middleware rutaMedico
 router.get('/medicalPanel', rutaMedico, medicalPanel);
+
+// ==========================================
+// MÓDULO: HISTORIA CLÍNICA (MÉDICO)
+// ==========================================
+
+// Vista para que el médico redacte la historia clínica de una cita
+router.get('/historia-clinica/crear/:idCita', rutaMedico, formularioCrearHistoriaClinica);
+
+// Procesar y guardar la historia clínica redactada por el médico
+router.post('/historia-clinica/guardar/:idCita', rutaMedico, guardarHistoriaClinica);
 
 export default router;
