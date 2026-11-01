@@ -1,7 +1,7 @@
 import { check, validationResult } from "express-validator";
 import { Op } from "sequelize";
 import bcrypt from "bcryptjs";
-import Usuario from "../models/usuarios.js";
+import { Usuario, Cita } from "../models/index.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
 
@@ -49,12 +49,20 @@ const verPatientPanel = async (req, res) => {
         
         const especialidades = medicosDisponibles.map(m => m.especialidad);
 
+        const misCitas = await Cita.findAll({
+            where: { paciente_id: req.usuario.id },
+            include: [{ model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad'] }],
+            order: [['fecha', 'ASC'], ['hora', 'ASC']]
+        });
+
         res.render("patientPanel", {
             tituloPagina: "Panel del Paciente",
             usuario: req.usuario,
             medicos,
             especialidades,
-            especialidadSeleccionada: especialidad || ''
+            citas: misCitas,
+            especialidadSeleccionada: especialidad || '',
+            csrfToken: req.csrfToken()
         });
 
     } catch (error) {
@@ -63,7 +71,9 @@ const verPatientPanel = async (req, res) => {
             tituloPagina: "Panel del Paciente",
             usuario: req.usuario,
             medicos: [],
-            especialidades: []
+            especialidades: [],
+            citas: [],
+            csrfToken: req.csrfToken()
         });
     }
 };

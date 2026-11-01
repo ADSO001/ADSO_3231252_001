@@ -32,7 +32,7 @@ html(lang="es")
 
                 div(class="border border-gray-300 rounded-[8px] p-[15px]")
                     h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
-                    p#numCitas(class="text-[28px] font-bold m-0") 0
+                    p#numCitas(class="text-[28px] font-bold m-0")= citas ? citas.length : 0
                     p(class="text-[12px] text-gray-500 m-0") Citas programadas
 
                 div(class="border border-gray-300 rounded-[8px] p-[15px]")
@@ -46,10 +46,6 @@ html(lang="es")
                 button#tabCitas(onclick="cambiarPestana('citas')" class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium") Mis citas
 
                 button#tabHistorial(onclick="cambiarPestana('historial')" class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium") Historial Médico
-
-                button(type="button" onclick="abrirModalCrear()" class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 bg-white text-black rounded-[20px] hover:bg-gray-100 transition-colors cursor-pointer flex items-center justify-between")
-                    span Nueva Cita
-                    i(class="fa fa-plus")
 
             section#seccionBuscar(class="border border-gray-300 rounded-[8px] p-[25px] bg-white")
                 div(class="mb-[25px]")
@@ -101,9 +97,9 @@ html(lang="es")
                                             span(class="text-[11px] text-gray-400 italic") No especificado
                                     
                                     div(class="mt-auto")
-                                        button(type="button" class="w-full bg-black text-white py-[8px] rounded-[6px] font-bold text-[12px] hover:opacity-80 transition-opacity cursor-pointer border-none flex items-center justify-center gap-[6px]")
+                                        button(type="button" onclick=`abrirModalCrear('${medico.id}', '${medico.especialidad}', 'Dr. ${medico.nombre} ${medico.apellido}')` class="w-full bg-black text-white py-[8px] rounded-[6px] font-bold text-[12px] hover:opacity-80 transition-opacity cursor-pointer border-none flex items-center justify-center gap-[6px]")
                                             i(class="fa fa-calendar-check")
-                                            | Ver horarios y seleccionar
+                                            | Agendar cita
 
                     else
                         div(class="col-span-full py-10 text-center text-gray-500 border border-dashed border-gray-300 rounded-[12px]")
@@ -113,13 +109,31 @@ html(lang="es")
             section#seccionCitas(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white")
                 div(class="flex justify-between items-center mb-[25px]")
                     div
-                        h2(class="text-[18px] font-bold text-black mb-[5px]") Agenda del Día
-                        p(class="text-[14px] text-gray-500 m-0") Tus consultas programadas para hoy
+                        h2(class="text-[18px] font-bold text-black mb-[5px]") Agenda de Citas
+                        p(class="text-[14px] text-gray-500 m-0") Tus consultas programadas
 
                 div#listaCitas(class="flex flex-col gap-[15px]")
-                    div#mensajeVacioCitas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
-                        i(class="fa fa-calendar-xmark text-[36px] text-gray-300 mb-[10px]")
-                        p(class="text-gray-500 text-[14px] m-0") No tienes citas programadas por el momento.
+                    if citas && citas.length > 0
+                        each cita in citas
+                            div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
+                                div(class="w-full md:w-auto")
+                                    div(class="flex items-center mb-[12px]")
+                                        p(class="font-bold text-[15px] m-0")= cita.fecha
+                                            span(class="text-gray-400 font-normal ml-[10px]")= cita.hora
+                                        span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-black text-white capitalize")= cita.estado
+                                    div(class="flex flex-col gap-[5px] text-[14px]")
+                                        div(class="flex")
+                                            span(class="text-gray-400 w-[75px]") Médico:
+                                            span(class="font-bold text-gray-800")= `Dr. ${cita.medico.nombre} ${cita.medico.apellido} (${cita.medico.especialidad})`
+                                        div(class="flex")
+                                            span(class="text-gray-400 w-[75px]") Motivo:
+                                            span(class="font-bold text-gray-800")= cita.motivo
+                                div(class="flex flex-col gap-[10px] w-full md:w-auto")
+                                    button(type="button" class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black border border-black text-white cursor-pointer hover:opacity-70 transition-opacity") Cancelar cita
+                    else
+                        div#mensajeVacioCitas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+                            i(class="fa fa-calendar-xmark text-[36px] text-gray-300 mb-[10px]")
+                            p(class="text-gray-500 text-[14px] m-0") No tienes citas programadas por el momento.
 
             section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white")
                 div(class="mb-[20px]")
@@ -137,27 +151,27 @@ html(lang="es")
                     i(class="fa fa-user-md text-black")
                     | Programar Nueva Cita
 
-                form#formNuevaCita(class="flex flex-col gap-[15px]")
+                form#formNuevaCita(action="/citas/crear" method="POST" class="flex flex-col gap-[15px]")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    input(type="hidden" name="medico_id" id="medico_id")
+                    input(type="hidden" name="especialidad" id="especialidad_oculta")
+
                     div
                         label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Médico / Especialista
-                        select#medico(required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none")
-                            option(value="" disabled selected) Seleccione un especialista
-                            if medicos && medicos.length > 0
-                                each m in medicos
-                                    option(value=`Dr. ${m.nombre} - ${m.especialidad}`)= `Dr. ${m.nombre} (${m.especialidad})`
+                        input#medico_nombre(type="text" readonly class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-500 cursor-not-allowed")
 
                     div(class="grid grid-cols-2 gap-[15px]")
                         div
                             label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Fecha
-                            input#fecha(type="date" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-700")
+                            input#fecha(type="date" name="fecha" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-700")
 
                         div
                             label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Hora
-                            input#hora(type="time" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-700")
+                            input#hora(type="time" name="hora" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-700")
 
                     div
                         label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Motivo de la Consulta
-                        input#motivo(type="text" placeholder="Ej. Control de rutina" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none")
+                        input#motivo(type="text" name="motivo" placeholder="Ej. Control de rutina" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none")
 
                     div(class="flex justify-between items-center mt-[20px]")
                         button(type="button" onclick="cerrarModalCrear()" class="bg-[#f0f0f0] text-black px-[20px] py-[12px] rounded-[6px] font-bold text-[14px] cursor-pointer hover:bg-gray-300 transition-colors border-none") Cancelar
@@ -198,59 +212,13 @@ html(lang="es")
                 }
             }
 
-            function abrirModalCrear() {
+            function abrirModalCrear(medicoId, especialidad, nombreMedico) {
+                document.getElementById('medico_id').value = medicoId;
+                document.getElementById('especialidad_oculta').value = especialidad;
+                document.getElementById('medico_nombre').value = nombreMedico;
                 document.getElementById('modalCrearCita').classList.remove('hidden');
             }
 
             function cerrarModalCrear() {
                 document.getElementById('modalCrearCita').classList.add('hidden');
-                document.getElementById('formNuevaCita').reset();
-            }
-
-            document.getElementById('formNuevaCita').addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const medico = document.getElementById('medico').value;
-                const fecha = document.getElementById('fecha').value;
-                const hora = document.getElementById('hora').value;
-                const motivo = document.getElementById('motivo').value;
-
-                const mensajeVacio = document.getElementById('mensajeVacioCitas');
-                if (mensajeVacio) mensajeVacio.style.display = 'none';
-
-                const contenedor = document.getElementById('listaCitas');
-                const tarjeta = document.createElement('div');
-                tarjeta.className = "flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm";
-
-                tarjeta.innerHTML = `
-                    <div class="w-full md:w-auto">
-                        <div class="flex items-center mb-[12px]">
-                            <p class="font-bold text-[15px] m-0">${fecha} <span class="text-gray-400 font-normal ml-[10px]">${hora}</span></p>
-                            <span class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-black text-white">Confirmada</span>
-                        </div>
-                        <div class="flex flex-col gap-[5px] text-[14px]">
-                            <div class="flex"><span class="text-gray-400 w-[75px]">Médico:</span><span class="font-bold text-gray-800">${medico}</span></div>
-                            <div class="flex"><span class="text-gray-400 w-[75px]">Motivo:</span><span class="font-bold text-gray-800">${motivo}</span></div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-[10px] w-full md:w-auto">
-                        <button type="button" onclick="this.closest('.shadow-sm').remove(); actualizarContador(-1);" class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black border border-black text-white cursor-pointer hover:opacity-70 transition-opacity">Cancelar cita</button>
-                    </div>
-                `;
-
-                contenedor.appendChild(tarjeta);
-                actualizarContador(1);
-                cerrarModalCrear();
-                cambiarPestana('citas');
-            });
-
-            function actualizarContador(valor) {
-                const numCitas = document.getElementById('numCitas');
-                let actual = parseInt(numCitas.innerText) || 0;
-                actual = Math.max(0, actual + valor);
-                numCitas.innerText = actual;
-
-                if (actual === 0) {
-                    document.getElementById('mensajeVacioCitas').style.display = 'block';
-                }
             }

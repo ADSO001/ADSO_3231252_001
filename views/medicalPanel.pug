@@ -11,7 +11,6 @@ html(lang="es")
       body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
   body(class="m-0 p-0 box-border bg-white text-gray-800")
-    //- Encabezado / Barra superior
     header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px]")
       div(class="flex items-center")
         img(src="img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
@@ -24,29 +23,26 @@ html(lang="es")
           i(class="fa-solid fa-right-from-bracket")
           | Cerrar sesión
 
-    //- Contenido Principal
     main(class="p-[20px]")
-      //- Tarjetas de métricas superiores
       section(class="grid grid-cols-1 md:grid-cols-3 gap-[20px] mb-[20px]")
         div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
           i(class="fa fa-calendar-day absolute top-[10px] right-[10px] text-[22px] text-gray-500")
           h3(class="text-[14px] font-bold mb-[5px]") Citas hoy
-          p#citasHoy(class="text-[28px] font-bold m-0") 0
+          p#citasHoy(class="text-[28px] font-bold m-0")= citasHoy ? citasHoy.length : 0
           p(class="text-[12px] text-gray-500 m-0") Citas programadas
 
         div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
           i(class="fa fa-clock absolute top-[10px] right-[10px] text-[22px] text-gray-500")
           h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
-          p#proxCita(class="text-[28px] font-bold m-0") 0
+          p#proxCita(class="text-[28px] font-bold m-0")= proximasCitas ? proximasCitas.length : 0
           p(class="text-[12px] text-gray-500 m-0") Esta semana y siguientes
 
         div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
           i(class="fa fa-folder-open absolute top-[10px] right-[10px] text-[22px] text-gray-500")
           h3(class="text-[14px] font-bold mb-[5px]") Consultas totales
-          p#ConTotal(class="text-[28px] font-bold m-0") 0
-          p(class="text-[12px] text-gray-500 m-0") Registros creados
+          p#ConTotal(class="text-[28px] font-bold m-0")= totalCitas || 0
+          p(class="text-[12px] text-gray-500 m-0") Registros en el sistema
 
-      //- Pestañas de navegación funcional
       section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
         button#tabHoy(onclick="cambiarPestana('hoy')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]")
           i(class="fa fa-calendar-day")
@@ -66,41 +62,78 @@ html(lang="es")
         p(class="text-[14px] text-gray-500 mb-[20px]") Tus consultas programadas para hoy
 
         div#lista-pacientes(class="flex flex-col gap-[15px]")
-          div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
-            i(class="fa fa-user-clock text-[36px] text-gray-300 mb-[10px]")
-            p(class="text-gray-500 text-[14px] m-0") No hay citas programadas para el día de hoy.
+          if citasHoy && citasHoy.length > 0
+            each cita in citasHoy
+              div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
+                div
+                  div(class="flex items-center mb-[8px]")
+                    span(class="font-bold text-[16px] text-black")= cita.hora
+                    span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-blue-100 text-blue-800 capitalize font-bold")= cita.estado
+                  div(class="flex flex-col gap-[4px] text-[14px]")
+                    div(class="flex")
+                      span(class="text-gray-400 w-[75px]") Paciente:
+                      span(class="font-bold text-gray-800")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    div(class="flex")
+                      span(class="text-gray-400 w-[75px]") Motivo:
+                      span(class="text-gray-600")= cita.motivo
+                div(class="flex flex-col gap-[10px] w-full md:w-auto")
+                  button(type="button" onclick=`abrirModalCrearHistoria('${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
+          else
+            div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+              i(class="fa fa-user-clock text-[36px] text-gray-300 mb-[10px]")
+              p(class="text-gray-500 text-[14px] m-0") No hay citas programadas para el día de hoy.
 
       //- SECCIÓN 2: Próximas Citas
       section#seccionProximas(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
         h4(class="text-[18px] font-bold text-black mb-[2px]") Próximas citas
         p(class="text-[14px] text-gray-500 mb-[20px]") Consultas agendadas para los próximos días
         
-        div#lista-proximas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
-          i(class="fa fa-clock text-[36px] text-gray-300 mb-[10px]")
-          p(class="text-gray-500 text-[14px] m-0") Citas agendadas próximamente aparecerán aquí.
+        div#lista-proximas(class="flex flex-col gap-[15px]")
+          if proximasCitas && proximasCitas.length > 0
+            each cita in proximasCitas
+              div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
+                div
+                  div(class="flex items-center mb-[8px]")
+                    span(class="font-bold text-[16px] text-black")= `${cita.fecha} | ${cita.hora}`
+                    span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-yellow-100 text-yellow-800 capitalize font-bold")= cita.estado
+                  div(class="flex flex-col gap-[4px] text-[14px]")
+                    div(class="flex")
+                      span(class="text-gray-400 w-[75px]") Paciente:
+                      span(class="font-bold text-gray-800")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    div(class="flex")
+                      span(class="text-gray-400 w-[75px]") Motivo:
+                      span(class="text-gray-600")= cita.motivo
+          else
+            div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+              i(class="fa fa-clock text-[36px] text-gray-300 mb-[10px]")
+              p(class="text-gray-500 text-[14px] m-0") No hay citas agendadas próximamente.
 
       //- SECCIÓN 3: Historial de Citas
       section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
         h4(class="text-[18px] font-bold text-black mb-[2px]") Historial de Citas
-        p(class="text-[14px] text-gray-500 mb-[20px]") Registro completo de historias clínicas creadas
+        p(class="text-[14px] text-gray-500 mb-[20px]") Registro de consultas pasadas
         
-        div#lista-historial(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
-          i(class="fa fa-folder-open text-[36px] text-gray-300 mb-[10px]")
-          p(class="text-gray-500 text-[14px] m-0") No hay consultas archivadas por el momento.
-
-    //- =======================================================================
-    //- IMPLEMENTACIÓN FUTURA: Plantilla de botones para renderizado dinámico JS
-    //- Descomentar esta sección cuando se integre la lógica dinámica en el script.
-    //- =======================================================================
-    //- template#plantilla-botones-historia
-    //-   div(class="flex flex-col gap-[10px] justify-center lg:w-[220px]")
-    //-     button.btn-ver-historia(type="button", class="w-full flex items-center gap-[8px] justify-start bg-white border border-gray-300 hover:bg-gray-200 text-black px-[12px] py-[8px] rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer shadow-sm")
-    //-       i(class="fa fa-history")
-    //-       | Ver historia clínica anterior
-    //-
-    //-     button.btn-crear-historia(type="button", class="w-full flex items-center gap-[8px] justify-start bg-white border border-gray-300 hover:bg-gray-200 text-black px-[12px] py-[8px] rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer shadow-sm")
-    //-       i(class="fa fa-plus")
-    //-       | Crear historia clínica
+        div#lista-historial(class="flex flex-col gap-[15px]")
+          if historial && historial.length > 0
+            each cita in historial
+              div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-gray-50 gap-[15px] shadow-sm opacity-80")
+                div
+                  div(class="flex items-center mb-[8px]")
+                    span(class="font-bold text-[16px] text-gray-600")= `${cita.fecha} | ${cita.hora}`
+                    span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-gray-200 text-gray-600 capitalize font-bold")= cita.estado
+                  div(class="flex flex-col gap-[4px] text-[14px]")
+                    div(class="flex")
+                      span(class="text-gray-400 w-[75px]") Paciente:
+                      span(class="font-bold text-gray-700")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    div(class="flex")
+                      span(class="text-gray-400 w-[75px]") Motivo:
+                      span(class="text-gray-500")= cita.motivo
+                div(class="flex flex-col gap-[10px] w-full md:w-auto")
+                  button(type="button" onclick=`abrirModalVerHistoria('${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-white border border-gray-300 text-black cursor-pointer hover:bg-gray-100 transition-colors") Ver Historia
+          else
+            div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+              i(class="fa fa-folder-open text-[36px] text-gray-300 mb-[10px]")
+              p(class="text-gray-500 text-[14px] m-0") No hay consultas archivadas por el momento.
 
     //- MODAL 1: Ver Historia Clínica
     div#modalVerHistoria(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
@@ -112,15 +145,6 @@ html(lang="es")
           div(class="flex justify-between border-b border-gray-100 pb-[8px]")
             span(class="font-bold text-gray-700") Paciente:
             span#verPacienteNombre(class="text-gray-800") -
-          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
-            span(class="font-bold text-gray-700") Fecha de elaboración:
-            span#verFechaElaboracion(class="text-gray-800") -
-          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
-            span(class="font-bold text-gray-700") Elaborado por:
-            span#verMedicoNombre(class="text-gray-800") -
-          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
-            span(class="font-bold text-gray-700") Alergias:
-            span#verAlergias(class="text-gray-800") -
           div(class="flex flex-col gap-[4px] border-b border-gray-100 pb-[8px]")
             span(class="font-bold text-gray-700") Motivo de consulta:
             p#verMotivo(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
@@ -214,6 +238,6 @@ html(lang="es")
 
       function guardarHistoria(event) {
         event.preventDefault();
-        alert('Historia clínica guardada con éxito.');
+        alert('Historia clínica guardada con éxito. (Falta integrar backend)');
         cerrarModalCrearHistoria();
       }
