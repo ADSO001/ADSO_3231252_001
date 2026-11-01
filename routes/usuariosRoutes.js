@@ -10,7 +10,8 @@ import {
   resetPassword, 
   formularioOlvidePassword, 
   comprobarToken, 
-  nuevaPassword 
+  nuevaPassword,
+  vistaPrincipal
 } from "../controllers/usuariosControllers.js";
 import protegerRuta from "../middleware/protegerRuta.js"; 
 
@@ -20,6 +21,7 @@ router.get("/login", formularioLogin);
 router.post("/login", autenticar);
 
 router.get("/pacientRegistration", formularioRegistro);
+router.get("/mainview", vistaPrincipal);
 
 router.post("/pacientRegistration", [
   check("nombre").notEmpty().withMessage("El nombre es obligatorio"),
