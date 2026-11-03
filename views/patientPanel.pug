@@ -120,7 +120,13 @@ html(lang="es")
                                     div(class="flex items-center mb-[12px]")
                                         p(class="font-bold text-[15px] m-0")= cita.fecha
                                             span(class="text-gray-400 font-normal ml-[10px]")= cita.hora
-                                        span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-black text-white capitalize")= cita.estado
+                                        if cita.estado === 'cancelada'
+                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-red-100 text-red-800 capitalize font-bold")= cita.estado
+                                        else if cita.estado === 'completada'
+                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-green-100 text-green-800 capitalize font-bold")= cita.estado
+                                        else
+                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-black text-white capitalize font-bold")= cita.estado
+                                            
                                     div(class="flex flex-col gap-[5px] text-[14px]")
                                         div(class="flex")
                                             span(class="text-gray-400 w-[75px]") Médico:
@@ -128,8 +134,12 @@ html(lang="es")
                                         div(class="flex")
                                             span(class="text-gray-400 w-[75px]") Motivo:
                                             span(class="font-bold text-gray-800")= cita.motivo
-                                div(class="flex flex-col gap-[10px] w-full md:w-auto")
-                                    button(type="button" class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black border border-black text-white cursor-pointer hover:opacity-70 transition-opacity") Cancelar cita
+                                
+                                //- Solo mostrar botones de cancelar/reprogramar si la cita NO está completada ni cancelada
+                                if cita.estado !== 'cancelada' && cita.estado !== 'completada'
+                                    div(class="flex gap-[8px] w-full md:w-[200px]")
+                                        button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 transition-colors border-none") Reprogramar
+                                        button(type="button" onclick=`cancelarCita('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-red-100 text-red-700 cursor-pointer hover:bg-red-200 transition-colors border-none") Cancelar
                     else
                         div#mensajeVacioCitas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
                             i(class="fa fa-calendar-xmark text-[36px] text-gray-300 mb-[10px]")
@@ -145,6 +155,7 @@ html(lang="es")
                         i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
                         p(class="text-gray-500 text-[14px] m-0") No hay registros en el historial médico por el momento.
 
+        //- MODAL CREAR CITA
         div#modalCrearCita(class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-[20px]")
             div(class="bg-[#d1d1d1] w-full max-w-[480px] p-[30px] rounded-[15px] shadow-2xl relative")
                 h3(class="text-[22px] font-bold text-black mb-[20px] flex items-center gap-[10px]")
@@ -152,7 +163,8 @@ html(lang="es")
                     | Programar Nueva Cita
 
                 form#formNuevaCita(action="/citas/crear" method="POST" class="flex flex-col gap-[15px]")
-                    input(type="hidden" name="_csrf" value=csrfToken)
+                    //- Se le añadió id="csrfToken" para que Javascript pueda leerlo
+                    input(type="hidden" name="_csrf" id="csrfToken" value=csrfToken)
                     input(type="hidden" name="medico_id" id="medico_id")
                     input(type="hidden" name="especialidad" id="especialidad_oculta")
 
@@ -178,6 +190,28 @@ html(lang="es")
                         button(type="submit" class="bg-black text-white px-[25px] py-[12px] rounded-[6px] font-bold text-[14px] cursor-pointer hover:bg-gray-800 transition-colors flex items-center gap-[8px] border-none")
                             i(class="fa fa-check")
                             | Agendar Cita
+
+        //- MODAL REPROGRAMAR CITA
+        div#modalReprogramar(class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-[20px]")
+            div(class="bg-[#d1d1d1] w-full max-w-[400px] p-[30px] rounded-[15px] shadow-2xl relative")
+                h3(class="text-[22px] font-bold text-black mb-[20px] flex items-center gap-[10px]")
+                    i(class="fa fa-calendar-days text-black")
+                    | Reprogramar Cita
+
+                form#formReprogramar(onsubmit="guardarReprogramacion(event)" class="flex flex-col gap-[15px]")
+                    input#citaIdReprogramar(type="hidden")
+
+                    div
+                        label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Nueva Fecha
+                        input#nuevaFecha(type="date" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-700")
+
+                    div
+                        label(class="block text-[13px] font-bold mb-[6px] text-gray-700") Nueva Hora
+                        input#nuevaHora(type="time" required class="w-full p-[12px] border-none rounded-[8px] bg-white text-[14px] outline-none text-gray-700")
+
+                    div(class="flex justify-between items-center mt-[20px]")
+                        button(type="button" onclick="cerrarModalReprogramar()" class="bg-[#f0f0f0] text-black px-[20px] py-[12px] rounded-[6px] font-bold text-[14px] cursor-pointer hover:bg-gray-300 transition-colors border-none") Cancelar
+                        button(type="submit" class="bg-black text-white px-[25px] py-[12px] rounded-[6px] font-bold text-[14px] cursor-pointer hover:bg-gray-800 transition-colors border-none") Reprogramar
 
         script.
             function cambiarPestana(pestana) {
@@ -212,13 +246,87 @@ html(lang="es")
                 }
             }
 
+            // MODAL CREAR CITA
             function abrirModalCrear(medicoId, especialidad, nombreMedico) {
                 document.getElementById('medico_id').value = medicoId;
                 document.getElementById('especialidad_oculta').value = especialidad;
                 document.getElementById('medico_nombre').value = nombreMedico;
                 document.getElementById('modalCrearCita').classList.remove('hidden');
             }
-
             function cerrarModalCrear() {
                 document.getElementById('modalCrearCita').classList.add('hidden');
             }
+
+            // MODAL REPROGRAMAR CITA
+            function abrirModalReprogramar(citaId) {
+                document.getElementById('citaIdReprogramar').value = citaId;
+                document.getElementById('modalReprogramar').classList.remove('hidden');
+            }
+            function cerrarModalReprogramar() {
+                document.getElementById('modalReprogramar').classList.add('hidden');
+                document.getElementById('formReprogramar').reset();
+            }
+
+            // FUNCIONES FETCH: Cancelar y Reprogramar
+            async function cancelarCita(citaId) {
+                if(!confirm('¿Estás seguro de que deseas cancelar tu cita? Esta acción no se puede deshacer.')) return;
+                
+                const csrf = document.getElementById('csrfToken').value;
+
+                try {
+                    const respuesta = await fetch(`/citas/${citaId}/cancelar`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'CSRF-Token': csrf 
+                        },
+                        body: JSON.stringify({ _csrf: csrf })
+                    });
+                    
+                    if(respuesta.ok) {
+                        alert('Cita cancelada con éxito.');
+                        window.location.reload();
+                    } else {
+                        alert('Error al cancelar la cita.');
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            }
+
+            async function guardarReprogramacion(event) {
+                event.preventDefault();
+                
+                const citaId = document.getElementById('citaIdReprogramar').value;
+                const nuevaFecha = document.getElementById('nuevaFecha').value;
+                const nuevaHora = document.getElementById('nuevaHora').value;
+                const csrf = document.getElementById('csrfToken').value;
+
+                try {
+                    const respuesta = await fetch(`/citas/${citaId}/reprogramar`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'CSRF-Token': csrf 
+                        },
+                        body: JSON.stringify({ nuevaFecha, nuevaHora, _csrf: csrf })
+                    });
+                    
+                    const resultado = await respuesta.json();
+                    
+                    if(respuesta.ok) {
+                        alert('Cita reprogramada con éxito.');
+                        window.location.reload(); 
+                    } else {
+                        alert(resultado.error || 'Error al reprogramar.');
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert('Error de conexión.');
+                }
+            }
+          const citasHoy = citas.filter(cita => cita.fecha === fechaHoyString && cita.estado !== 'completada');
+          const proximasCitas = citas.filter(cita => cita.fecha > fechaHoyString && cita.estado !== 'completada');
+        
+         // El historial del paciente también acumulará las canceladas
+          const historial = citas.filter(cita => cita.fecha < fechaHoyString || cita.estado === 'completada' || cita.estado === 'cancelada');

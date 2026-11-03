@@ -2,7 +2,7 @@ import { check, validationResult } from 'express-validator';
 import fs from 'fs';
 import path from 'path';
 import { Op } from 'sequelize';
-import { Usuario, Cita } from '../models/index.js';
+import { Usuario, Cita, HistoriaClinica } from '../models/index.js';
 
 const obtenerCsrfToken = (req) => {
     return typeof req.csrfToken === 'function' ? req.csrfToken() : req.body._csrf;
@@ -127,10 +127,8 @@ const formularioMedico = (req, res) => {
 
 const medicalPanel = async (req, res) => {
     try {
-        
         const fechaHoyString = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
 
-      
         const citas = await Cita.findAll({
             where: { medico_id: req.usuario.id },
             include: [{
@@ -166,9 +164,41 @@ const medicalPanel = async (req, res) => {
     }
 };
 
+// Guardar la historia clínica y completar la cita
+const guardarHistoriaClinica = async (req, res) => {
+    const { citaId, motivo, descripcion, resolucion } = req.body;
+    const medicoId = req.usuario.id;
+
+    try {
+        const cita = await Cita.findOne({ where: { id: citaId, medico_id: medicoId } });
+        
+        if (!cita) {
+            return res.status(404).json({ error: 'Cita no encontrada o no autorizada' });
+        }
+
+        await HistoriaClinica.create({
+            motivo,
+            descripcion,
+            resolucion,
+            cita_id: citaId,
+            paciente_id: cita.paciente_id,
+            medico_id: medicoId
+        });
+
+        cita.estado = 'completada';
+        await cita.save();
+
+        return res.json({ mensaje: 'Historia clínica guardada con éxito' });
+    } catch (error) {
+        console.error("Error al guardar la historia clínica:", error);
+        return res.status(500).json({ error: 'Hubo un error al procesar la solicitud' });
+    }
+};
+
 export {
     formularioMedico,
     medicalPanel,
     formularioRegistroMedico,
-    registrarMedico
+    registrarMedico,
+    guardarHistoriaClinica
 };

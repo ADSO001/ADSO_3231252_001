@@ -6,15 +6,15 @@ import {
     formularioMedico, 
     medicalPanel, 
     formularioRegistroMedico, 
-    registrarMedico 
+    registrarMedico,
+    guardarHistoriaClinica 
 } from '../controllers/medicalControllers.js';
 
 const router = express.Router();
 
-// Formulario de registro (GET)
 router.get('/medicalRegistration', formularioRegistroMedico);
 
-// Procesamiento de registro (POST) -> Multer procesa el stream multipart primero
+
 router.post('/medicalRegistration', (req, res, next) => {
     uploadMedicalFiles(req, res, (err) => {
         if (err) {
@@ -31,10 +31,12 @@ router.post('/medicalRegistration', (req, res, next) => {
     });
 }, registrarMedico);
 
-// Vista adicional del formulario médico si aplica
+
 router.get('/formularioMedico', formularioMedico);
 
-// Panel médico protegido con el middleware rutaMedico
+
 router.get('/medicalPanel', rutaMedico, medicalPanel);
+
+router.post('/medico/historia-clinica', rutaMedico, guardarHistoriaClinica);
 
 export default router;
