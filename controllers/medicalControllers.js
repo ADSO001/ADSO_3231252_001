@@ -141,10 +141,16 @@ const medicalPanel = async (req, res) => {
 
         const citasHoy = citas.filter(cita => cita.fecha === fechaHoyString && cita.estado !== 'completada');
         const proximasCitas = citas.filter(cita => cita.fecha > fechaHoyString && cita.estado !== 'completada');
-        const historial = citas.filter(cita => cita.fecha < fechaHoyString || cita.estado === 'completada');
+        const historial = citas.filter(cita => 
+            cita.fecha < fechaHoyString || 
+            cita.estado === 'completada' || 
+            cita.estado === 'cancelada'
+        );
 
         res.render("medicalPanel", {
             tituloPagina: "Panel del Médico",
+          
+            csrfToken: typeof req.csrfToken === 'function' ? req.csrfToken() : (req.body && req.body._csrf ? req.body._csrf : ''), 
             medico: req.usuario,
             citasHoy,
             proximasCitas,
@@ -201,4 +207,5 @@ export {
     formularioRegistroMedico,
     registrarMedico,
     guardarHistoriaClinica
+    
 };

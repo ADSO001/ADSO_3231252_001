@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Usuario from "../models/usuarios.js";
+import { Cita } from '../models/index.js';
 // Importamos los helpers de email (asegúrate de que la ruta relativa coincida con tu carpeta)
 import { emailMedicoAprobado, emailMedicoRechazado } from "../helpers/emails.js";
 
@@ -16,10 +17,81 @@ const formularioAdminAppointment = (req, res) => {
     });
 };
 
-const formularioDoctorsHours = (req, res) => {
-    res.render("doctorsHours", {
-        tituloPagina: "Panel de Administración"
-    });
+
+const formatLocal = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+const obtenerDiasSemana = (fechaReferencia) => {
+   
+    let fecha = fechaReferencia ? new Date(`${fechaReferencia}T12:00:00`) : new Date();
+    let diaSemana = fecha.getDay();
+    let diferencia = fecha.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1); 
+    
+    let lunes = new Date(fecha.setDate(diferencia));
+    let dias = [];
+    const nombresDias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    
+    for (let i = 0; i < 7; i++) {
+        let dia = new Date(lunes);
+        dia.setDate(lunes.getDate() + i);
+        dias.push({
+            nombre: nombresDias[dia.getDay()],
+            fechaISO: formatLocal(dia), 
+            texto: `${dia.getDate()} ${nombresDias[dia.getDay()].substring(0,3)}`
+        });
+    }
+    return dias;
+};
+
+
+const formularioDoctorsHours = async (req, res) => {
+    try {
+        const medicos = await Usuario.findAll({
+            where: { rol: 'medico', estado_aprobacion: 'aprobado' },
+            attributes: ['id', 'nombre', 'apellido', 'especialidad', 'horarios']
+        });
+
+        
+        const { medicoId, fecha } = req.query;
+        const diasSemana = obtenerDiasSemana(fecha);
+        
+        let citasMedico = [];
+        let medicoSeleccionado = null;
+
+        if (medicoId) {
+            medicoSeleccionado = await Usuario.findByPk(medicoId);
+            
+           
+            citasMedico = await Cita.findAll({
+                where: { medico_id: medicoId, estado: 'pendiente' },
+                include: [{ model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido'] }]
+            });
+        }
+
+        const fechaActualObj = new Date(`${diasSemana[0].fechaISO}T12:00:00`);
+        const semAnterior = new Date(fechaActualObj); 
+        semAnterior.setDate(semAnterior.getDate() - 7);
+        const semSiguiente = new Date(fechaActualObj); 
+        semSiguiente.setDate(semSiguiente.getDate() + 7);
+
+        res.render("doctorsHours", {
+            tituloPagina: "Control de Horarios - SIGCMI",
+            medicos,
+            medicoSeleccionado,
+            citas: citasMedico,
+            diasSemana, 
+            fechaAnterior: formatLocal(semAnterior),
+            fechaSiguiente: formatLocal(semSiguiente)
+        });
+
+    } catch (error) {
+        console.error("Error al cargar horarios:", error);
+        res.redirect("/adminPanel");
+    }
 };
 
 const formulariopatientManagement = (req, res) => {
