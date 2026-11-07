@@ -66,7 +66,7 @@ html(lang="es")
                   each med in medicos
                     option(value=med.id selected=(medicoSeleccionado && medicoSeleccionado.id == med.id))= `Dr. ${med.nombre} ${med.apellido} - ${med.especialidad}`
             div
-              button(type="submit" class="bg-black text-white px-[20px] py-[10px] rounded-[8px] font-bold hover:opacity-80 transition-opacity") Ver Horario
+              button(type="submit" class="bg-black text-white px-[20px] py-[10px] rounded-[8px] font-bold hover:opacity-80 transition-opacity cursor-pointer") Ver Horario
 
         //- TARJETA PRINCIPAL DEL CALENDARIO
         if medicoSeleccionado
@@ -97,40 +97,36 @@ html(lang="es")
                   span(class="w-[14px] h-[14px] rounded-md bg-gray-100 border border-gray-300 inline-block")
                   | Fines de semana
 
-            //- GRILLA DEL CALENDARIO DINÁMICA
             div(class="overflow-x-auto")
               div(class="grid grid-cols-[70px_repeat(7,minmax(120px,1fr))] gap-2 min-w-[900px]")
                 
-                //- CABECERAS (Ahora con fechas reales)
+                //- Cabecera: Espacio vacío para la columna de horas
                 div(class="bg-transparent")
+
+                //- Cabecera: Los 7 días de la semana
                 each dia in diasSemana
                   div(class="p-2 text-center font-bold text-gray-700 bg-gray-100 rounded-lg text-[13px] flex flex-col")
                     span= dia.nombre
                     span(class="text-[11px] font-normal text-gray-500")= dia.fechaISO
 
-                //- ITERACIÓN DE HORAS (8:00 a 20:00)
                 - const horas = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
                 
-                //- Función que cruza las fechas reales con la BD
-                - 
-                  function obtenerCita(fechaISO, horaStr) {
-                    return citas.find(c => c.fecha === fechaISO && c.hora.startsWith(horaStr.substring(0,2)));
-                  }
-
+                //- Cuerpo de la grilla (Horas y celdas por cada día)
                 each hora in horas
-                  div(class="flex items-center justify-center font-bold text-gray-500 text-[12px]")= hora
+                  div(class="flex items-center justify-center font-bold text-gray-500 text-[12px] bg-gray-50 rounded-lg")= hora
                   
                   each dia, i in diasSemana
                     if i === 5 || i === 6
                       div(class="min-h-[58px] p-2 rounded-lg bg-gray-100 border border-gray-200 select-none")
                     else
-                      - const cita = obtenerCita(dia.fechaISO, hora)
+                      - const cita = citas.find(c => c.fecha === dia.fechaISO && c.hora.startsWith(hora.substring(0,2)))
+                      
                       if cita
                         div(class="min-h-[58px] p-2 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 text-[11px] flex flex-col justify-center text-center font-semibold leading-tight")
                           span= `${cita.paciente.nombre} ${cita.paciente.apellido}`
                           span(class="text-[10px] text-amber-700 font-normal mt-1") Ocupado
                       else
-                        div(class="min-h-[58px] p-2 rounded-lg bg-emerald-50 border border-emerald-200 transition-colors hover:bg-emerald-100 cursor-pointer")
+                        div(class="min-h-[58px] p-2 rounded-lg bg-emerald-50 border border-emerald-200 transition-colors cursor-default")
         else
           div(class="bg-white rounded-[16px] p-[40px] text-center border border-gray-200 shadow-sm")
             i(data-lucide="search", class="w-[40px] h-[40px] text-gray-300 mx-auto mb-[15px]")

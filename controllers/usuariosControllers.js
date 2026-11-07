@@ -5,6 +5,7 @@ import { Usuario, Cita } from "../models/index.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
 
+
 const formularioLogin = (req, res) => {
     res.render("login", {
         autenticado: true,
@@ -368,7 +369,78 @@ const autenticar = async (req, res) => {
 
     return res.redirect("/patientPanel");
 };
+const verAgendaMedicoParaPaciente = async (req, res) => {
+    try {
+     
+        const medicos = await Usuario.findAll({
+            where: { rol: 'medico', estado_aprobacion: 'aprobado' },
+            attributes: ['id', 'nombre', 'apellido', 'especialidad', 'precio_consulta']
+        });
 
+        const { medicoId, fecha } = req.query;
+
+       
+        let fechaBase = fecha ? new Date(`${fecha}T12:00:00`) : new Date();
+        
+   
+        let diaSemana = fechaBase.getDay();
+        let diff = fechaBase.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
+        let lunes = new Date(fechaBase.setDate(diff));
+
+        let diasSemana = [];
+        const nombresDias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábados', 'Domingos'];
+        
+        for (let i = 0; i < 7; i++) {
+            let d = new Date(lunes);
+            d.setDate(lunes.getDate() + i);
+            
+            let anio = d.getFullYear();
+            let mes = String(d.getMonth() + 1).padStart(2, '0');
+            let dia = String(d.getDate()).padStart(2, '0');
+            let fechaISO = `${anio}-${mes}-${dia}`;
+            
+            diasSemana.push({
+                nombre: nombresDias[i],
+                fechaISO: fechaISO,
+                texto: `${dia}/${mes}`
+            });
+        }
+
+        
+        let semAnteriorObj = new Date(lunes);
+        semAnteriorObj.setDate(semAnteriorObj.getDate() - 7);
+        let semSiguienteObj = new Date(lunes);
+        semSiguienteObj.setDate(semSiguienteObj.getDate() + 7);
+
+        const formatDateISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        let citasMedico = [];
+        let medicoSeleccionado = null;
+
+        if (medicoId) {
+            medicoSeleccionado = await Usuario.findByPk(medicoId);
+            
+            citasMedico = await Cita.findAll({
+                where: { medico_id: medicoId, estado: 'pendiente' }
+            });
+        }
+
+        res.render("patientScheduleAppointment", {
+            usuario: req.usuario,
+            medicos,
+            medicoSeleccionado,
+            citas: citasMedico,
+            diasSemana,
+            fechaAnterior: formatDateISO(semAnteriorObj),
+            fechaSiguiente: formatDateISO(semSiguienteObj),
+            csrfToken: req.csrfToken ? req.csrfToken() : null
+        });
+
+    } catch (error) {
+        console.error("Error al cargar agenda para paciente:", error);
+        res.redirect("/patientPanel");
+    }
+};
 export { 
     formularioLogin, 
     registrar, 
@@ -380,5 +452,6 @@ export {
     autenticar, 
     verPatientPanel, 
     confirmar,
-    vistaPrincipal 
+    vistaPrincipal ,
+    verAgendaMedicoParaPaciente
 };

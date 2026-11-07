@@ -1,9 +1,12 @@
-import { Cita } from '../models/index.js';
+import { Cita, Usuario } from '../models/index.js';
 
 const crearCita = async (req, res) => {
     try {
-        const { medico_id, especialidad, fecha, hora, motivo } = req.body;
+        const { medico_id, fecha, hora, motivo } = req.body;
         const paciente_id = req.usuario.id;
+
+      
+        const medico = await Usuario.findByPk(medico_id);
 
         await Cita.create({
             paciente_id,
@@ -11,13 +14,13 @@ const crearCita = async (req, res) => {
             fecha,
             hora,
             motivo,
-            especialidad,
+            especialidad: medico ? medico.especialidad : 'General', 
             estado: 'pendiente'
         });
 
         res.redirect('/patientPanel');
     } catch (error) {
-        console.error(error);
+        console.error("Error detallado al crear la cita:", error);
         res.redirect('/patientPanel');
     }
 };

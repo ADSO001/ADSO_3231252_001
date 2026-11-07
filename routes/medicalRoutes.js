@@ -2,12 +2,14 @@ import express from 'express';
 import upload from '../middleware/subirDocumento.js';
 import rutaMedico from '../middleware/rutaMedico.js';
 import uploadMedicalFiles from '../middleware/subirDocumento.js';
+import protegerRuta from '../middleware/protegerRuta.js';
 import { 
     formularioMedico, 
     medicalPanel, 
     formularioRegistroMedico, 
     registrarMedico,
-    guardarHistoriaClinica 
+    guardarHistoriaClinica,
+    miAgendaSemanal
 } from '../controllers/medicalControllers.js';
 
 const router = express.Router();
@@ -39,4 +41,5 @@ router.get('/medicalPanel', rutaMedico, medicalPanel);
 
 router.post('/medico/historia-clinica', rutaMedico, guardarHistoriaClinica);
 
+router.get('/medico/mi-agenda', protegerRuta, miAgendaSemanal);
 export default router;
