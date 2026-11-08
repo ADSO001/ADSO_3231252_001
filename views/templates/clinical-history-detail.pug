@@ -1,0 +1,75 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= `${tituloPagina} - SIGCMI`
+    script(src="https://cdn.tailwindcss.com")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body(class="bg-gray-100 text-gray-800 min-h-screen")
+    header(class="bg-white border-b border-gray-200 px-5 py-4")
+      div(class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3")
+        div
+          h1(class="text-xl font-bold text-gray-900") Historia clínica
+          p(class="text-sm text-gray-500") SIGCMI · Registro de atención ambulatoria
+        div(class="flex flex-wrap gap-2")
+          a(href=`/historia-clinica/pdf/${historia.id}`, target="_blank", class="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Descargar PDF
+          if rolUsuario === 'medico'
+            a(href="/medicalPanel", class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Volver al panel
+          else
+            a(href="/patientPanel", class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Volver al panel
+    main(class="max-w-5xl mx-auto p-4 md:p-6")
+      section(class="bg-white border border-gray-200 rounded-xl p-5 mb-4 shadow-sm")
+        div(class="flex flex-wrap justify-between gap-4")
+          div
+            p(class="text-xs uppercase tracking-wide text-gray-500 font-bold") Paciente
+            h2(class="text-lg font-bold")= `${paciente.nombre} ${paciente.apellido}`
+            p(class="text-sm text-gray-600")= `${paciente.tipo_documento || ''} ${paciente.numero_documento || ''}`
+            p(class="text-sm text-gray-600")= `Fecha de nacimiento: ${paciente.fecha_nacimiento || 'No registrada'}${edadPaciente !== null ? ' · Edad: ' + edadPaciente + ' años' : ''}`
+            p(class="text-sm text-gray-600")= `Teléfono: ${paciente.telefono || 'No registrado'} · Emergencia: ${paciente.telefono_emergencia || 'No registrado'}`
+            p(class="text-sm text-gray-600")= paciente.email || 'Correo no registrado'
+          div
+            p(class="text-xs uppercase tracking-wide text-gray-500 font-bold") Profesional responsable
+            p(class="font-semibold")= `Dr. ${medico.nombre} ${medico.apellido}`
+            p(class="text-sm text-gray-600")= medico.especialidad || 'Especialidad no registrada'
+            p(class="text-sm text-gray-600")= `Registro profesional: ${medico.tarjeta_profesional || 'No registrado'}`
+        div(class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5 pt-4 border-t border-gray-100")
+          div
+            p(class="text-xs text-gray-500") Fecha de elaboración
+            p(class="font-semibold text-sm")= new Date(historia.fecha_elaboracion).toLocaleString('es-CO', { timeZone: 'America/Bogota' })
+          div
+            p(class="text-xs text-gray-500") Motivo de consulta
+            p(class="font-semibold text-sm")= historia.motivo
+          div
+            p(class="text-xs text-gray-500") Cita relacionada
+            p(class="font-semibold text-sm")= historia.cita ? `${historia.cita.fecha} · ${historia.cita.hora}` : 'Registro histórico sin cita vinculada'
+      section(class="bg-white border border-gray-200 rounded-xl p-5 mb-4 shadow-sm")
+        h3(class="font-bold text-gray-900 mb-3") Diagnóstico y plan de manejo
+        div(class="grid grid-cols-1 md:grid-cols-2 gap-4")
+          div
+            p(class="text-xs text-gray-500") Diagnóstico principal
+            p(class="font-semibold whitespace-pre-line")= historia.diagnostico_principal || datos.diagnosticoPrincipal || 'No registrado'
+          div
+            p(class="text-xs text-gray-500") Código CIE-10
+            p(class="font-semibold")= historia.codigo_cie10 || datos.codigoCie10 || 'No registrado'
+          div(class="md:col-span-2")
+            p(class="text-xs text-gray-500") Plan de manejo / tratamiento
+            p(class="whitespace-pre-line text-sm bg-gray-50 rounded-lg p-3")= datos.planTratamiento || historia.resolucion || 'No registrado'
+      if secciones.length
+        each seccion in secciones
+          section(class="bg-white border border-gray-200 rounded-xl p-5 mb-4 shadow-sm")
+            h3(class="font-bold text-gray-900 mb-4")= seccion.titulo
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-4")
+              each campo in seccion.campos
+                div(class="min-w-0")
+                  p(class="text-xs font-bold text-gray-500 mb-1")= campo.etiqueta
+                  p(class="text-sm whitespace-pre-line break-words")= campo.valor
+      if !secciones.length && (!historia.datos_clinicos || !Object.keys(historia.datos_clinicos).length)
+        section(class="bg-white border border-gray-200 rounded-xl p-5 mb-4 shadow-sm")
+          h3(class="font-bold text-gray-900 mb-3") Registro anterior
+          p(class="text-xs text-gray-500") Descripción
+          p(class="text-sm whitespace-pre-line mb-4")= historia.descripcion
+          p(class="text-xs text-gray-500") Diagnóstico / resolución
+          p(class="text-sm whitespace-pre-line")= historia.resolucion
+      p(class="text-xs text-gray-500 text-center mt-6") Información clínica confidencial. Su consulta y tratamiento deben respetar los controles de acceso y las obligaciones de custodia aplicables.

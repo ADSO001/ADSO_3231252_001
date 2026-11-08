@@ -2,19 +2,20 @@ import express from 'express';
 import upload from '../middleware/subirDocumento.js';
 import rutaMedico from '../middleware/rutaMedico.js';
 import uploadMedicalFiles from '../middleware/subirDocumento.js';
+import protegerRuta from '../middleware/protegerRuta.js';
 import { 
     formularioMedico, 
     medicalPanel, 
     formularioRegistroMedico, 
-    registrarMedico 
+    registrarMedico,
+    miAgendaSemanal
 } from '../controllers/medicalControllers.js';
 
 const router = express.Router();
 
-// Formulario de registro (GET)
 router.get('/medicalRegistration', formularioRegistroMedico);
 
-// Procesamiento de registro (POST) -> Multer procesa el stream multipart primero
+
 router.post('/medicalRegistration', (req, res, next) => {
     uploadMedicalFiles(req, res, (err) => {
         if (err) {
@@ -31,10 +32,12 @@ router.post('/medicalRegistration', (req, res, next) => {
     });
 }, registrarMedico);
 
-// Vista adicional del formulario médico si aplica
+
 router.get('/formularioMedico', formularioMedico);
 
-// Panel médico protegido con el middleware rutaMedico
+
 router.get('/medicalPanel', rutaMedico, medicalPanel);
 
+
+router.get('/medico/mi-agenda', protegerRuta, miAgendaSemanal);
 export default router;

@@ -1,0 +1,122 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Agendar Cita - SIGCMI
+    script(src="https://cdn.tailwindcss.com")
+    script(src="https://unpkg.com/lucide@latest")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-[#fafafa] text-gray-800 min-h-screen flex flex-col")
+    
+    //- ENCABEZADO
+    header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px] bg-white shrink-0")
+      div(class="flex items-center")
+        img(src="/img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
+        h1(class="text-[18px] font-bold ml-[10px]") Portal de Pacientes - Agendar Cita
+
+      a(href="/patientPanel", class="bg-gray-200 text-black px-[15px] h-[35px] rounded-[10px] font-bold text-[13px] no-underline hover:bg-gray-300 transition-colors flex items-center") Volver al Panel
+
+    main(class="flex-1 p-[30px] max-w-[1200px] mx-auto w-full")
+      
+      //- FILTRO DE MÉDICOS
+      div(class="mb-[20px] bg-white p-[20px] rounded-[12px] border border-gray-200 shadow-sm")
+        form(action="/paciente/agendar" method="GET" class="flex flex-col md:flex-row gap-[15px] items-end")
+          div(class="w-full md:w-1/2")
+            label(for="medicoId" class="block text-[13px] font-bold text-gray-700 mb-[5px]") Selecciona un Especialista:
+            select#medicoId(name="medicoId" class="w-full p-[10px] border border-gray-300 rounded-[8px] outline-none")
+              option(value="") -- Elige un médico --
+              if medicos
+                each med in medicos
+                  option(value=med.id selected=(medicoSeleccionado && medicoSeleccionado.id == med.id))= `Dr. ${med.nombre} ${med.apellido} - ${med.especialidad} ($${med.precio_consulta})`
+          div
+            button(type="submit" class="bg-black text-white px-[20px] py-[10px] rounded-[8px] font-bold hover:opacity-80 transition-opacity cursor-pointer") Ver Disponibilidad
+
+      if medicoSeleccionado
+        //- NAVEGACIÓN DE SEMANAS
+        div(class="flex flex-col md:flex-row justify-between items-center mb-[15px] bg-white p-[10px_20px] rounded-[12px] border border-gray-200 shadow-sm gap-[10px]")
+          a(href=`/paciente/agendar?medicoId=${medicoSeleccionado.id}&fecha=${fechaAnterior}` class="text-[13px] font-bold text-gray-600 hover:text-black bg-gray-100 px-[15px] py-[8px] rounded-[8px] shadow-sm no-underline") &larr; Semana anterior
+          span(class="text-[15px] font-bold text-gray-800") Semana del #{diasSemana[0].texto} al #{diasSemana[6].texto}
+          a(href=`/paciente/agendar?medicoId=${medicoSeleccionado.id}&fecha=${fechaSiguiente}` class="text-[13px] font-bold text-gray-600 hover:text-black bg-gray-100 px-[15px] py-[8px] rounded-[8px] shadow-sm no-underline") Semana siguiente &rarr;
+
+        section(class="bg-white rounded-[16px] p-[20px] border border-gray-200 shadow-sm")
+          p(class="text-[13px] text-gray-500 mb-[15px]") Haz clic en cualquier recuadro 
+            span(class="font-bold text-emerald-600") Verde (Disponible)
+            |  para agendar tu cita a esa hora exacta.
+
+          div(class="overflow-x-auto")
+            div(class="grid grid-cols-[70px_repeat(7,minmax(120px,1fr))] gap-2 min-w-[900px]")
+              div(class="bg-transparent")
+              each dia in diasSemana
+                div(class="p-2 text-center font-bold text-gray-700 bg-gray-100 rounded-lg text-[13px] flex flex-col")
+                  span= dia.nombre
+                  span(class="text-[11px] font-normal text-gray-500")= dia.fechaISO
+
+              - const horas = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+              
+              each hora in horas
+                div(class="flex items-center justify-center font-bold text-gray-500 text-[12px]")= hora
+                
+                each dia, i in diasSemana
+                  if i === 5 || i === 6
+                    div(class="min-h-[58px] p-2 rounded-lg bg-gray-100 border border-gray-200 select-none")
+                  else
+                    - const cita = citas.find(c => c.fecha === dia.fechaISO && c.hora.startsWith(hora.substring(0,2)))
+                    
+                    if cita
+                      div(class="min-h-[58px] p-2 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 text-[11px] flex flex-col justify-center text-center font-semibold leading-tight")
+                        span Ocupado
+                    else
+                      //- SLOT VERDE CLICKEABLE
+                      div(onclick=`abrirModalAgendar('${medicoSeleccionado.id}', '${dia.fechaISO}', '${hora}')` class="min-h-[58px] p-2 rounded-lg bg-emerald-50 border border-emerald-200 transition-colors hover:bg-emerald-200 cursor-pointer flex items-center justify-center text-[12px] font-bold text-emerald-700")
+                        | Reservar
+      else
+        div(class="bg-white rounded-[16px] p-[40px] text-center border border-gray-200 shadow-sm")
+          i(data-lucide="calendar", class="w-[40px] h-[40px] text-gray-300 mx-auto mb-[15px]")
+          h3(class="text-[18px] font-bold text-gray-700 mb-[5px]") Selecciona un médico para comenzar
+          p(class="text-[14px] text-gray-500") Elige un especialista en el filtro superior para ver sus horarios disponibles y reservar.
+
+    //- MODAL PARA CONFIRMAR LA CITA
+    div#modalAgendar(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
+      div(class="bg-white w-full max-w-[450px] rounded-[15px] shadow-2xl overflow-hidden")
+        div(class="p-[20px] border-b border-gray-200 bg-gray-50")
+          h2(class="text-[18px] font-bold text-black m-0") Confirmar Cita Médica
+        form(action="/citas/crear" method="POST" class="p-[20px] flex flex-col gap-[15px] text-[14px]")
+          input(type="hidden" name="_csrf" value=csrfToken)
+          input#modalMedicoId(type="hidden" name="medico_id")
+          input#modalFecha(type="hidden" name="fecha")
+          input#modalHora(type="hidden" name="hora")
+
+          div(class="flex flex-col gap-[5px]")
+            span(class="font-bold text-gray-700") Fecha seleccionada:
+            p#textoFecha(class="text-gray-900 font-semibold bg-gray-50 p-[8px] rounded-[6px] m-0")
+          
+          div(class="flex flex-col gap-[5px]")
+            span(class="font-bold text-gray-700") Hora seleccionada:
+            p#textoHora(class="text-gray-900 font-semibold bg-gray-50 p-[8px] rounded-[6px] m-0")
+
+          div(class="flex flex-col gap-[5px]")
+            label(for="motivo" class="font-bold text-gray-700") Motivo de la consulta:
+            textarea#motivo(name="motivo" rows="3" required class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]" placeholder="Breve descripción de sus síntomas o motivo...")
+
+          div(class="flex justify-end gap-[10px] mt-[10px]")
+            button(type="button" onclick="cerrarModalAgendar()" class="bg-gray-200 text-black px-[18px] py-[8px] rounded-[6px] font-bold text-[13px] cursor-pointer hover:bg-gray-300") Cancelar
+            button(type="submit" class="bg-black text-white px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] cursor-pointer hover:opacity-80") Confirmar Cita
+
+    script.
+      lucide.createIcons();
+
+      function abrirModalAgendar(medicoId, fecha, hora) {
+        document.getElementById('modalMedicoId').value = medicoId;
+        document.getElementById('modalFecha').value = fecha;
+        document.getElementById('modalHora').value = hora;
+        document.getElementById('textoFecha').innerText = fecha;
+        document.getElementById('textoHora').innerText = hora;
+        document.getElementById('modalAgendar').classList.remove('hidden');
+      }
+
+      function cerrarModalAgendar() {
+        document.getElementById('modalAgendar').classList.add('hidden');
+      }

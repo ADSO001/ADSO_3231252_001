@@ -1,0 +1,86 @@
+extends ../layout/includes/header
+
+block content
+  .container.mx-auto.mt-6.mb-12.px-4.max-w-5xl
+    .bg-white.shadow-lg.rounded-xl.overflow-hidden.border.border-gray-200
+      // Header Formulario
+      .bg-blue-700.p-6.text-white
+        h2.text-2xl.font-bold Registro de Historia Clínica Ambulatoria
+        p.text-blue-100.text-sm Atencion Medica - Normativa MinSalud Colombia
+      
+      // Resumen del Paciente y Cita
+      .bg-blue-50.p-4.border-b.border-blue-100.grid.grid-cols-1.md_grid-cols-3.gap-4.text-sm
+        div
+          span.font-semibold.text-gray-700 Paciente: 
+          span.text-gray-900 #{cita.paciente.nombre} #{cita.paciente.apellido}
+        div
+          span.font-semibold.text-gray-700 Identificacion: 
+          span.text-gray-900 #{cita.paciente.tipo_documento || 'CC'} - #{cita.paciente.numero_documento}
+        div
+          span.font-semibold.text-gray-700 Contacto / Tel: 
+          span.text-gray-900 #{cita.paciente.telefono || 'N/A'}
+
+      // Formulario Principal
+      form.p-6(action=`/historia-clinica/crear/${cita.id}` method="POST")
+        input(type="hidden" name="_csrf" value=csrfToken)
+
+        // SECCION 1: ANAMNESIS
+        .mb-8
+          h3.text-lg.font-bold.text-blue-800.border-b-2.border-blue-500.pb-1.mb-4
+            i.fas.fa-notes-medical.mr-2
+            | 1. Anamnesis y Motivo de Consulta
+          
+          .grid.grid-cols-1.gap-4
+            div
+              label.block.text-sm.font-semibold.text-gray-700.mb-1 Motivo de Consulta *
+              textarea.w-full.border.border-gray-300.rounded-lg.p-3.focus_ring-2.focus_ring-blue-500(
+                name="motivo" 
+                rows="2" 
+                required 
+                placeholder="Razon principal expresada espontaneamente por el paciente..."
+              )
+            div
+              label.block.text-sm.font-semibold.text-gray-700.mb-1 Enfermedad Actual / Descripcion *
+              textarea.w-full.border.border-gray-300.rounded-lg.p-3.focus_ring-2.focus_ring-blue-500(
+                name="descripcion" 
+                rows="4" 
+                required 
+                placeholder="Detalle de inicio de sintomas, cronologia, evolucion y estado actual..."
+              )
+
+        // SECCION 2: SIGNOS VITALES Y ANTROPOMETRÍA
+        .mb-8
+          h3.text-lg.font-bold.text-blue-800.border-b-2.border-blue-500.pb-1.mb-4
+            i.fas.fa-heartbeat.mr-2
+            | 2. Signos Vitales y Antropometria
+          
+          .grid.grid-cols-2.sm_grid-cols-3.md_grid-cols-6.gap-4
+            div
+              label.block.text-xs.font-semibold.text-gray-700.mb-1 P. Arterial (mmHg)
+              input.w-full.border.border-gray-300.rounded-lg.p-2.text-sm(type="text" name="presion_arterial" placeholder="Ej: 120/80")
+            div
+              label.block.text-xs.font-semibold.text-gray-700.mb-1 F. Cardiaca (lpm)
+              input.w-full.border.border-gray-300.rounded-lg.p-2.text-sm(type="number" name="frecuencia_cardiaca" placeholder="Ej: 75")
+            div
+              label.block.text-xs.font-semibold.text-gray-700.mb-1 F. Resp. (rpm)
+              input.w-full.border.border-gray-300.rounded-lg.p-2.text-sm(type="number" name="frecuencia_respiratoria" placeholder="Ej: 18")
+            div
+              label.block.text-xs.font-semibold.text-gray-700.mb-1 Temp. (°C)
+              input.w-full.border.border-gray-300.rounded-lg.p-2.text-sm(type="number" step="0.1" name="temperatura" placeholder="Ej: 36.5")
+            div
+              label.block.text-xs.font-semibold.text-gray-700.mb-1 Peso (kg)
+              input.w-full.border.border-gray-300.rounded-lg.p-2.text-sm(type="number" step="0.1" name="peso" placeholder="Ej: 70.5")
+            div
+              label.block.text-xs.font-semibold.text-gray-700.mb-1 Talla (cm)
+              input.w-full.border.border-gray-300.rounded-lg.p-2.text-sm(type="number" step="0.1" name="talla" placeholder="Ej: 172")
+
+        // SECCION 3: ANTECEDENTES Y REVISION POR SISTEMAS
+        .mb-8
+          h3.text-lg.font-bold.text-blue-800.border-b-2.border-blue-500.pb-1.mb-4
+            i.fas.fa-file-medical-alt.mr-2
+            | 3. Antecedentes Medicos y Revision
+          
+          .grid.grid-cols-1.md_grid-cols-2.gap-4
+            div
+              label.block.text-sm.font-semibold.text-gray-700.mb-1 Antecedentes Personales y Alergias
+              textarea.w-full.border.border-gray-300.rounded-lg.p-2.5.text-

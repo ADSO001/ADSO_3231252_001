@@ -1,24 +1,15 @@
-
-import express from "express";
-
-import {
-    agendarCita,
-    mostrarPanelMedico
-} from "../controllers/citaController.js";
-
-import protegerRuta from "../middleware/protegerRuta.js";
+console.log("--- LEYENDO ARCHIVO DE RUTAS DE CITAS ---");
+import express from 'express';
+import { crearCita, cancelarCita, reprogramarCita } from '../controllers/citaControllers.js';
+import protegerRuta from '../middleware/protegerRuta.js';
 
 const router = express.Router();
 
-// Mantener compatible la dirección anterior del panel del paciente
-router.get("/paciente/panel", protegerRuta, (req, res) => {
-    return res.redirect("/patientPanel");
-});
 
-// Crear una cita
-router.post("/citas/crear", protegerRuta, agendarCita);
+router.post('/citas/crear', protegerRuta, crearCita);
 
-// Panel del médico
-router.get("/medico/panel", protegerRuta, mostrarPanelMedico);
+
+router.post('/citas/:id/cancelar', protegerRuta, cancelarCita);
+router.post('/citas/:id/reprogramar', protegerRuta, reprogramarCita);
 
 export default router;

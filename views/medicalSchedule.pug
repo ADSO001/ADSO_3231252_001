@@ -1,0 +1,82 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Mi Agenda Semanal - SIGCMI
+    script(src="https://cdn.tailwindcss.com")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-[#fafafa] text-gray-800 min-h-screen flex flex-col")
+    
+    
+    header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px] bg-white shrink-0")
+      div(class="flex items-center")
+        img(src="/img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
+        div(class="border border-gray-300 rounded-[8px] px-[15px] py-[5px] ml-[20px]")
+          p#nombreMedico(class="text-[14px] font-bold m-0")= medico ? `Dr. ${medico.nombre}` : 'Dr. Médico'
+          p#especialidadMedico(class="text-[12px] text-gray-500 m-0")= medico && medico.especialidad ? medico.especialidad : 'Medicina General'
+
+      div(class="flex items-center gap-[15px] ml-auto")
+       
+        a(href="/medicalPanel" class="bg-gray-200 text-black px-[15px] h-[35px] rounded-[10px] font-bold text-[13px] no-underline hover:bg-gray-300 transition-colors flex items-center") Volver al Panel
+        a(href="/login", class="no-underline")
+          button#logout(type="button", class="bg-black text-white px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:opacity-70 transition-opacity")
+            i(class="fa-solid fa-right-from-bracket")
+            | Cerrar sesión
+
+    main(class="flex-1 p-[30px] max-w-[1200px] mx-auto w-full")
+      header(class="mb-[25px]")
+        h2(class="text-[22px] font-bold mb-[5px] text-gray-900") Mi Agenda Semanal
+        p(class="text-[14px] text-gray-500 m-0") Visualiza tus espacios ocupados y disponibles en tiempo real.
+
+    
+      div(class="flex flex-col md:flex-row justify-between items-center mb-[15px] bg-white p-[10px_20px] rounded-[12px] border border-gray-200 shadow-sm gap-[10px]")
+        a(href=`/medico/mi-agenda?fecha=${fechaAnterior}` class="text-[13px] font-bold text-gray-600 hover:text-black bg-gray-100 px-[15px] py-[8px] rounded-[8px] shadow-sm no-underline") &larr; Semana anterior
+        span(class="text-[15px] font-bold text-gray-800") Semana del #{diasSemana[0].texto} al #{diasSemana[6].texto}
+        a(href=`/medico/mi-agenda?fecha=${fechaSiguiente}` class="text-[13px] font-bold text-gray-600 hover:text-black bg-gray-100 px-[15px] py-[8px] rounded-[8px] shadow-sm no-underline") Semana siguiente &rarr;
+
+      section(class="bg-white rounded-[16px] p-[20px] border border-gray-200 shadow-sm")
+        
+        div(class="flex flex-col md:flex-row md:items-center justify-between gap-[15px] mb-[20px] pb-[15px] border-b border-gray-100")
+          div(class="flex flex-wrap items-center gap-[20px] text-[13px] font-medium text-gray-600")
+            div(class="flex items-center gap-[8px]")
+              span(class="w-[14px] h-[14px] rounded-md bg-emerald-100 border border-emerald-400 inline-block")
+              | Disponible
+            div(class="flex items-center gap-[8px]")
+              span(class="w-[14px] h-[14px] rounded-md bg-amber-100 border border-amber-400 inline-block")
+              | Ocupado
+            div(class="flex items-center gap-[8px]")
+              span(class="w-[14px] h-[14px] rounded-md bg-gray-100 border border-gray-300 inline-block")
+              | Fines de semana
+
+        //- GRILLA DEL CALENDARIO DINÁMICA
+        div(class="overflow-x-auto")
+          div(class="grid grid-cols-[70px_repeat(7,minmax(120px,1fr))] gap-2 min-w-[900px]")
+            
+            div(class="bg-transparent")
+            each dia in diasSemana
+              div(class="p-2 text-center font-bold text-gray-700 bg-gray-100 rounded-lg text-[13px] flex flex-col")
+                span= dia.nombre
+                span(class="text-[11px] font-normal text-gray-500")= dia.fechaISO
+
+            - const horas = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+            
+            each hora in horas
+              div(class="flex items-center justify-center font-bold text-gray-500 text-[12px]")= hora
+              
+              each dia, i in diasSemana
+                if i === 5 || i === 6
+                  div(class="min-h-[58px] p-2 rounded-lg bg-gray-100 border border-gray-200 select-none")
+                else
+     
+                  - const cita = citas.find(c => c.fecha === dia.fechaISO && c.hora.startsWith(hora.substring(0,2)))
+                  
+                  if cita
+                    div(class="min-h-[58px] p-2 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 text-[11px] flex flex-col justify-center text-center font-semibold leading-tight")
+                      span= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                      span(class="text-[10px] text-amber-700 font-normal mt-1") Ocupado
+                  else
+                    div(class="min-h-[58px] p-2 rounded-lg bg-emerald-50 border border-emerald-200 transition-colors cursor-default")

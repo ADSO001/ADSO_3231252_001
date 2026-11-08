@@ -1,14 +1,13 @@
 import { check, validationResult } from 'express-validator';
 import fs from 'fs';
 import path from 'path';
-import Usuario from '../models/usuarios.js';
+import { Op } from 'sequelize';
+import { Usuario, Cita, HistoriaClinica } from '../models/index.js';
 
-// Helper para obtener el token CSRF de forma segura
 const obtenerCsrfToken = (req) => {
     return typeof req.csrfToken === 'function' ? req.csrfToken() : req.body._csrf;
 };
 
-// Renderizar la vista de registro de médicos
 const formularioRegistroMedico = (req, res) => {
     res.render('medicalRegistration', {
         pagina: 'Registro de Médico - SIGCMI',
@@ -18,12 +17,10 @@ const formularioRegistroMedico = (req, res) => {
     });
 };
 
-// Procesar el registro del médico
 const registrarMedico = async (req, res) => {
     console.log("BODY RECIBIDO:", req.body);
     console.log("ARCHIVOS RECIBIDOS:", req.files);
 
-    // 1. Validaciones de campos de texto (incluyendo precio_consulta y horarios si se requieren)
     await check('nombre').notEmpty().withMessage('El nombre es obligatorio').run(req);
     await check('apellido').notEmpty().withMessage('El apellido es obligatorio').run(req);
     await check('tipo_documento').notEmpty().withMessage('Selecciona el tipo de documento').run(req);
@@ -42,7 +39,6 @@ const registrarMedico = async (req, res) => {
 
     let resultado = validationResult(req);
 
-    // Helper para eliminar ambos archivos en caso de error
     const eliminarArchivosSiExisten = () => {
         if (req.files) {
             if (req.files['documento_verificacion']) {
@@ -56,11 +52,9 @@ const registrarMedico = async (req, res) => {
         }
     };
 
-    // 2. Extraer archivos de req.files
     const documentoVerificacion = req.files && req.files['documento_verificacion'] ? req.files['documento_verificacion'][0].filename : null;
     const fotoPerfil = req.files && req.files['foto'] ? req.files['foto'][0].filename : null;
 
-    // 3. Validar si adjuntó el documento de verificación obligatoriamente
     if (!documentoVerificacion) {
         eliminarArchivosSiExisten();
         return res.render('medicalRegistration', {
@@ -71,7 +65,6 @@ const registrarMedico = async (req, res) => {
         });
     }
 
-    // 4. Si hay errores en las validaciones de texto
     if (!resultado.isEmpty()) {
         eliminarArchivosSiExisten();
         return res.render('medicalRegistration', {
@@ -89,7 +82,6 @@ const registrarMedico = async (req, res) => {
         precio_consulta, horarios
     } = req.body;
 
-    // 5. Verificar si el correo ya existe
     const existeUsuario = await Usuario.findOne({ where: { email } });
     if (existeUsuario) {
         eliminarArchivosSiExisten();
@@ -103,25 +95,11 @@ const registrarMedico = async (req, res) => {
 
     try {
         await Usuario.create({
-            nombre,
-            apellido,
-            tipo_documento,
-            numero_documento,
-            genero,
-            telefono,
-            direccion,
-            email,
-            password,
-            rol: 'medico',
-            estado_aprobacion: 'pendiente',
-            confirmado: true,
-            especialidad,
-            tarjeta_profesional,
-            experiencia,
-            precio_consulta,
-            horarios,
-            documento_verificacion: documentoVerificacion,
-            foto: fotoPerfil
+            nombre, apellido, tipo_documento, numero_documento, 
+            genero, telefono, direccion, email, password, 
+            rol: 'medico', estado_aprobacion: 'pendiente', confirmado: true, 
+            especialidad, tarjeta_profesional, experiencia, precio_consulta, 
+            horarios, documento_verificacion: documentoVerificacion, foto: fotoPerfil
         });
 
         return res.render('templates/mensaje', {
@@ -147,16 +125,137 @@ const formularioMedico = (req, res) => {
     });
 };
 
-const medicalPanel = (req, res) => {
-    res.render("medicalPanel", {
-        tituloPagina: "Panel del Médico",
-        medico: req.usuario
-    });
+const medicalPanel = async (req, res) => {
+    try {
+        const fechaHoyString = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+
+        const citas = await Cita.findAll({
+            where: { medico_id: req.usuario.id },
+            include: [{
+                model: Usuario,
+                as: 'paciente',
+                attributes: ['nombre', 'apellido', 'telefono', 'email']
+            }],
+            order: [['fecha', 'ASC'], ['hora', 'ASC']]
+        });
+
+        // El médico consulta las historias de los pacientes con quienes tiene
+        // una cita activa o ya atendida, no solamente las que él mismo creó.
+        const pacientesRelacionados = [...new Set(
+            citas.filter(cita => cita.estado !== 'cancelada').map(cita => cita.paciente_id)
+        )];
+        const historiasClinicas = pacientesRelacionados.length
+            ? await HistoriaClinica.findAll({
+                where: { paciente_id: { [Op.in]: pacientesRelacionados } },
+                include: [
+                    { model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido', 'tipo_documento', 'numero_documento'] },
+                    { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad'] },
+                    { model: Cita, as: 'cita', attributes: ['id', 'fecha', 'hora', 'motivo'] }
+                ],
+                order: [['fecha_elaboracion', 'DESC']]
+            })
+            : [];
+
+        const citasHoy = citas.filter(cita => cita.fecha === fechaHoyString && cita.estado !== 'completada');
+        const proximasCitas = citas.filter(cita => cita.fecha > fechaHoyString && cita.estado !== 'completada');
+        const historial = citas.filter(cita => 
+            cita.fecha < fechaHoyString || 
+            cita.estado === 'completada' || 
+            cita.estado === 'cancelada'
+        );
+
+        res.render("medicalPanel", {
+            tituloPagina: "Panel del Médico",
+          
+            csrfToken: typeof req.csrfToken === 'function' ? req.csrfToken() : (req.body && req.body._csrf ? req.body._csrf : ''), 
+            medico: req.usuario,
+            citasHoy,
+            proximasCitas,
+            historial,
+            historiasClinicas,
+            totalCitas: citas.length
+        });
+    } catch (error) {
+        console.error(error);
+        res.render("medicalPanel", {
+            tituloPagina: "Panel del Médico",
+            medico: req.usuario,
+            csrfToken: typeof req.csrfToken === 'function' ? req.csrfToken() : '',
+            citasHoy: [],
+            proximasCitas: [],
+            historial: [],
+            historiasClinicas: [],
+            totalCitas: 0
+        });
+    }
 };
 
+
+const formatLocal = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+const obtenerDiasSemana = (fechaReferencia) => {
+    let fecha = fechaReferencia ? new Date(`${fechaReferencia}T12:00:00`) : new Date();
+    let diaSemana = fecha.getDay();
+    let diferencia = fecha.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1); 
+    
+    let lunes = new Date(fecha.setDate(diferencia));
+    let dias = [];
+    const nombresDias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    
+    for (let i = 0; i < 7; i++) {
+        let dia = new Date(lunes);
+        dia.setDate(lunes.getDate() + i);
+        dias.push({
+            nombre: nombresDias[dia.getDay()],
+            fechaISO: formatLocal(dia),
+            texto: `${dia.getDate()} ${nombresDias[dia.getDay()].substring(0,3)}`
+        });
+    }
+    return dias;
+};
+
+
+const miAgendaSemanal = async (req, res) => {
+    try {
+        const medicoId = req.usuario.id; 
+        const { fecha } = req.query;
+        const diasSemana = obtenerDiasSemana(fecha);
+
+       
+        const citasMedico = await Cita.findAll({
+            where: { medico_id: medicoId, estado: 'pendiente' },
+            include: [{ model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido'] }]
+        });
+
+      
+        const fechaActualObj = new Date(`${diasSemana[0].fechaISO}T12:00:00`);
+        const semAnterior = new Date(fechaActualObj); 
+        semAnterior.setDate(semAnterior.getDate() - 7);
+        const semSiguiente = new Date(fechaActualObj); 
+        semSiguiente.setDate(semSiguiente.getDate() + 7);
+
+        res.render("medicalSchedule", {
+            medico: req.usuario,
+            citas: citasMedico,
+            diasSemana,
+            fechaAnterior: formatLocal(semAnterior),
+            fechaSiguiente: formatLocal(semSiguiente)
+        });
+
+    } catch (error) {
+        console.error("Error al cargar la agenda:", error);
+        res.redirect("medicalPanel"); 
+    }
+};
 export {
     formularioMedico,
     medicalPanel,
     formularioRegistroMedico,
-    registrarMedico
+    registrarMedico,
+    miAgendaSemanal
 };

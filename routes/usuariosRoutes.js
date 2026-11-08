@@ -10,7 +10,9 @@ import {
   resetPassword, 
   formularioOlvidePassword, 
   comprobarToken, 
-  nuevaPassword 
+  nuevaPassword,
+  vistaPrincipal,
+  verAgendaMedicoParaPaciente
 } from "../controllers/usuariosControllers.js";
 import protegerRuta from "../middleware/protegerRuta.js"; 
 
@@ -20,7 +22,7 @@ router.get("/login", formularioLogin);
 router.post("/login", autenticar);
 
 router.get("/pacientRegistration", formularioRegistro);
-
+router.get("/mainview", vistaPrincipal);
 
 router.post("/pacientRegistration", [
   check("nombre").notEmpty().withMessage("El nombre es obligatorio"),
@@ -51,5 +53,5 @@ router.get("/forgotPassword/:token", comprobarToken);
 router.post("/forgotPassword/:token", nuevaPassword);
 
 router.get("/patientPanel", protegerRuta, verPatientPanel);
-
+router.get('/paciente/agendar', protegerRuta, verAgendaMedicoParaPaciente);
 export default router;

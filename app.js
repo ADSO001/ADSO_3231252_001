@@ -7,6 +7,7 @@ import usuariosRouter from "./routes/usuariosRoutes.js";
 import medicalRouter from "./routes/medicalRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
 import citaRouter from "./routes/citaRoutes.js";
+import historiaClinicaRouter from "./routes/historiaClinicaRoutes.js";
 
 const app = express();
 
@@ -45,5 +46,6 @@ app.use("/", usuariosRouter);
 app.use("/", medicalRouter);
 app.use("/", adminRouter);
 app.use("/", citaRouter);
+app.use("/", historiaClinicaRouter);
 
 export default app;

@@ -109,7 +109,7 @@ html(lang="es")
                       span(class="text-[12px] text-gray-400 italic") No especificado
                   
                   div(class="flex mt-auto")
-                    a(href="#", class="w-full bg-black text-white py-[8px] rounded-[20px] font-bold text-[13px] hover:opacity-80 transition-opacity no-underline text-center flex items-center justify-center") Ver agenda
+                    a(href="/doctorsHours?medicoId=" + medico.id, class="w-full bg-black text-white py-[8px] rounded-[20px] font-bold text-[13px] hover:opacity-80 transition-opacity no-underline text-center flex items-center justify-center") Ver agenda
           else
             div(class="col-span-full py-12 text-center text-gray-500 bg-white border border-gray-200 rounded-[8px]")
               p(class="text-base font-medium") No hay médicos aprobados registrados en este momento.
