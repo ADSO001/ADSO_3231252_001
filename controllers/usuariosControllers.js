@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import { Usuario, Cita, HistoriaClinica } from "../models/index.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
-import { Cita, Usuario } from "../models/index.js";
 
 const formularioLogin = (req, res) => {
     res.render("login", {

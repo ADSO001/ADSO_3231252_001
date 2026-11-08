@@ -1,14 +1,86 @@
 import fs from 'fs';
 import path from 'path';
+import { Op } from 'sequelize';
+import moment from 'moment-timezone';
+
 import Usuario from "../models/usuarios.js";
 import { Cita } from '../models/index.js';
-// Importamos los helpers de email (asegúrate de que la ruta relativa coincida con tu carpeta)
 import { emailMedicoAprobado, emailMedicoRechazado } from "../helpers/emails.js";
 
-const formularioAdmin = (req, res) => {
-    res.render("adminPanel", {
-        tituloPagina: "Panel de Administración"
-    });
+// Función del Dashboard Principal con Métricas y Citas de Hoy
+const formularioAdmin = async (req, res) => {
+    try {
+        const zonaHoraria = 'America/Bogota';
+        const hoyInicio = moment().tz(zonaHoraria).startOf('day').toDate();
+        const hoyFin = moment().tz(zonaHoraria).endOf('day').toDate();
+
+        const [
+            totalCitas,
+            citasHoy,
+            citasPendientes,
+            citasConfirmadas,
+            citasCompletadas,
+            citasCanceladas,
+            totalUsuarios,
+            totalClientes,
+            citasDelDia
+        ] = await Promise.all([
+            Cita.count(),
+            Cita.count({
+                where: {
+                    fecha: {
+                        [Op.between]: [hoyInicio, hoyFin]
+                    }
+                }
+            }),
+            Cita.count({ where: { estado: 'pendiente' } }),
+            Cita.count({ where: { estado: 'confirmada' } }),
+            Cita.count({ where: { estado: 'completada' } }),
+            Cita.count({ where: { estado: 'cancelada' } }),
+            Usuario.count(),
+            Usuario.count({ where: { rol: 'paciente' } }).catch(() => 0), 
+            Cita.findAll({
+                where: {
+                    fecha: {
+                        [Op.between]: [hoyInicio, hoyFin]
+                    }
+                },
+                include: [
+                    { model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido', 'email'] },
+                    { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido'] }
+                ],
+                order: [['hora', 'ASC']]
+            })
+        ]);
+
+        res.render("adminPanel", {
+            tituloPagina: "Panel de Administración",
+            usuario: req.usuario,
+            metricas: {
+                totalCitas,
+                citasHoy,
+                citasPendientes,
+                citasConfirmadas,
+                citasCompletadas,
+                citasCanceladas,
+                totalUsuarios,
+                totalClientes
+            },
+            citasDelDia
+        });
+    } catch (error) {
+        console.error("Error al cargar el dashboard del administrador:", error);
+        res.render("adminPanel", {
+            tituloPagina: "Panel de Administración",
+            usuario: req.usuario,
+            metricas: {
+                totalCitas: 0, citasHoy: 0, citasPendientes: 0,
+                citasConfirmadas: 0, citasCompletadas: 0, citasCanceladas: 0,
+                totalUsuarios: 0, totalClientes: 0
+            },
+            citasDelDia: []
+        });
+    }
 };
 
 const formularioAdminAppointment = (req, res) => {
@@ -16,7 +88,6 @@ const formularioAdminAppointment = (req, res) => {
         tituloPagina: "Panel de Administración"
     });
 };
-
 
 const formatLocal = (d) => {
     const year = d.getFullYear();
@@ -26,7 +97,6 @@ const formatLocal = (d) => {
 };
 
 const obtenerDiasSemana = (fechaReferencia) => {
-   
     let fecha = fechaReferencia ? new Date(`${fechaReferencia}T12:00:00`) : new Date();
     let diaSemana = fecha.getDay();
     let diferencia = fecha.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1); 
@@ -47,7 +117,6 @@ const obtenerDiasSemana = (fechaReferencia) => {
     return dias;
 };
 
-
 const formularioDoctorsHours = async (req, res) => {
     try {
         const medicos = await Usuario.findAll({
@@ -55,7 +124,6 @@ const formularioDoctorsHours = async (req, res) => {
             attributes: ['id', 'nombre', 'apellido', 'especialidad', 'horarios']
         });
 
-        
         const { medicoId, fecha } = req.query;
         const diasSemana = obtenerDiasSemana(fecha);
         
@@ -65,7 +133,6 @@ const formularioDoctorsHours = async (req, res) => {
         if (medicoId) {
             medicoSeleccionado = await Usuario.findByPk(medicoId);
             
-           
             citasMedico = await Cita.findAll({
                 where: { medico_id: medicoId, estado: 'pendiente' },
                 include: [{ model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido'] }]
@@ -120,10 +187,8 @@ const managementDoctors = async (req, res) => {
     }
 };
 
-// Renderizar solicitudes pendientes en managementSpecialities.pug
 const confirmDoctors = async (req, res) => {
     try {
-        // 1. Médicos pendientes de aprobación
         const medicosPendientes = await Usuario.findAll({
             where: {
                 rol: 'medico',
@@ -131,7 +196,6 @@ const confirmDoctors = async (req, res) => {
             }
         });
 
-        // 2. Médicos ya aprobados
         const medicosAprobados = await Usuario.findAll({
             where: {
                 rol: 'medico',
@@ -139,7 +203,6 @@ const confirmDoctors = async (req, res) => {
             }
         });
 
-        // 3. Renderizar la vista
         res.render("managementSpecialities", {
             tituloPagina: "Aprobación de Médicos",
             usuario: req.usuario,
@@ -154,7 +217,6 @@ const confirmDoctors = async (req, res) => {
     }
 };
 
-// Acción: Aprobar Médico
 const aprobarMedico = async (req, res) => {
     const { id } = req.params;
 
@@ -165,7 +227,6 @@ const aprobarMedico = async (req, res) => {
             medico.estado_aprobacion = 'aprobado';
             await medico.save();
 
-            // Enviar correo de notificación al médico
             await emailMedicoAprobado({
                 email: medico.email,
                 nombre: `${medico.nombre} ${medico.apellido}`
@@ -179,23 +240,20 @@ const aprobarMedico = async (req, res) => {
     }
 };
 
-// Acción: Rechazar Médico (con envío de correo y borrado físico del archivo/registro)
 const rechazarMedico = async (req, res) => {
     const { id } = req.params;
-    const { motivo } = req.body; // Viene del formulario dentro del modal
+    const { motivo } = req.body;
 
     try {
         const medico = await Usuario.findOne({ where: { id, rol: 'medico' } });
 
         if (medico) {
-            // 1. Enviar el correo con el motivo antes de borrar el registro
             await emailMedicoRechazado({
                 email: medico.email,
                 nombre: `${medico.nombre} ${medico.apellido}`,
                 motivo: motivo || "No se detallaron motivos específicos."
             });
 
-            // 2. Borrar archivo físico si existe
             if (medico.documento_verificacion) {
                 const rutaDocumento = path.join(process.cwd(), 'public', 'uploads', 'documentos', medico.documento_verificacion);
                 
@@ -204,7 +262,6 @@ const rechazarMedico = async (req, res) => {
                 }
             }
 
-            // 3. Borrar el registro de la BD
             await medico.destroy();
         }
 
