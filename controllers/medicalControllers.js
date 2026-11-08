@@ -139,6 +139,23 @@ const medicalPanel = async (req, res) => {
             order: [['fecha', 'ASC'], ['hora', 'ASC']]
         });
 
+        // El médico consulta las historias de los pacientes con quienes tiene
+        // una cita activa o ya atendida, no solamente las que él mismo creó.
+        const pacientesRelacionados = [...new Set(
+            citas.filter(cita => cita.estado !== 'cancelada').map(cita => cita.paciente_id)
+        )];
+        const historiasClinicas = pacientesRelacionados.length
+            ? await HistoriaClinica.findAll({
+                where: { paciente_id: { [Op.in]: pacientesRelacionados } },
+                include: [
+                    { model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido', 'tipo_documento', 'numero_documento'] },
+                    { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad'] },
+                    { model: Cita, as: 'cita', attributes: ['id', 'fecha', 'hora', 'motivo'] }
+                ],
+                order: [['fecha_elaboracion', 'DESC']]
+            })
+            : [];
+
         const citasHoy = citas.filter(cita => cita.fecha === fechaHoyString && cita.estado !== 'completada');
         const proximasCitas = citas.filter(cita => cita.fecha > fechaHoyString && cita.estado !== 'completada');
         const historial = citas.filter(cita => 
@@ -155,6 +172,7 @@ const medicalPanel = async (req, res) => {
             citasHoy,
             proximasCitas,
             historial,
+            historiasClinicas,
             totalCitas: citas.length
         });
     } catch (error) {
@@ -162,44 +180,16 @@ const medicalPanel = async (req, res) => {
         res.render("medicalPanel", {
             tituloPagina: "Panel del Médico",
             medico: req.usuario,
+            csrfToken: typeof req.csrfToken === 'function' ? req.csrfToken() : '',
             citasHoy: [],
             proximasCitas: [],
             historial: [],
+            historiasClinicas: [],
             totalCitas: 0
         });
     }
 };
 
-
-const guardarHistoriaClinica = async (req, res) => {
-    const { citaId, motivo, descripcion, resolucion } = req.body;
-    const medicoId = req.usuario.id;
-
-    try {
-        const cita = await Cita.findOne({ where: { id: citaId, medico_id: medicoId } });
-        
-        if (!cita) {
-            return res.status(404).json({ error: 'Cita no encontrada o no autorizada' });
-        }
-
-        await HistoriaClinica.create({
-            motivo,
-            descripcion,
-            resolucion,
-            cita_id: citaId,
-            paciente_id: cita.paciente_id,
-            medico_id: medicoId
-        });
-
-        cita.estado = 'completada';
-        await cita.save();
-
-        return res.json({ mensaje: 'Historia clínica guardada con éxito' });
-    } catch (error) {
-        console.error("Error al guardar la historia clínica:", error);
-        return res.status(500).json({ error: 'Hubo un error al procesar la solicitud' });
-    }
-};
 
 const formatLocal = (d) => {
     const year = d.getFullYear();
@@ -267,6 +257,5 @@ export {
     medicalPanel,
     formularioRegistroMedico,
     registrarMedico,
-    guardarHistoriaClinica,
     miAgendaSemanal
 };

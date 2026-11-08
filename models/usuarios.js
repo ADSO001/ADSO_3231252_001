@@ -36,6 +36,14 @@ const Usuario = db.define('usuarios', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    fecha_nacimiento: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
+    },
+    telefono_emergencia: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,

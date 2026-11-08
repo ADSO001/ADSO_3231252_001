@@ -8,7 +8,6 @@ import {
     medicalPanel, 
     formularioRegistroMedico, 
     registrarMedico,
-    guardarHistoriaClinica,
     miAgendaSemanal
 } from '../controllers/medicalControllers.js';
 
@@ -39,7 +38,6 @@ router.get('/formularioMedico', formularioMedico);
 
 router.get('/medicalPanel', rutaMedico, medicalPanel);
 
-router.post('/medico/historia-clinica', rutaMedico, guardarHistoriaClinica);
 
 router.get('/medico/mi-agenda', protegerRuta, miAgendaSemanal);
 export default router;

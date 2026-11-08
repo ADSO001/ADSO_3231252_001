@@ -15,8 +15,8 @@ html(lang="es")
       div(class="flex items-center")
         img(src="img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
         div(class="border border-gray-300 rounded-[8px] px-[15px] py-[5px] ml-[20px]")
-          p#nombreMedico(class="text-[14px] font-bold m-0")= medico ? `Dr. ${medico.nombre}` : 'Dr. Médico'
-          p#especialidadMedico(class="text-[12px] text-gray-500 m-0")= medico && medico.especialidad ? medico.especialidad : 'Medicina General'
+          p#nombreMedico(class="text-[14px] font-bold m-0")= medico ? `Dr. ${medico.nombre}` : (usuario ? `Dr. ${usuario.nombre}` : 'Dr. Médico')
+          p#especialidadMedico(class="text-[12px] text-gray-500 m-0")= medico && medico.especialidad ? medico.especialidad : (usuario && usuario.especialidad ? usuario.especialidad : 'Medicina General')
 
       div(class="flex items-center gap-[10px] ml-auto")
         a(href="/medico/mi-agenda", class="no-underline")
@@ -60,7 +60,7 @@ html(lang="es")
 
         button#tabHistorial(onclick="cambiarPestana('historial')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]")
           i(class="fa fa-folder")
-          | Historial de citas
+          | Historias clínicas
 
       //- SECCIÓN 1: Agenda de hoy
       section#seccionHoy(class="border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
@@ -85,7 +85,7 @@ html(lang="es")
                     div(class="flex")
                       span(class="text-gray-400 w-[75px]") Motivo:
                       span(class="text-gray-600")= cita.motivo
-                if cita.estado !== 'cancelada'
+                if cita.estado !== 'cancelada' && cita.estado !== 'completada'
                   div(class="flex flex-col gap-[8px] w-full md:w-auto")
                     button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
                     div(class="flex gap-[8px] w-full md:w-[160px]")
@@ -119,7 +119,7 @@ html(lang="es")
                     div(class="flex")
                       span(class="text-gray-400 w-[75px]") Motivo:
                       span(class="text-gray-600")= cita.motivo
-                if cita.estado !== 'cancelada'
+                if cita.estado !== 'cancelada' && cita.estado !== 'completada'
                   div(class="flex flex-col gap-[8px] w-full md:w-auto")
                     button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
                     div(class="flex gap-[8px] w-full md:w-[160px]")
@@ -130,83 +130,261 @@ html(lang="es")
               i(class="fa fa-clock text-[36px] text-gray-300 mb-[10px]")
               p(class="text-gray-500 text-[14px] m-0") No hay citas agendadas próximamente.
 
-      //- SECCIÓN 3: Historial de Citas
+      //- SECCIÓN 3: Historias clínicas de pacientes atendidos
       section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
-        h4(class="text-[18px] font-bold text-black mb-[2px]") Historial de Citas
-        p(class="text-[14px] text-gray-500 mb-[20px]") Registro de consultas pasadas o canceladas
-        
-        div#lista-historial(class="flex flex-col gap-[15px]")
-          if historial && historial.length > 0
-            each cita in historial
-              div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-gray-50 gap-[15px] shadow-sm opacity-80")
+        h4(class="text-[18px] font-bold text-black mb-[2px]") Historias clínicas
+        p(class="text-[14px] text-gray-500 mb-[20px]") Consulta los registros clínicos que has elaborado y las historias de pacientes que has atendido.
+        div(class="flex flex-col gap-[15px]")
+          if historiasClinicas && historiasClinicas.length > 0
+            each historia in historiasClinicas
+              div(class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-[18px] border border-gray-200 rounded-[12px] bg-gray-50")
                 div
-                  div(class="flex items-center mb-[8px]")
-                    span(class="font-bold text-[16px] text-gray-600")= `${cita.fecha} | ${cita.hora}`
-                    
-                    if cita.estado === 'cancelada'
-                      span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-red-100 text-red-800 capitalize font-bold")= cita.estado
-                    else
-                      span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-gray-200 text-gray-600 capitalize font-bold")= cita.estado
-                      
-                  div(class="flex flex-col gap-[4px] text-[14px]")
-                    div(class="flex")
-                      span(class="text-gray-400 w-[75px]") Paciente:
-                      span(class="font-bold text-gray-700")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
-                    div(class="flex")
-                      span(class="text-gray-400 w-[75px]") Motivo:
-                      span(class="text-gray-500")= cita.motivo
-                if cita.estado === 'completada'
-                  div(class="flex flex-col gap-[10px] w-full md:w-auto")
-                    button(type="button" onclick=`abrirModalVerHistoria('${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-white border border-gray-300 text-black cursor-pointer hover:bg-gray-100 transition-colors") Ver Historia
+                  p(class="text-[11px] uppercase font-bold tracking-wide text-gray-500 mb-1")= new Date(historia.fecha_elaboracion).toLocaleString('es-CO', { timeZone: 'America/Bogota' })
+                  h3(class="text-[15px] font-bold text-gray-900")= `${historia.paciente.nombre} ${historia.paciente.apellido}`
+                  p(class="text-[13px] text-gray-600 mt-1")= `Motivo: ${historia.motivo}`
+                  p(class="text-[13px] text-gray-600 mt-1")= `Diagnóstico: ${historia.diagnostico_principal || 'No registrado'} · CIE-10: ${historia.codigo_cie10 || 'No registrado'}`
+                  if historia.medico
+                    p(class="text-[12px] text-gray-500 mt-1")= `Atención registrada por: Dr. ${historia.medico.nombre} ${historia.medico.apellido}`
+                  if historia.cita
+                    p(class="text-[12px] text-gray-500 mt-1")= `Cita: ${historia.cita.fecha} · ${historia.cita.hora}`
+                div(class="flex gap-2 shrink-0")
+                  a(href=`/historia-clinica/${historia.id}` class="bg-black text-white px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") Ver historia
+                  a(href=`/historia-clinica/pdf/${historia.id}` target="_blank" class="bg-red-100 text-red-700 px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") PDF
           else
             div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
-              i(class="fa fa-folder-open text-[36px] text-gray-300 mb-[10px]")
-              p(class="text-gray-500 text-[14px] m-0") No hay consultas archivadas por el momento.
+              i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
+              p(class="text-gray-500 text-[14px] m-0") Aún no has registrado historias clínicas.
 
-    //- MODAL 1: Ver Historia Clínica 
-    div#modalVerHistoria(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
-      div(class="bg-white w-full max-w-[550px] rounded-[15px] shadow-2xl overflow-hidden")
-        div(class="p-[20px] border-b border-gray-200 bg-gray-50")
-          h2(class="text-[18px] font-bold text-black m-0") Historia Clínica
-        div(class="p-[20px] flex flex-col gap-[12px] text-[14px]")
-          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
+    //- MODAL 2: Historia clínica ambulatoria ampliada
+    div#modalCrearHistoria(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[15px] overflow-y-auto")
+      div(class="bg-white w-full max-w-[1000px] rounded-[15px] shadow-2xl overflow-hidden my-6")
+        div(class="p-[20px] border-b border-gray-200 bg-gray-50 flex justify-between items-center gap-3")
+          div
+            h2(class="text-[18px] font-bold text-black m-0") Historia clínica ambulatoria
+            p(class="text-[12px] text-gray-500 mt-1") Registra la información pertinente a esta atención. Los campos no aplicables pueden dejarse vacíos.
+          button(type="button", onclick="cerrarModalCrearHistoria()", class="text-gray-500 hover:text-black font-bold text-[22px]") &times;
+        form#formCrearHistoria(onsubmit="guardarHistoria(event)", class="p-[20px] flex flex-col gap-[18px] text-[14px] max-h-[82vh] overflow-y-auto")
+          input#citaIdHistoria(type="hidden", name="citaId")
+          input(type="hidden", name="_csrf", value=csrfToken)
+          div(class="flex justify-between border border-blue-100 bg-blue-50 p-3 rounded-lg")
             span(class="font-bold text-gray-700") Paciente:
-            span#verPacienteNombre(class="text-gray-800") -
-          div(class="flex flex-col gap-[4px] border-b border-gray-100 pb-[8px]")
-            span(class="font-bold text-gray-700") Motivo de consulta:
-            p#verMotivo(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
-          div(class="flex flex-col gap-[4px] border-b border-gray-100 pb-[8px]")
-            span(class="font-bold text-gray-700") Descripción:
-            p#verDescripcion(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
-          div(class="flex flex-col gap-[4px]")
-            span(class="font-bold text-gray-700") Resolución:
-            p#verResolucion(class="text-gray-600 m-0 bg-gray-50 p-[8px] rounded-[6px]") -
-        div(class="p-[15px] border-t border-gray-200 flex justify-end bg-gray-50")
-          button(type="button", onclick="cerrarModalVerHistoria()", class="bg-gray-200 text-black px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-300 transition-colors cursor-pointer") Cerrar
-
-    //- MODAL 2: Crear Historia Clínica 
-    div#modalCrearHistoria(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
-      div(class="bg-white w-full max-w-[550px] rounded-[15px] shadow-2xl overflow-hidden")
-        div(class="p-[20px] border-b border-gray-200 bg-gray-50")
-          h2(class="text-[18px] font-bold text-black m-0") Creación de Historia Clínica
-        form#formCrearHistoria(onsubmit="guardarHistoria(event)", class="p-[20px] flex flex-col gap-[15px] text-[14px]")
-          input#citaIdHistoria(type="hidden")
-          input(type="hidden" name="_csrf" id="csrfToken" value=csrfToken)
-          div(class="flex justify-between border-b border-gray-100 pb-[8px]")
-            span(class="font-bold text-gray-700") Paciente:
-            span#crearPacienteNombre(class="text-gray-800") -
-          div(class="flex flex-col gap-[5px]")
-            label(for="motivoConsulta", class="font-bold text-gray-700") Motivo de consulta:
-            input#motivoConsulta(type="text", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]", placeholder="Escriba el motivo...")
-          div(class="flex flex-col gap-[5px]")
-            label(for="descripcionConsulta", class="font-bold text-gray-700") Descripción:
-            textarea#descripcionConsulta(rows="3", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]", placeholder="Detalles de la consulta...")
-          div(class="flex flex-col gap-[5px]")
-            label(for="resolucionConsulta", class="font-bold text-gray-700") Resolución:
-            textarea#resolucionConsulta(rows="3", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]", placeholder="Diagnóstico / Tratamiento...")
-          div(class="flex justify-end gap-[10px] mt-[10px]")
-            button(type="button", onclick="cerrarModalCrearHistoria()", class="bg-gray-200 text-black px-[18px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-300 transition-colors cursor-pointer") Cancelar
-            button(type="submit", class="bg-black text-white px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-800 transition-colors cursor-pointer") Guardar
+            span#crearPacienteNombre(class="text-gray-900 font-semibold") -
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 1. Identificación de la atención
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="motivoConsulta", class="text-xs font-semibold text-gray-600") Motivo de consulta
+                textarea#motivoConsulta(name="motivoConsulta", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="finalidadConsulta", class="text-xs font-semibold text-gray-600") Finalidad de la consulta
+                input#finalidadConsulta(name="finalidadConsulta", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="causaExterna", class="text-xs font-semibold text-gray-600") Causa externa
+                input#causaExterna(name="causaExterna", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="entidadResponsable", class="text-xs font-semibold text-gray-600") EPS / entidad responsable
+                input#entidadResponsable(name="entidadResponsable", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="tipoUsuario", class="text-xs font-semibold text-gray-600") Tipo de usuario
+                input#tipoUsuario(name="tipoUsuario", type="text", placeholder="Contributivo, subsidiado, particular...", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="regimenAfiliacion", class="text-xs font-semibold text-gray-600") Régimen de afiliación
+                input#regimenAfiliacion(name="regimenAfiliacion", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="sedeAtencion", class="text-xs font-semibold text-gray-600") Sede o lugar de atención
+                input#sedeAtencion(name="sedeAtencion", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="modalidadAtencion", class="text-xs font-semibold text-gray-600") Modalidad de atención
+                input#modalidadAtencion(name="modalidadAtencion", type="text", placeholder="Presencial, teleconsulta...", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="acompanante", class="text-xs font-semibold text-gray-600") Acompañante o responsable
+                input#acompanante(name="acompanante", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="parentescoAcompanante", class="text-xs font-semibold text-gray-600") Parentesco
+                input#parentescoAcompanante(name="parentescoAcompanante", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="telefonoAcompanante", class="text-xs font-semibold text-gray-600") Teléfono del acompañante
+                input#telefonoAcompanante(name="telefonoAcompanante", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 2. Antecedentes
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="antecedentesPersonales", class="text-xs font-semibold text-gray-600") Antecedentes personales
+                textarea#antecedentesPersonales(name="antecedentesPersonales", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="antecedentesFamiliares", class="text-xs font-semibold text-gray-600") Antecedentes familiares
+                textarea#antecedentesFamiliares(name="antecedentesFamiliares", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="antecedentesQuirurgicos", class="text-xs font-semibold text-gray-600") Antecedentes quirúrgicos
+                textarea#antecedentesQuirurgicos(name="antecedentesQuirurgicos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="antecedentesFarmacologicos", class="text-xs font-semibold text-gray-600") Antecedentes farmacológicos
+                textarea#antecedentesFarmacologicos(name="antecedentesFarmacologicos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="alergias", class="text-xs font-semibold text-gray-600") Alergias
+                textarea#alergias(name="alergias", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="antecedentesPatologicos", class="text-xs font-semibold text-gray-600") Antecedentes patológicos
+                textarea#antecedentesPatologicos(name="antecedentesPatologicos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="habitos", class="text-xs font-semibold text-gray-600") Hábitos y antecedentes relevantes
+                textarea#habitos(name="habitos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="antecedentesGinecoObstetricos", class="text-xs font-semibold text-gray-600") Antecedentes ginecológicos y obstétricos (si aplica)
+                textarea#antecedentesGinecoObstetricos(name="antecedentesGinecoObstetricos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 3. Enfermedad actual
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="enfermedadActual", class="text-xs font-semibold text-gray-600") Descripción de la enfermedad actual
+                textarea#enfermedadActual(name="enfermedadActual", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="fechaInicioSintomas", class="text-xs font-semibold text-gray-600") Fecha de inicio
+                input#fechaInicioSintomas(name="fechaInicioSintomas", type="date", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="tiempoEvolucion", class="text-xs font-semibold text-gray-600") Tiempo de evolución
+                input#tiempoEvolucion(name="tiempoEvolucion", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="sintomasAsociados", class="text-xs font-semibold text-gray-600") Síntomas asociados
+                textarea#sintomasAsociados(name="sintomasAsociados", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="factoresMejoranEmpeoran", class="text-xs font-semibold text-gray-600") Factores que mejoran o empeoran los síntomas
+                textarea#factoresMejoranEmpeoran(name="factoresMejoranEmpeoran", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="tratamientosPrevios", class="text-xs font-semibold text-gray-600") Tratamientos previos
+                textarea#tratamientosPrevios(name="tratamientosPrevios", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 4. Revisión por sistemas
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="revisionCardiovascular", class="text-xs font-semibold text-gray-600") Sistema cardiovascular
+                textarea#revisionCardiovascular(name="revisionCardiovascular", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionRespiratoria", class="text-xs font-semibold text-gray-600") Sistema respiratorio
+                textarea#revisionRespiratoria(name="revisionRespiratoria", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionDigestiva", class="text-xs font-semibold text-gray-600") Sistema digestivo
+                textarea#revisionDigestiva(name="revisionDigestiva", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionNeurologica", class="text-xs font-semibold text-gray-600") Sistema neurológico
+                textarea#revisionNeurologica(name="revisionNeurologica", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionMusculoesqueletica", class="text-xs font-semibold text-gray-600") Sistema musculoesquelético
+                textarea#revisionMusculoesqueletica(name="revisionMusculoesqueletica", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionGenitourinaria", class="text-xs font-semibold text-gray-600") Sistema genitourinario
+                textarea#revisionGenitourinaria(name="revisionGenitourinaria", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionDermatologica", class="text-xs font-semibold text-gray-600") Sistema dermatológico
+                textarea#revisionDermatologica(name="revisionDermatologica", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="revisionOtros", class="text-xs font-semibold text-gray-600") Otros sistemas
+                textarea#revisionOtros(name="revisionOtros", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 5. Signos vitales y antropometría
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="presionArterial", class="text-xs font-semibold text-gray-600") Presión arterial (mmHg)
+                input#presionArterial(name="presionArterial", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="frecuenciaCardiaca", class="text-xs font-semibold text-gray-600") Frecuencia cardíaca (lpm)
+                input#frecuenciaCardiaca(name="frecuenciaCardiaca", type="number" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="frecuenciaRespiratoria", class="text-xs font-semibold text-gray-600") Frecuencia respiratoria (rpm)
+                input#frecuenciaRespiratoria(name="frecuenciaRespiratoria", type="number" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="temperatura", class="text-xs font-semibold text-gray-600") Temperatura (°C)
+                input#temperatura(name="temperatura", type="number" step="0.1" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="saturacionOxigeno", class="text-xs font-semibold text-gray-600") Saturación de oxígeno (%)
+                input#saturacionOxigeno(name="saturacionOxigeno", type="number" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="peso", class="text-xs font-semibold text-gray-600") Peso (kg)
+                input#peso(name="peso", type="number" step="0.1" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="talla", class="text-xs font-semibold text-gray-600") Talla (cm)
+                input#talla(name="talla", type="number" step="0.1" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="imc", class="text-xs font-semibold text-gray-600") Índice de masa corporal
+                input#imc(name="imc", type="number" step="0.1" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 6. Examen físico
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="examenEstadoGeneral", class="text-xs font-semibold text-gray-600") Estado general
+                textarea#examenEstadoGeneral(name="examenEstadoGeneral", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenCabezaCuello", class="text-xs font-semibold text-gray-600") Cabeza y cuello
+                textarea#examenCabezaCuello(name="examenCabezaCuello", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenTorax", class="text-xs font-semibold text-gray-600") Tórax
+                textarea#examenTorax(name="examenTorax", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenCardiopulmonar", class="text-xs font-semibold text-gray-600") Examen cardiopulmonar
+                textarea#examenCardiopulmonar(name="examenCardiopulmonar", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenAbdomen", class="text-xs font-semibold text-gray-600") Abdomen
+                textarea#examenAbdomen(name="examenAbdomen", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenExtremidades", class="text-xs font-semibold text-gray-600") Extremidades
+                textarea#examenExtremidades(name="examenExtremidades", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenNeurologico", class="text-xs font-semibold text-gray-600") Examen neurológico
+                textarea#examenNeurologico(name="examenNeurologico", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenOtros", class="text-xs font-semibold text-gray-600") Otros hallazgos
+                textarea#examenOtros(name="examenOtros", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 7. Diagnóstico y análisis
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="codigoCie10", class="text-xs font-semibold text-gray-600") Código CIE-10 (obligatorio)
+                input#codigoCie10(name="codigoCie10", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="diagnosticoPrincipal", class="text-xs font-semibold text-gray-600") Diagnóstico principal (obligatorio)
+                input#diagnosticoPrincipal(name="diagnosticoPrincipal", type="text", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="diagnosticoSecundario", class="text-xs font-semibold text-gray-600") Diagnósticos secundarios
+                textarea#diagnosticoSecundario(name="diagnosticoSecundario", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="analisisMedico", class="text-xs font-semibold text-gray-600") Análisis médico
+                textarea#analisisMedico(name="analisisMedico", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+          section(class="border-t border-gray-200 pt-4")
+            h3(class="font-bold text-blue-800 mb-3") 8. Plan de manejo
+            div(class="grid grid-cols-1 md:grid-cols-2 gap-3")
+              div(class="flex flex-col gap-1")
+                label(for="planTratamiento", class="text-xs font-semibold text-gray-600") Plan de manejo / tratamiento (obligatorio)
+                textarea#planTratamiento(name="planTratamiento", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="medicamentos", class="text-xs font-semibold text-gray-600") Medicamentos: nombre, dosis, vía, frecuencia y duración
+                textarea#medicamentos(name="medicamentos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="examenesSolicitados", class="text-xs font-semibold text-gray-600") Exámenes solicitados
+                textarea#examenesSolicitados(name="examenesSolicitados", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="procedimientos", class="text-xs font-semibold text-gray-600") Procedimientos
+                textarea#procedimientos(name="procedimientos", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="recomendaciones", class="text-xs font-semibold text-gray-600") Recomendaciones
+                textarea#recomendaciones(name="recomendaciones", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="remisiones", class="text-xs font-semibold text-gray-600") Remisiones
+                textarea#remisiones(name="remisiones", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="incapacidadDias", class="text-xs font-semibold text-gray-600") Días de incapacidad
+                input#incapacidadDias(name="incapacidadDias", type="number" min="0", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="incapacidadMotivo", class="text-xs font-semibold text-gray-600") Motivo de incapacidad
+                textarea#incapacidadMotivo(name="incapacidadMotivo", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+              div(class="flex flex-col gap-1")
+                label(for="fechaControl", class="text-xs font-semibold text-gray-600") Fecha de control
+                input#fechaControl(name="fechaControl", type="date", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]")
+              div(class="flex flex-col gap-1")
+                label(for="observaciones", class="text-xs font-semibold text-gray-600") Observaciones adicionales
+                textarea#observaciones(name="observaciones", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
+          div(class="flex justify-end gap-[10px] border-t border-gray-200 pt-4")
+            button(type="button", onclick="cerrarModalCrearHistoria()", class="bg-gray-200 text-black px-[18px] py-[9px] rounded-[6px] font-bold text-[13px]") Cancelar
+            button(type="submit", class="bg-black text-white px-[20px] py-[9px] rounded-[6px] font-bold text-[13px]") Guardar historia clínica
 
     //- MODAL 3: Reprogramar Cita 
     div#modalReprogramar(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
@@ -261,14 +439,6 @@ html(lang="es")
         }
       }
 
-      // Funciones Modal Historia Clínica
-      function abrirModalVerHistoria(paciente) {
-        document.getElementById('verPacienteNombre').innerText = paciente || '-';
-        document.getElementById('modalVerHistoria').classList.remove('hidden');
-      }
-      function cerrarModalVerHistoria() {
-        document.getElementById('modalVerHistoria').classList.add('hidden');
-      }
       function abrirModalCrearHistoria(citaId, paciente) {
         document.getElementById('citaIdHistoria').value = citaId;
         document.getElementById('crearPacienteNombre').innerText = paciente || '-';
@@ -279,7 +449,6 @@ html(lang="es")
         document.getElementById('formCrearHistoria').reset();
       }
 
-      // Funciones Modal Reprogramar
       function abrirModalReprogramar(citaId) {
         document.getElementById('citaIdReprogramar').value = citaId;
         document.getElementById('modalReprogramar').classList.remove('hidden');
@@ -289,32 +458,42 @@ html(lang="es")
         document.getElementById('formReprogramar').reset();
       }
 
-      // LÓGICA DE BASE DE DATOS 
-
       async function guardarHistoria(event) {
         event.preventDefault();
-        const citaId = document.getElementById('citaIdHistoria').value;
-        const motivo = document.getElementById('motivoConsulta').value;
-        const descripcion = document.getElementById('descripcionConsulta').value;
-        const resolucion = document.getElementById('resolucionConsulta').value;
-        const csrf = document.getElementById('csrfToken').value;
+        const formulario = document.getElementById('formCrearHistoria');
+        const datosFormulario = Object.fromEntries(new FormData(formulario).entries());
+        const citaId = datosFormulario.citaId;
+        const csrf = datosFormulario._csrf;
+        const motivo = (datosFormulario.motivoConsulta || '').trim();
+        const codigoCie10 = (datosFormulario.codigoCie10 || '').trim().toUpperCase();
+        const diagnosticoPrincipal = (datosFormulario.diagnosticoPrincipal || '').trim();
+        delete datosFormulario.citaId;
+        delete datosFormulario._csrf;
+        delete datosFormulario.motivoConsulta;
+        delete datosFormulario.codigoCie10;
+        delete datosFormulario.diagnosticoPrincipal;
+
+        if (!motivo || !codigoCie10 || !diagnosticoPrincipal || !(datosFormulario.planTratamiento || '').trim()) {
+          alert('Completa el motivo, el código CIE-10, el diagnóstico principal y el plan de manejo.');
+          return;
+        }
 
         try {
-            const respuesta = await fetch('/medico/historia-clinica', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrf },
-                body: JSON.stringify({ citaId, motivo, descripcion, resolucion, _csrf: csrf })
-            });
-            const resultado = await respuesta.json();
-            if(respuesta.ok) {
-                alert('Historia clínica guardada y cita completada.');
-                window.location.reload(); 
-            } else {
-                alert(resultado.error || 'Hubo un error al guardar.');
-            }
+          const respuesta = await fetch('/medico/historia-clinica', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrf },
+            body: JSON.stringify({ citaId, motivo, codigoCie10, diagnosticoPrincipal, datosClinicos: datosFormulario, _csrf: csrf })
+          });
+          const resultado = await respuesta.json();
+          if (respuesta.ok) {
+            alert(resultado.mensaje || 'Historia clínica guardada.');
+            window.location.reload();
+          } else {
+            alert(resultado.error || 'No fue posible guardar la historia clínica.');
+          }
         } catch (error) {
-            console.error("Error:", error);
-            alert('Error de conexión.');
+          console.error('Error al guardar historia clínica:', error);
+          alert('Error de conexión al guardar la historia clínica.');
         }
       }
 

@@ -1,10 +1,9 @@
 import { check, validationResult } from "express-validator";
 import { Op } from "sequelize";
 import bcrypt from "bcryptjs";
-import { Usuario, Cita } from "../models/index.js";
+import { Usuario, Cita, HistoriaClinica } from "../models/index.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
-
 
 const formularioLogin = (req, res) => {
     res.render("login", {
@@ -20,6 +19,7 @@ const formularioRegistro = (req, res) => {
         csrfToken: req.csrfToken()
     });
 };
+
 const vistaPrincipal = (req, res) => {
     res.render("mainview", {
         tituloPagina: "Inicio",
@@ -62,12 +62,23 @@ const verPatientPanel = async (req, res) => {
             order: [['fecha', 'ASC'], ['hora', 'ASC']]
         });
 
+        // Cargamos también las historias clínicas del paciente para mostrarlas en su panel
+        const historiasClinicas = await HistoriaClinica.findAll({
+            where: { paciente_id: req.usuario.id },
+            include: [
+                { model: Cita, as: 'cita', attributes: ['id', 'fecha', 'hora', 'motivo'] },
+                { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad', 'tarjeta_profesional'] }
+            ],
+            order: [['fecha_elaboracion', 'DESC']]
+        });
+
         res.render("patientPanel", {
             tituloPagina: "Panel del Paciente",
             usuario: req.usuario,
             medicos,
             especialidades,
             citas: misCitas,
+            historiasClinicas,
             especialidadSeleccionada: especialidad || '',
             csrfToken: req.csrfToken()
         });
@@ -80,6 +91,7 @@ const verPatientPanel = async (req, res) => {
             medicos: [],
             especialidades: [],
             citas: [],
+            historiasClinicas: [],
             csrfToken: req.csrfToken()
         });
     }
@@ -369,9 +381,9 @@ const autenticar = async (req, res) => {
 
     return res.redirect("/patientPanel");
 };
+
 const verAgendaMedicoParaPaciente = async (req, res) => {
     try {
-     
         const medicos = await Usuario.findAll({
             where: { rol: 'medico', estado_aprobacion: 'aprobado' },
             attributes: ['id', 'nombre', 'apellido', 'especialidad', 'precio_consulta']
@@ -379,10 +391,8 @@ const verAgendaMedicoParaPaciente = async (req, res) => {
 
         const { medicoId, fecha } = req.query;
 
-       
         let fechaBase = fecha ? new Date(`${fecha}T12:00:00`) : new Date();
         
-   
         let diaSemana = fechaBase.getDay();
         let diff = fechaBase.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
         let lunes = new Date(fechaBase.setDate(diff));
@@ -406,7 +416,6 @@ const verAgendaMedicoParaPaciente = async (req, res) => {
             });
         }
 
-        
         let semAnteriorObj = new Date(lunes);
         semAnteriorObj.setDate(semAnteriorObj.getDate() - 7);
         let semSiguienteObj = new Date(lunes);
@@ -441,6 +450,9 @@ const verAgendaMedicoParaPaciente = async (req, res) => {
         res.redirect("/patientPanel");
     }
 };
+
+
+
 export { 
     formularioLogin, 
     registrar, 
@@ -452,6 +464,6 @@ export {
     autenticar, 
     verPatientPanel, 
     confirmar,
-    vistaPrincipal ,
+    vistaPrincipal,
     verAgendaMedicoParaPaciente
 };

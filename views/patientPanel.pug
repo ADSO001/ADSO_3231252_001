@@ -40,7 +40,7 @@ html(lang="es")
 
                 div(class="border border-gray-300 rounded-[8px] p-[15px]")
                     h3(class="text-[14px] font-bold mb-[5px]") Historial médico
-                    p#numHistorial(class="text-[28px] font-bold m-0") 0
+                    p#numHistorial(class="text-[28px] font-bold m-0")= historiasClinicas ? historiasClinicas.length : 0
                     p(class="text-[12px] text-gray-500 m-0") Registros guardados
 
             section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
@@ -152,9 +152,23 @@ html(lang="es")
                     p(class="text-[14px] text-gray-500 m-0") Tus registros y diagnósticos
 
                 div#listaHistorial(class="flex flex-col gap-[15px]")
-                    div#mensajeVacioHistorial(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px] bg-white")
-                        i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
-                        p(class="text-gray-500 text-[14px] m-0") No hay registros en el historial médico por el momento.
+                    if historiasClinicas && historiasClinicas.length > 0
+                        each historia in historiasClinicas
+                            div(class="border border-gray-200 rounded-[12px] p-[18px] bg-white shadow-sm")
+                                div(class="flex flex-col md:flex-row md:items-start md:justify-between gap-3")
+                                    div
+                                        p(class="text-[11px] uppercase font-bold tracking-wide text-gray-500 mb-1")= new Date(historia.fecha_elaboracion).toLocaleString('es-CO', { timeZone: 'America/Bogota' })
+                                        h3(class="text-[16px] font-bold text-gray-900")= historia.diagnostico_principal || (historia.datos_clinicos && historia.datos_clinicos.diagnosticoPrincipal) || 'Atención médica'
+                                        p(class="text-[13px] text-gray-600 mt-1")= `Médico: Dr. ${historia.medico.nombre} ${historia.medico.apellido}${historia.medico.especialidad ? ' · ' + historia.medico.especialidad : ''}`
+                                        p(class="text-[13px] text-gray-600 mt-1")= `Motivo: ${historia.motivo}`
+                                        p(class="text-[13px] text-gray-600 mt-1")= `Código CIE-10: ${historia.codigo_cie10 || 'No registrado'}`
+                                    div(class="flex gap-2 shrink-0")
+                                        a(href=`/historia-clinica/${historia.id}` class="bg-black text-white px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") Ver historia completa
+                                        a(href=`/historia-clinica/pdf/${historia.id}` target="_blank" class="bg-red-100 text-red-700 px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") PDF
+                    else
+                        div#mensajeVacioHistorial(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px] bg-white")
+                            i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
+                            p(class="text-gray-500 text-[14px] m-0") No hay registros en el historial médico por el momento.
 
             //- MODAL REPROGRAMAR CITA
             div#modalReprogramar(class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-[20px]")
