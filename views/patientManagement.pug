@@ -67,7 +67,7 @@ html(lang="es")
           
           div(class="relative max-w-[800px]")
             i(data-lucide="search", class="absolute left-[18px] top-1/2 -translate-y-1/2 w-[16px] h-[16px] text-gray-400")
-            input(type="text", class="w-full py-[12px] pr-[15px] pl-[45px] border border-gray-200 bg-white rounded-[10px] text-[14px] outline-none focus:border-gray-400 transition-colors", placeholder="Buscar por nombre, email o teléfono...")
+            input#buscarPaciente(type="text", class="w-full py-[12px] pr-[15px] pl-[45px] border border-gray-200 bg-white rounded-[10px] text-[14px] outline-none focus:border-gray-400 transition-colors", placeholder="Buscar por nombre, email o teléfono...")
 
         //- LISTA DE TARJETAS DE PACIENTES DINÁMICAS
         div(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[20px]")
@@ -78,7 +78,7 @@ html(lang="es")
               - var generoInicial = paciente.genero ? paciente.genero.charAt(0).toUpperCase() : '-';
               - var edad = paciente.fecha_nacimiento ? Math.floor((new Date() - new Date(paciente.fecha_nacimiento).getTime()) / 3.15576e+10) : 'N/A';
 
-              div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow")
+              div.paciente-item(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow", data-busqueda=(paciente.nombre + ' ' + paciente.apellido + ' ' + paciente.email + ' ' + paciente.telefono + ' ' + paciente.tipo_documento + ' ' + paciente.numero_documento).toLowerCase())
                 div
                   div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold")= generoInicial
                   div(class="flex items-center gap-[12px] mb-[15px]")
@@ -99,6 +99,25 @@ html(lang="es")
           else
             div(class="col-span-full p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg")
               p(class="font-medium") No hay pacientes registrados en el sistema.
+          div#sinResultadosPacientes(class="hidden col-span-full p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg")
+            p(class="font-medium") No se encontraron pacientes con esa búsqueda.
 
     script.
       lucide.createIcons();
+
+      const buscarPaciente = document.getElementById('buscarPaciente');
+      const tarjetasPaciente = document.querySelectorAll('.paciente-item');
+      const sinResultadosPacientes = document.getElementById('sinResultadosPacientes');
+
+      buscarPaciente.addEventListener('input', () => {
+        const texto = buscarPaciente.value.toLowerCase().trim();
+        let visibles = 0;
+
+        tarjetasPaciente.forEach((tarjeta) => {
+          const coincide = tarjeta.dataset.busqueda.includes(texto);
+          tarjeta.classList.toggle('hidden', !coincide);
+          if (coincide) visibles++;
+        });
+
+        sinResultadosPacientes.classList.toggle('hidden', visibles > 0 || tarjetasPaciente.length === 0);
+      });

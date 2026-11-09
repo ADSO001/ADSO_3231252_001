@@ -129,10 +129,24 @@ const formularioAdmin = async (req, res) => {
     }
 };
 
-const formularioAdminAppointment = (req, res) => {
-    res.render("appointmentScheduleAdmin", {
-        tituloPagina: "Panel de Administración"
-    });
+const formularioAdminAppointment = async (req, res) => {
+    try {
+        const citas = await Cita.findAll({
+            include: [
+                { model: Usuario, as: 'paciente', attributes: ['id', 'nombre', 'apellido', 'email'] },
+                { model: Usuario, as: 'medico', attributes: ['id', 'nombre', 'apellido', 'especialidad'] }
+            ],
+            order: [['fecha', 'ASC'], ['hora', 'ASC']]
+        });
+
+        res.render("appointmentScheduleAdmin", {
+            tituloPagina: "Agenda de Citas",
+            citas
+        });
+    } catch (error) {
+        console.error("Error al cargar la agenda de citas:", error);
+        res.status(500).send("Error al obtener la agenda de citas");
+    }
 };
 
 const formatLocal = (d) => {

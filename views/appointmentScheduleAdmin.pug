@@ -70,116 +70,75 @@ html(lang="es")
         section(class="flex flex-col sm:flex-row gap-[15px] mb-[30px] items-stretch sm:items-center")
           div(class="flex-1 min-w-[250px] flex items-center bg-[#f0f0f0] px-[15px] py-[10px] rounded-[8px] gap-[10px]")
             i(data-lucide="search", class="w-[18px] h-[18px] text-gray-500")
-            input(type="text", placeholder="Buscar por paciente, médico o motivo...", class="border-none bg-transparent outline-none w-full text-[14px] text-gray-800")
+            input#buscarCita(type="text", placeholder="Buscar por paciente, médico o motivo...", class="border-none bg-transparent outline-none w-full text-[14px] text-gray-800")
           
-          select(class="px-[15px] py-[10px] border border-gray-200 rounded-[8px] bg-white text-[14px] text-gray-600 outline-none cursor-pointer")
-            option Todos los estados
-            option Programadas
-            option Confirmadas
-            option Completadas
-            option Canceladas
-            option No asistió
+          select#filtroEstadoCita(class="px-[15px] py-[10px] border border-gray-200 rounded-[8px] bg-white text-[14px] text-gray-600 outline-none cursor-pointer")
+            option(value="") Todos los estados
+            option(value="pendiente") Programadas
+            option(value="confirmada") Confirmadas
+            option(value="completada") Completadas
+            option(value="cancelada") Canceladas
 
         //- LISTA DE AGENDA
         section(class="bg-white border border-gray-100 rounded-[12px] p-[20px]")
           div(class="mb-[15px]")
             i(data-lucide="calendar", class="w-[20px] h-[20px] text-gray-700")
 
-          div(class="flex flex-col gap-[15px]")
-            
-            //- Tarjeta Cita 1
-            div(class="border border-gray-200 rounded-[10px] p-[20px]")
-              div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
-                div(class="flex flex-wrap items-center gap-[15px]")
-                  span(class="font-bold text-[15px]") Sábado, 3 de Marzo 2026
-                  span(class="text-gray-600 text-[15px]") 9:00
-                  span(class="px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold bg-black text-white") Confirmada
-                a(href="#", class="inline-flex items-center gap-[6px] px-[14px] py-[7px] bg-gray-100 hover:bg-black hover:text-white text-gray-800 text-[13px] font-bold rounded-[8px] no-underline transition-all duration-200 shadow-sm border border-gray-200 hover:border-black")
-                  i(data-lucide="eye", class="w-[15px] h-[15px]")
-                  | Ver detalles
-              div(class="flex flex-col md:flex-row justify-between gap-[20px]")
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Paciente: 
-                    span(class="font-semibold text-gray-900") Luiyer Gamadiel Rios
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Motivo: 
-                    span(class="text-gray-700") mentiroso compulsivo
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Médico: 
-                    span(class="font-semibold text-gray-900") Dr. Jeffrey Epstein
-
-            //- Tarjeta Cita 2
-            div(class="border border-gray-200 rounded-[10px] p-[20px]")
-              div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
-                div(class="flex flex-wrap items-center gap-[15px]")
-                  span(class="font-bold text-[15px]") Sábado, 3 de Marzo 2026
-                  span(class="text-gray-600 text-[15px]") 10:00
-                  span(class="px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold bg-[#ccc] text-[#333]") Programada
-                a(href="#", class="inline-flex items-center gap-[6px] px-[14px] py-[7px] bg-gray-100 hover:bg-black hover:text-white text-gray-800 text-[13px] font-bold rounded-[8px] no-underline transition-all duration-200 shadow-sm border border-gray-200 hover:border-black")
-                  i(data-lucide="eye", class="w-[15px] h-[15px]")
-                  | Ver detalles
-              div(class="flex flex-col md:flex-row justify-between gap-[20px]")
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Paciente: 
-                    span(class="font-semibold text-gray-900") Leandro Calvo
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Motivo: 
-                    span(class="text-gray-700") Exceso de motos
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Médico: 
-                    span(class="font-semibold text-gray-900") El Negro de whatsApp
-
-            //- Tarjeta Cita 3
-            div(class="border border-gray-200 rounded-[10px] p-[20px]")
-              div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
-                div(class="flex flex-wrap items-center gap-[15px]")
-                  span(class="font-bold text-[15px]") Sábado, 3 de Marzo 2026
-                  span(class="text-gray-600 text-[15px]") 11:00
-                  span(class="px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold bg-black text-white") Confirmada
-                a(href="#", class="inline-flex items-center gap-[6px] px-[14px] py-[7px] bg-gray-100 hover:bg-black hover:text-white text-gray-800 text-[13px] font-bold rounded-[8px] no-underline transition-all duration-200 shadow-sm border border-gray-200 hover:border-black")
-                  i(data-lucide="eye", class="w-[15px] h-[15px]")
-                  | Ver detalles
-              div(class="flex flex-col md:flex-row justify-between gap-[20px]")
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Paciente: 
-                    span(class="font-semibold text-gray-900") Thomas Vargas
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Motivo: 
-                    span(class="text-gray-700") Cansancio crónico
-                  p(class="text-[11px] text-gray-400 mt-[10px] mb-0") Confirmado vía email - 3/3/2026 10:00
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Médico: 
-                    span(class="font-semibold text-gray-900") Dr. P.Diddy
-
-            //- Tarjeta Cita 4
-            div(class="border border-gray-200 rounded-[10px] p-[20px]")
-              div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
-                div(class="flex flex-wrap items-center gap-[15px]")
-                  span(class="font-bold text-[15px]") Sábado, 3 de Marzo 2026
-                  span(class="text-gray-600 text-[15px]") 9:00
-                  span(class="px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold bg-[#ccc] text-[#333]") Programada
-                a(href="#", class="inline-flex items-center gap-[6px] px-[14px] py-[7px] bg-gray-100 hover:bg-black hover:text-white text-gray-800 text-[13px] font-bold rounded-[8px] no-underline transition-all duration-200 shadow-sm border border-gray-200 hover:border-black")
-                  i(data-lucide="eye", class="w-[15px] h-[15px]")
-                  | Ver detalles
-              div(class="flex flex-col md:flex-row justify-between gap-[20px]")
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Paciente: 
-                    span(class="font-semibold text-gray-900") Felipe Marín Restrepo
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Motivo: 
-                    span(class="text-gray-700") VH sida
-                div(class="flex-1 min-w-[200px]")
-                  p(class="mb-[6px] text-[14px]")
-                    span(class="text-gray-500") Médico: 
-                    span(class="font-semibold text-gray-900") Dr. Garavito
+          div#listaCitas(class="flex flex-col gap-[15px]")
+            if citas && citas.length > 0
+              each cita in citas
+                - var fechaTexto = String(cita.fecha).substring(0, 10).split('-');
+                - var fechaFormateada = fechaTexto.length === 3 ? `${fechaTexto[2]}/${fechaTexto[1]}/${fechaTexto[0]}` : cita.fecha;
+                - var estadoTexto = cita.estado === 'pendiente' ? 'Programada' : cita.estado === 'confirmada' ? 'Confirmada' : cita.estado === 'completada' ? 'Completada' : 'Cancelada';
+                - var estadoClase = cita.estado === 'confirmada' || cita.estado === 'completada' ? 'bg-black text-white' : cita.estado === 'cancelada' ? 'bg-[#f5dada] text-[#8a2222]' : 'bg-[#ccc] text-[#333]';
+                div.cita-item(class="border border-gray-200 rounded-[10px] p-[20px]", data-estado=cita.estado, data-busqueda=((cita.paciente ? cita.paciente.nombre + ' ' + cita.paciente.apellido + ' ' + cita.paciente.email : '') + ' ' + (cita.medico ? cita.medico.nombre + ' ' + cita.medico.apellido : '') + ' ' + cita.motivo).toLowerCase())
+                  div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
+                    div(class="flex flex-wrap items-center gap-[15px]")
+                      span(class="font-bold text-[15px]")= fechaFormateada
+                      span(class="text-gray-600 text-[15px]")= String(cita.hora).substring(0, 5)
+                      span(class=`px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold ${estadoClase}`)= estadoTexto
+                  div(class="flex flex-col md:flex-row justify-between gap-[20px]")
+                    div(class="flex-1 min-w-[200px]")
+                      p(class="mb-[6px] text-[14px]")
+                        span(class="text-gray-500") Paciente: 
+                        span(class="font-semibold text-gray-900")= cita.paciente ? `${cita.paciente.nombre} ${cita.paciente.apellido}` : 'No disponible'
+                      p(class="mb-[6px] text-[14px]")
+                        span(class="text-gray-500") Motivo: 
+                        span(class="text-gray-700")= cita.motivo
+                    div(class="flex-1 min-w-[200px]")
+                      p(class="mb-[6px] text-[14px]")
+                        span(class="text-gray-500") Médico: 
+                        span(class="font-semibold text-gray-900")= cita.medico ? `Dr. ${cita.medico.nombre} ${cita.medico.apellido}` : 'No asignado'
+            else
+              div(class="p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg")
+                p(class="font-medium") No hay citas registradas en el sistema.
+          p#sinResultadosCitas(class="hidden p-8 text-center text-gray-500") No se encontraron citas con esos filtros.
 
     //- Script para inicializar los íconos de Lucide
     script.
       lucide.createIcons();
+
+      const buscarCita = document.getElementById('buscarCita');
+      const filtroEstadoCita = document.getElementById('filtroEstadoCita');
+      const tarjetasCita = document.querySelectorAll('.cita-item');
+      const sinResultadosCitas = document.getElementById('sinResultadosCitas');
+
+      function filtrarCitas() {
+        const texto = buscarCita.value.toLowerCase().trim();
+        const estado = filtroEstadoCita.value;
+        let visibles = 0;
+
+        tarjetasCita.forEach((tarjeta) => {
+          const coincideTexto = tarjeta.dataset.busqueda.includes(texto);
+          const coincideEstado = !estado || tarjeta.dataset.estado === estado;
+          const mostrar = coincideTexto && coincideEstado;
+
+          tarjeta.classList.toggle('hidden', !mostrar);
+          if (mostrar) visibles++;
+        });
+
+        sinResultadosCitas.classList.toggle('hidden', visibles > 0);
+      }
+
+      buscarCita.addEventListener('input', filtrarCitas);
+      filtroEstadoCita.addEventListener('change', filtrarCitas);
