@@ -1,0 +1,104 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title SIGCMI - Detalle de Paciente
+    link(rel="stylesheet" href="/css/output.css")
+    script(src="https://unpkg.com/lucide@latest")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white text-gray-800")
+    div(class="flex flex-col md:flex-row min-h-screen")
+      
+      //- BARRA LATERAL (Simplificada para no repetir todo el código aquí, asume tu diseño base)
+      aside(class="w-full md:w-[260px] bg-white border-r border-gray-200 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto")
+        div(class="p-[20px] flex items-center gap-[10px] border-b border-gray-200")
+          div(class="w-[60px] h-[60px] max-w-[60px] max-h-[60px]")
+            img(src="/img/logo.png", alt="logo", class="w-full h-full object-contain")
+          h1(class="text-[20px] font-bold") SIGCMI
+        nav(class="flex-1 p-[20px_10px] flex flex-col gap-[8px]")
+          a(href="/patientManagement", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#000000] rounded-[10px] text-[14px] font-bold bg-[#e0e0e0] no-underline")
+            i(data-lucide="arrow-left", class="w-[20px] h-[20px]")
+            | Volver a Pacientes
+
+      //- CONTENIDO PRINCIPAL
+      main(class="flex-1 p-[30px] bg-[#fafafa]")
+        
+        //- ENCABEZADO
+        header(class="mb-[30px] flex items-center justify-between")
+          div
+            h2(class="text-[24px] font-bold mb-[5px] text-gray-900") Expediente: #{paciente.nombre} #{paciente.apellido}
+            p(class="text-[14px] text-gray-500 m-0") #{paciente.tipo_documento} #{paciente.numero_documento}
+        
+        div(class="grid grid-cols-1 lg:grid-cols-3 gap-[20px]")
+          
+          //- COLUMNA IZQUIERDA: Info Personal e Historias Clínicas
+          div(class="lg:col-span-1 flex flex-col gap-[20px]")
+            //- Datos Personales
+            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] shadow-sm")
+              h3(class="text-[16px] font-bold text-gray-900 mb-[15px] border-b pb-[10px]") Información de Contacto
+              div(class="text-[14px] text-gray-600 flex flex-col gap-[10px]")
+                p(class="m-0 flex items-center gap-[8px]") 
+                  i(data-lucide="mail", class="w-[16px] h-[16px]") 
+                  | #{paciente.email}
+                p(class="m-0 flex items-center gap-[8px]") 
+                  i(data-lucide="phone", class="w-[16px] h-[16px]") 
+                  | #{paciente.telefono}
+                p(class="m-0 flex items-center gap-[8px]") 
+                  i(data-lucide="map-pin", class="w-[16px] h-[16px]") 
+                  | #{paciente.direccion || 'No registrada'}
+
+            //- Resumen de Historias Clínicas Generales
+            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] shadow-sm")
+              h3(class="text-[16px] font-bold text-gray-900 mb-[15px] border-b pb-[10px]") Registros Clínicos
+              if paciente.historiasPaciente && paciente.historiasPaciente.length > 0
+                div(class="flex flex-col gap-[15px]")
+                  each historia in paciente.historiasPaciente
+                    div(class="p-[10px] bg-gray-50 rounded-[8px] border border-gray-100")
+                      p(class="text-[12px] text-gray-400 mb-[5px]") Fecha: #{new Date(historia.fecha_elaboracion).toLocaleDateString('es-CO')}
+                      p(class="text-[13px] font-bold text-gray-800 m-0 mb-[2px]") Motivo: #{historia.motivo}
+                      p(class="text-[13px] text-gray-600 m-0 truncate") Diagnóstico: #{historia.diagnostico_principal || 'No especificado'}
+              else
+                p(class="text-[13px] text-gray-500 italic") No hay historias clínicas registradas.
+
+          //- COLUMNA DERECHA: Historial de Citas
+          div(class="lg:col-span-2")
+            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] shadow-sm h-full")
+              h3(class="text-[16px] font-bold text-gray-900 mb-[15px] border-b pb-[10px]") Historial de Citas
+              
+              if paciente.citasPaciente && paciente.citasPaciente.length > 0
+                div(class="overflow-x-auto")
+                  table(class="w-full text-left border-collapse")
+                    thead
+                      tr(class="text-[13px] text-gray-500 border-b border-gray-200")
+                        th(class="pb-[10px] font-semibold") Fecha
+                        th(class="pb-[10px] font-semibold") Médico
+                        th(class="pb-[10px] font-semibold") Motivo
+                        th(class="pb-[10px] font-semibold") Estado
+                    tbody
+                      each cita in paciente.citasPaciente
+                        tr(class="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors")
+                          td(class="py-[12px] text-[13px] text-gray-800")
+                            span(class="font-medium") #{cita.fecha}
+                            br
+                            span(class="text-gray-500 text-[12px]") #{cita.hora}
+                          td(class="py-[12px] text-[13px] text-gray-800")
+                            if cita.medico
+                              | Dr. #{cita.medico.nombre} #{cita.medico.apellido}
+                              br
+                              span(class="text-gray-500 text-[12px]") #{cita.medico.especialidad || 'General'}
+                            else
+                              | No asignado
+                          td(class="py-[12px] text-[13px] text-gray-800") #{cita.motivo}
+                          td(class="py-[12px]")
+                            //- Colores dinámicos según el estado de la cita
+                            - var colorBg = cita.estado === 'completada' ? 'bg-green-100 text-green-700' : cita.estado === 'cancelada' ? 'bg-red-100 text-red-700' : cita.estado === 'confirmada' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'
+                            span(class=`px-[8px] py-[3px] rounded-full text-[11px] font-bold uppercase tracking-wide ${colorBg}`) #{cita.estado}
+              else
+                div(class="p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg mt-[20px]")
+                  p(class="font-medium") Este paciente aún no tiene citas registradas.
+
+    script.
+      lucide.createIcons();     

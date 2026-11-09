@@ -4,8 +4,7 @@ html(lang="es")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title SIGCMI - Pacientes
-    script(src="https://cdn.tailwindcss.com")
-    //- Lucide Icons (CDN)
+    link(rel="stylesheet" href="/css/output.css")
     script(src="https://unpkg.com/lucide@latest")
     style.
       body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -70,97 +69,38 @@ html(lang="es")
             i(data-lucide="search", class="absolute left-[18px] top-1/2 -translate-y-1/2 w-[16px] h-[16px] text-gray-400")
             input(type="text", class="w-full py-[12px] pr-[15px] pl-[45px] border border-gray-200 bg-white rounded-[10px] text-[14px] outline-none focus:border-gray-400 transition-colors", placeholder="Buscar por nombre, email o teléfono...")
 
-        //- LISTA DE TARJETAS DE PACIENTES
+        //- LISTA DE TARJETAS DE PACIENTES DINÁMICAS
         div(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[20px]")
+          if pacientes && pacientes.length > 0
+            each paciente in pacientes
+              //- Lógica de UI para iniciales, género y edad
+              - var iniciales = paciente.nombre.charAt(0).toUpperCase() + paciente.apellido.charAt(0).toUpperCase();
+              - var generoInicial = paciente.genero ? paciente.genero.charAt(0).toUpperCase() : '-';
+              - var edad = paciente.fecha_nacimiento ? Math.floor((new Date() - new Date(paciente.fecha_nacimiento).getTime()) / 3.15576e+10) : 'N/A';
 
-          //- Tarjeta 1: Juan Pérez García
-          div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
-            div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") M
-              div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") JP
+              div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow")
                 div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Juan Pérez García
-                  span(class="text-[12px] text-gray-400 font-medium") 40 años
-              
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: juan.perez@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
-                p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") O+
-                p(class="m-0") Alergias: Penicilina
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
+                  div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold")= generoInicial
+                  div(class="flex items-center gap-[12px] mb-[15px]")
+                    div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]")= iniciales
+                    div
+                      h3(class="text-[15px] font-bold text-gray-900 m-0") #{paciente.nombre} #{paciente.apellido}
+                      span(class="text-[12px] text-gray-400 font-medium") #{edad} años
+                  
+                  div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
+                    p(class="m-0") Email: #{paciente.email}
+                    p(class="m-0") Teléfono: #{paciente.telefono}
+                    p(class="m-0 flex items-center gap-[5px]")
+                      | Documento: 
+                      span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") #{paciente.tipo_documento} #{paciente.numero_documento}
+                
+                //- Botón que redirige al detalle completo del paciente
+                a(href=`/patientManagement/${paciente.id}` class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px] no-underline")
+                  i(data-lucide="folder", class="w-[14px] h-[14px]")
+                  | Ver Expediente
+          else
+            div(class="col-span-full p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg")
+              p(class="font-medium") No hay pacientes registrados en el sistema.
 
-          //- Tarjeta 2: Ana López Ruiz
-          div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
-            div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") F
-              div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") AL
-                div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Ana López Ruiz
-                  span(class="text-[12px] text-gray-400 font-medium") 35 años
-              
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: ana.lopez@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
-                p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") A+
-                p(class="m-0") Alergias: Ninguna conocida
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
-
-          //- Tarjeta 3: Pedro Ramírez Torres
-          div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
-            div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") M
-              div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") PR
-                div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Pedro Ramírez Torres
-                  span(class="text-[12px] text-gray-400 font-medium") 10 años
-              
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: ramirez.familia@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
-                p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") B+
-                p(class="m-0") Alergias: Ninguna conocida
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
-
-          //- Tarjeta 4: Sofía Martínez Díaz
-          div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] relative shadow-sm flex flex-col justify-between")
-            div
-              div(class="absolute top-[20px] right-[20px] bg-[#f5f5f5] text-gray-600 w-[24px] h-[24px] rounded-full flex items-center justify-center text-[11px] font-bold") F
-              div(class="flex items-center gap-[12px] mb-[15px]")
-                div(class="w-[45px] h-[45px] bg-[#e0e0e0] rounded-full flex items-center justify-center font-bold text-gray-800 text-[14px]") SM
-                div
-                  h3(class="text-[15px] font-bold text-gray-900 m-0") Sofía Martínez Díaz
-                  span(class="text-[12px] text-gray-400 font-medium") 47 años
-              
-              div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
-                p(class="m-0") Email: sofia.martinez@email.com
-                p(class="m-0") Teléfono: +57 300 555 0101
-                p(class="m-0 flex items-center gap-[5px]")
-                  | Tipo de sangre: 
-                  span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") AB+
-                p(class="m-0") Alergias: Látex, Polen
-            
-            button(type="button", class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px]")
-              i(data-lucide="folder", class="w-[14px] h-[14px]")
-              | Historial
-
-    //- Script para inicializar los íconos de Lucide
     script.
       lucide.createIcons();

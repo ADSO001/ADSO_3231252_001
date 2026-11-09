@@ -1,25 +1,31 @@
 import express from 'express';
+import { 
+    formularioAdmin, 
+    managementDoctors, 
+    formularioAdminAppointment, 
+    formularioDoctorsHours, 
+    formulariopatientManagement, 
+    detallePaciente,
+    confirmDoctors, 
+    aprobarMedico, 
+    rechazarMedico 
+} from '../controllers/adminControllers.js';
+
 import protegerRuta from '../middleware/protegerRuta.js';
 import rutaAdmin from '../middleware/rutaAdmin.js';
-import {
-    formularioAdmin,
-    managementDoctors,
-    formularioAdminAppointment,
-    formularioDoctorsHours,
-    formulariopatientManagement,
-    confirmDoctors,
-    aprobarMedico,
-    rechazarMedico
-} from '../controllers/adminControllers.js';
 
 const router = express.Router();
 
 // Rutas generales de administración
+
 router.get('/adminPanel', protegerRuta, rutaAdmin, formularioAdmin);
-router.get('/physicianManagement', protegerRuta, rutaAdmin, managementDoctors);
+router.get('/managementDoctors', protegerRuta, rutaAdmin, managementDoctors);
 router.get('/appointmentScheduleAdmin', protegerRuta, rutaAdmin, formularioAdminAppointment);
 router.get('/doctorsHours', protegerRuta, rutaAdmin, formularioDoctorsHours);
+
+// Rutas de gestión de pacientes
 router.get('/patientManagement', protegerRuta, rutaAdmin, formulariopatientManagement);
+router.get('/patientManagement/:id', protegerRuta, rutaAdmin, detallePaciente); // <-- Nueva ruta para ver el expediente
 
 // Vista de gestión/aprobación de médicos
 router.get('/managementSpecialities', protegerRuta, rutaAdmin, confirmDoctors);
