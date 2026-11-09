@@ -164,9 +164,9 @@ const formularioDoctorsHours = async (req, res) => {
 const formulariopatientManagement = async (req, res) => {
     try {
         const pacientes = await Usuario.findAll({
-    where: { rol: 'paciente' },
-    attributes: ['id', 'nombre', 'apellido', 'tipo_documento', 'numero_documento', 'email', 'telefono', 'fecha_nacimiento', 'genero']
-});
+            where: { rol: 'paciente' },
+            attributes: ['id', 'nombre', 'apellido', 'tipo_documento', 'numero_documento', 'email', 'telefono', 'fecha_nacimiento', 'genero']
+        });
 
         res.render('patientManagement', {
             tituloPagina: 'Gestión de Pacientes',
@@ -223,6 +223,68 @@ const detallePaciente = async (req, res) => {
     } catch (error) {
         console.error('Error al cargar expediente:', error);
         res.status(500).send('Error al cargar el expediente del paciente');
+    }
+};
+
+const verHistoriaClinica = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const historia = await HistoriaClinica.findByPk(id, {
+            include: [
+                { 
+                    model: Usuario, 
+                    as: 'paciente'
+                },
+                { 
+                    model: Usuario, 
+                    as: 'medico', 
+                    attributes: ['nombre', 'apellido', 'especialidad', 'tarjeta_profesional'] 
+                },
+                { 
+                    model: Cita, 
+                    as: 'cita' 
+                }
+            ]
+        });
+
+        if (!historia) {
+            return res.redirect('/patientManagement');
+        }
+
+        let edadPaciente = null;
+        if (historia.paciente && historia.paciente.fecha_nacimiento) {
+            const hoy = new Date();
+            const fechaNac = new Date(historia.paciente.fecha_nacimiento);
+            edadPaciente = hoy.getFullYear() - fechaNac.getFullYear();
+            const m = hoy.getMonth() - fechaNac.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < fechaNac.getDate())) {
+                edadPaciente--;
+            }
+        }
+
+        let datos = historia.datos_clinicos || {};
+        if (typeof datos === 'string') {
+            try { datos = JSON.parse(datos); } catch (e) { datos = {}; }
+        }
+        
+        let secciones = historia.secciones || [];
+
+        res.render('templates/clinical-history-detail', {
+            tituloPagina: 'Detalle de Historia Clínica',
+            usuario: req.usuario,
+            historia: historia,
+            paciente: historia.paciente,
+            medico: historia.medico,
+            cita: historia.cita,
+            edadPaciente: edadPaciente,
+            datos: datos,
+            secciones: secciones
+        });
+
+    } catch (error) {
+        console.error('Error al cargar la historia clínica:', error);
+        res.status(500).send('Error interno al cargar el documento');
     }
 };
 
@@ -338,6 +400,7 @@ export {
     formularioDoctorsHours,
     formulariopatientManagement,
     detallePaciente,
+    verHistoriaClinica,
     confirmDoctors,
     aprobarMedico,
     rechazarMedico

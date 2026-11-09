@@ -1,0 +1,94 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title SIGCMI - Historia Clínica
+    link(rel="stylesheet" href="/css/output.css")
+    script(src="https://unpkg.com/lucide@latest")
+    style.
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body(class="m-0 p-0 box-border bg-white text-gray-800")
+    div(class="flex flex-col md:flex-row min-h-screen")
+      
+      //- BARRA LATERAL
+      aside(class="w-full md:w-[260px] bg-white border-r border-gray-200 flex flex-col shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto")
+        div(class="p-[20px] flex items-center gap-[10px] border-b border-gray-200")
+          div(class="w-[60px] h-[60px] max-w-[60px] max-h-[60px]")
+            img(src="/img/logo.png", alt="logo", class="w-full h-full object-contain")
+          h1(class="text-[20px] font-bold") SIGCMI
+        nav(class="flex-1 p-[20px_10px] flex flex-col gap-[8px]")
+          //- Botón que usa JavaScript para volver exactamente al paciente que estábamos viendo
+          a(href="javascript:history.back()", class="flex items-center gap-[10px] px-[15px] py-[8px] text-[#000000] rounded-[10px] text-[14px] font-bold bg-[#e0e0e0] no-underline cursor-pointer")
+            i(data-lucide="arrow-left", class="w-[20px] h-[20px]")
+            | Volver al Expediente
+
+      //- CONTENIDO PRINCIPAL
+      main(class="flex-1 p-[30px] bg-[#fafafa]")
+        
+        //- ENCABEZADO DEL DOCUMENTO
+        header(class="mb-[30px] flex items-center justify-between border-b border-gray-200 pb-[20px]")
+          div
+            h2(class="text-[24px] font-bold mb-[5px] text-gray-900") Registro de Historia Clínica
+            p(class="text-[14px] text-gray-500 m-0") Documento N° #{historia.id}
+        
+        div(class="max-w-[900px] mx-auto flex flex-col gap-[20px]")
+          
+          //- SECCIÓN 1: DATOS DEL PACIENTE Y MÉDICO
+          div(class="grid grid-cols-1 md:grid-cols-2 gap-[20px]")
+            
+            //- Tarjeta Paciente
+            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] shadow-sm")
+              h3(class="text-[13px] font-bold text-gray-400 uppercase tracking-wide mb-[15px] flex items-center gap-[8px]") 
+                i(data-lucide="user", class="w-[16px] h-[16px]") 
+                | Información del Paciente
+              div(class="flex flex-col gap-[5px]")
+                p(class="text-[16px] font-bold text-gray-900 m-0") #{historia.paciente.nombre} #{historia.paciente.apellido}
+                p(class="text-[14px] text-gray-600 m-0") #{historia.paciente.tipo_documento} #{historia.paciente.numero_documento}
+
+            //- Tarjeta Médico
+            div(class="bg-white border border-gray-200 rounded-[12px] p-[20px] shadow-sm")
+              h3(class="text-[13px] font-bold text-gray-400 uppercase tracking-wide mb-[15px] flex items-center gap-[8px]") 
+                i(data-lucide="stethoscope", class="w-[16px] h-[16px]") 
+                | Profesional Tratante
+              div(class="flex flex-col gap-[5px]")
+                p(class="text-[16px] font-bold text-gray-900 m-0") Dr. #{historia.medico.nombre} #{historia.medico.apellido}
+                p(class="text-[14px] text-gray-600 m-0") #{historia.medico.especialidad || 'Medicina General'}
+                
+                if historia.cita
+                  p(class="text-[12px] text-gray-500 m-0 mt-[10px] pt-[10px] border-t border-gray-100 flex items-center gap-[6px]")
+                    i(data-lucide="calendar", class="w-[14px] h-[14px]")
+                    | Cita original: #{historia.cita.fecha} a las #{historia.cita.hora}
+
+          //- SECCIÓN 2: DETALLES CLÍNICOS
+          div(class="bg-white border border-gray-200 rounded-[12px] shadow-sm overflow-hidden")
+            
+            //- Motivo
+            div(class="bg-blue-50 border-b border-gray-200 p-[20px]")
+              h3(class="text-[15px] font-bold text-blue-900 m-0") Motivo de Consulta
+              p(class="text-[14px] text-gray-700 mt-[8px] mb-0") #{historia.motivo || (historia.cita ? historia.cita.motivo : 'No especificado')}
+
+            //- Datos y Evolución
+            div(class="p-[20px] border-b border-gray-200")
+              h3(class="text-[15px] font-bold text-gray-900 mb-[10px] flex items-center gap-[8px]")
+                i(data-lucide="clipboard-list", class="w-[18px] h-[18px] text-gray-500")
+                | Datos Clínicos y Evolución
+              p(class="text-[14px] text-gray-700 leading-relaxed m-0 whitespace-pre-wrap") #{historia.datos_clinicos || 'No se registraron datos clínicos en esta sesión.'}
+
+            //- Diagnóstico
+            div(class="p-[20px] border-b border-gray-200 bg-gray-50")
+              h3(class="text-[15px] font-bold text-gray-900 mb-[10px] flex items-center gap-[8px]")
+                i(data-lucide="activity", class="w-[18px] h-[18px] text-red-500")
+                | Diagnóstico Principal
+              p(class="text-[14px] font-medium text-gray-800 m-0") #{historia.diagnostico_principal || 'Sin diagnóstico registrado.'}
+
+            //- Plan / Resolución
+            div(class="p-[20px]")
+              h3(class="text-[15px] font-bold text-gray-900 mb-[10px] flex items-center gap-[8px]")
+                i(data-lucide="check-circle", class="w-[18px] h-[18px] text-green-500")
+                | Plan / Resolución / Tratamiento
+              p(class="text-[14px] text-gray-700 leading-relaxed m-0 whitespace-pre-wrap") #{historia.resolucion || 'Sin indicaciones o tratamiento adicional registrado.'}
+
+    script.
+      lucide.createIcons();

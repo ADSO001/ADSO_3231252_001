@@ -83,6 +83,7 @@ export const guardarHistoriaClinica = async (req, res) => {
 };
 
 const puedeConsultarHistoria = async (usuario, historia) => {
+  if (usuario.rol === 'admin') return true; // Autorización total para administradores
   if (usuario.rol === 'paciente') return historia.paciente_id === usuario.id;
   if (usuario.rol === 'medico') {
     if (historia.medico_id === usuario.id) return true;

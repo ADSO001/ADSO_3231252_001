@@ -90,9 +90,7 @@ html(lang="es")
                   div(class="text-[13px] text-gray-600 flex flex-col gap-[6px] mb-[20px]")
                     p(class="m-0") Email: #{paciente.email}
                     p(class="m-0") Teléfono: #{paciente.telefono}
-                    p(class="m-0 flex items-center gap-[5px]")
-                      | Documento: 
-                      span(class="bg-black text-white px-[6px] py-[1px] rounded-[4px] text-[11px] font-bold") #{paciente.tipo_documento} #{paciente.numero_documento}
+                    p(class="m-0") Documento: #{paciente.tipo_documento} #{paciente.numero_documento}
                 
                 //- Botón que redirige al detalle completo del paciente
                 a(href=`/patientManagement/${paciente.id}` class="w-full py-[8px] border border-gray-300 rounded-[8px] bg-white text-[12px] font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-[6px] no-underline")

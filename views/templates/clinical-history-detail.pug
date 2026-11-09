@@ -15,7 +15,9 @@ html(lang="es")
           p(class="text-sm text-gray-500") SIGCMI · Registro de atención ambulatoria
         div(class="flex flex-wrap gap-2")
           a(href=`/historia-clinica/pdf/${historia.id}`, target="_blank", class="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Descargar PDF
-          if rolUsuario === 'medico'
+          if usuario && usuario.rol === 'admin'
+            a(href=`/patientManagement/${paciente.id}`, class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Volver al expediente
+          else if rolUsuario === 'medico'
             a(href="/medicalPanel", class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Volver al panel
           else
             a(href="/patientPanel", class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold no-underline") Volver al panel
