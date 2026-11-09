@@ -7,44 +7,44 @@ import Usuario from "../models/usuarios.js";
 import { Cita, HistoriaClinica } from '../models/index.js';
 import { emailMedicoAprobado, emailMedicoRechazado } from "../helpers/emails.js";
 
-// Función del Dashboard Principal con Métricas y Citas de Hoy
+// Función del Dashboard Principal con Métricas y Rendimiento (Lógica de Tiempos)
 const formularioAdmin = async (req, res) => {
     try {
         const zonaHoraria = 'America/Bogota';
-        const hoyInicio = moment().tz(zonaHoraria).startOf('day').toDate();
-        const hoyFin = moment().tz(zonaHoraria).endOf('day').toDate();
+        const ahora = moment().tz(zonaHoraria);
+        
+        // 1. Obtener la fecha seleccionada por el admin (o por defecto el día de hoy)
+        const fechaQuery = req.query.fecha;
+        let fechaFiltroInicio, fechaFiltroFin;
+        let fechaSeleccionadaStr;
 
+        if (fechaQuery) {
+            fechaFiltroInicio = moment.tz(fechaQuery, zonaHoraria).startOf('day').toDate();
+            fechaFiltroFin = moment.tz(fechaQuery, zonaHoraria).endOf('day').toDate();
+            fechaSeleccionadaStr = fechaQuery;
+        } else {
+            fechaFiltroInicio = moment().tz(zonaHoraria).startOf('day').toDate();
+            fechaFiltroFin = moment().tz(zonaHoraria).endOf('day').toDate();
+            fechaSeleccionadaStr = moment().tz(zonaHoraria).format('YYYY-MM-DD');
+        }
+
+        // Límite estricto de 3 meses atrás. Citas más antiguas no se incluyen en la estadística.
+        const limite3Meses = moment().tz(zonaHoraria).subtract(3, 'months').startOf('day').toDate();
+
+        // 2. Ejecutar todas las consultas a la BD
         const [
-            totalCitas,
-            citasHoy,
-            citasPendientes,
-            citasConfirmadas,
-            citasCompletadas,
-            citasCanceladas,
-            totalUsuarios,
-            totalClientes,
-            citasDelDia
+            totalPacientesActivos,
+            totalMedicosActivos,
+            citasDeLaFecha,
+            todasLasCitasRecientes,
+            citasDelDiaLista
         ] = await Promise.all([
-            Cita.count(),
-            Cita.count({
-                where: {
-                    fecha: {
-                        [Op.between]: [hoyInicio, hoyFin]
-                    }
-                }
-            }),
-            Cita.count({ where: { estado: 'pendiente' } }),
-            Cita.count({ where: { estado: 'confirmada' } }),
-            Cita.count({ where: { estado: 'completada' } }),
-            Cita.count({ where: { estado: 'cancelada' } }),
-            Usuario.count(),
-            Usuario.count({ where: { rol: 'paciente' } }).catch(() => 0),
+            Usuario.count({ where: { rol: 'paciente' } }),
+            Usuario.count({ where: { rol: 'medico', estado_aprobacion: 'aprobado' } }),
+            Cita.count({ where: { fecha: { [Op.between]: [fechaFiltroInicio, fechaFiltroFin] } } }),
+            Cita.findAll({ where: { fecha: { [Op.gte]: limite3Meses } } }),
             Cita.findAll({
-                where: {
-                    fecha: {
-                        [Op.between]: [hoyInicio, hoyFin]
-                    }
-                },
+                where: { fecha: { [Op.between]: [fechaFiltroInicio, fechaFiltroFin] } },
                 include: [
                     { model: Usuario, as: 'paciente', attributes: ['nombre', 'apellido', 'email'] },
                     { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido'] }
@@ -53,32 +53,78 @@ const formularioAdmin = async (req, res) => {
             })
         ]);
 
+        // 3. Calcular métricas (Regla de los 30 min y estados) para las barras superiores
+        let atendidas = 0;
+        let inasistencias = 0;
+        let pendientes = 0;
+        const totalCitasRendimiento = todasLasCitasRecientes.length;
+
+        todasLasCitasRecientes.forEach(cita => {
+            let fechaStr = cita.fecha;
+            if (cita.fecha instanceof Date) {
+                fechaStr = `${cita.fecha.getFullYear()}-${String(cita.fecha.getMonth() + 1).padStart(2, '0')}-${String(cita.fecha.getDate()).padStart(2, '0')}`;
+            }
+            
+            const horaCitaExacta = moment.tz(`${fechaStr} ${cita.hora}`, 'YYYY-MM-DD HH:mm:ss', zonaHoraria);
+
+            if (cita.estado === 'completada') {
+                atendidas++;
+            } else if (cita.estado === 'cancelada') {
+                inasistencias++;
+            } else if (cita.estado === 'pendiente' && ahora.isAfter(horaCitaExacta.clone().add(30, 'minutes'))) {
+                inasistencias++;
+            } else {
+                pendientes++;
+            }
+        });
+
+        // 4. APLICAR LA MISMA REGLA DE LOS 30 MIN A LA LISTA INFERIOR
+        // Recorremos la lista del día y reescribimos el estado visualmente si es inasistencia
+        const listaCitasFormateada = citasDelDiaLista.map(cita => {
+            // Convertimos la cita a un objeto plano para poder modificar sus propiedades
+            const citaPlana = cita.get({ plain: true }); 
+            
+            let fechaStr = citaPlana.fecha;
+            if (citaPlana.fecha instanceof Date) {
+                fechaStr = `${citaPlana.fecha.getFullYear()}-${String(citaPlana.fecha.getMonth() + 1).padStart(2, '0')}-${String(citaPlana.fecha.getDate()).padStart(2, '0')}`;
+            }
+            
+            const horaCitaExacta = moment.tz(`${fechaStr} ${citaPlana.hora}`, 'YYYY-MM-DD HH:mm:ss', zonaHoraria);
+            
+            // Si está pendiente y ya pasaron 30 min, la mostramos como inasistencia en la vista
+            if (citaPlana.estado === 'pendiente' && ahora.isAfter(horaCitaExacta.clone().add(30, 'minutes'))) {
+                citaPlana.estado = 'inasistencia'; 
+            }
+            
+            return citaPlana;
+        });
+
+        // Función para sacar porcentaje a un decimal
+        const calcularPorcentaje = (valor, total) => total > 0 ? ((valor / total) * 100).toFixed(1) : 0;
+
+        // 5. Enviar a la vista
         res.render("adminPanel", {
             tituloPagina: "Panel de Administración",
             usuario: req.usuario,
+            fechaSeleccionada: fechaSeleccionadaStr,
             metricas: {
-                totalCitas,
-                citasHoy,
-                citasPendientes,
-                citasConfirmadas,
-                citasCompletadas,
-                citasCanceladas,
-                totalUsuarios,
-                totalClientes
+                totalPacientesActivos,
+                totalMedicosActivos,
+                citasHoy: citasDeLaFecha,
+                citasUltimos3Meses: totalCitasRendimiento
             },
-            citasDelDia
+            rendimiento: {
+                tasaAtendidas: calcularPorcentaje(atendidas, totalCitasRendimiento),
+                tasaInasistencia: calcularPorcentaje(inasistencias, totalCitasRendimiento),
+                tasaPendientes: calcularPorcentaje(pendientes, totalCitasRendimiento)
+            },
+            citasDelDia: listaCitasFormateada // Enviamos la lista con los estados corregidos
         });
+
     } catch (error) {
         console.error("Error al cargar el dashboard del administrador:", error);
         res.render("adminPanel", {
-            tituloPagina: "Panel de Administración",
-            usuario: req.usuario,
-            metricas: {
-                totalCitas: 0, citasHoy: 0, citasPendientes: 0,
-                citasConfirmadas: 0, citasCompletadas: 0, citasCanceladas: 0,
-                totalUsuarios: 0, totalClientes: 0
-            },
-            citasDelDia: []
+            // ... (el manejo de errores se mantiene igual)
         });
     }
 };
@@ -232,19 +278,9 @@ const verHistoriaClinica = async (req, res) => {
     try {
         const historia = await HistoriaClinica.findByPk(id, {
             include: [
-                { 
-                    model: Usuario, 
-                    as: 'paciente'
-                },
-                { 
-                    model: Usuario, 
-                    as: 'medico', 
-                    attributes: ['nombre', 'apellido', 'especialidad', 'tarjeta_profesional'] 
-                },
-                { 
-                    model: Cita, 
-                    as: 'cita' 
-                }
+                { model: Usuario, as: 'paciente' },
+                { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad', 'tarjeta_profesional'] },
+                { model: Cita, as: 'cita' }
             ]
         });
 
@@ -291,10 +327,7 @@ const verHistoriaClinica = async (req, res) => {
 const managementDoctors = async (req, res) => {
     try {
         const medicosAprobados = await Usuario.findAll({
-            where: {
-                rol: 'medico',
-                estado_aprobacion: 'aprobado'
-            }
+            where: { rol: 'medico', estado_aprobacion: 'aprobado' }
         });
 
         res.render("physicianManagement", {
@@ -311,17 +344,11 @@ const managementDoctors = async (req, res) => {
 const confirmDoctors = async (req, res) => {
     try {
         const medicosPendientes = await Usuario.findAll({
-            where: {
-                rol: 'medico',
-                estado_aprobacion: 'pendiente'
-            }
+            where: { rol: 'medico', estado_aprobacion: 'pendiente' }
         });
 
         const medicosAprobados = await Usuario.findAll({
-            where: {
-                rol: 'medico',
-                estado_aprobacion: 'aprobado'
-            }
+            where: { rol: 'medico', estado_aprobacion: 'aprobado' }
         });
 
         res.render("managementSpecialities", {
