@@ -4,7 +4,7 @@ html(lang="es")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title= tituloPagina ? tituloPagina : "SIGCMI - Sistema de Gestión Médica"
-    link(rel="stylesheet" href="/css/output.css")
+    script(src="https://cdn.tailwindcss.com")
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css", crossorigin="anonymous", referrerpolicy="no-referrer")
     style.
       html { scroll-behavior: smooth; }
@@ -26,7 +26,7 @@ html(lang="es")
             a(href="#acerca", class="hover:text-black transition-colors no-underline") Acerca de
 
           div(class="flex items-center gap-3")
-            a(href="/login", class="text-[14px] font-bold text-gray-700 hover:text-black px-4 py-2 rounded-lg transition-colors no-underline") Iniciar sesión
+            a(href="/login", class="bg-black text-white px-5 py-2.5 rounded-[10px] text-[14px] font-bold hover:bg-gray-800 transition-all shadow-sm no-underline") Iniciar sesión
 
     //- SECCIÓN PRINCIPAL (HERO SECTION)
     main(class="w-full")
