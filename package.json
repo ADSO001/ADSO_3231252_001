@@ -10,7 +10,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
     "css": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",
     "seed": "node seed/seeder.js",
-    "build:css": "tailwindcss -i ./src/css/app.css -o ./public/css/output.css --minify"
+    "build:css": "tailwindcss -i ./src/css/app.css -o ./public/css/output.css --minify",
+    "seed:demo": "node seed/demoSeeder.js"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +37,7 @@
     "validator": "^13.15.35"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.5.4",

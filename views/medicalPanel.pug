@@ -5,6 +5,7 @@ html(lang="es")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title SIGCMI - Panel Médico
     link(rel="stylesheet" href="/css/output.css")
+    link(rel="stylesheet" href="/css/notificaciones.css")
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
     link(rel="icon", href="icono.png", type="image/png")
     style.
@@ -474,7 +475,7 @@ html(lang="es")
         delete datosFormulario.diagnosticoPrincipal;
 
         if (!motivo || !codigoCie10 || !diagnosticoPrincipal || !(datosFormulario.planTratamiento || '').trim()) {
-          alert('Completa el motivo, el código CIE-10, el diagnóstico principal y el plan de manejo.');
+          mostrarNotificacion({ tipo: 'warning', titulo: 'Información incompleta', mensaje: 'Completa el motivo, el código CIE-10, el diagnóstico principal y el plan de manejo.' });
           return;
         }
 
@@ -486,19 +487,25 @@ html(lang="es")
           });
           const resultado = await respuesta.json();
           if (respuesta.ok) {
-            alert(resultado.mensaje || 'Historia clínica guardada.');
-            window.location.reload();
+            mostrarNotificacion({ tipo: 'success', titulo: 'Historia clínica guardada', mensaje: resultado.mensaje || 'La atención quedó registrada correctamente.' });
+            window.setTimeout(() => window.location.reload(), 900);
           } else {
-            alert(resultado.error || 'No fue posible guardar la historia clínica.');
+            mostrarNotificacion({ tipo: 'error', titulo: 'No se pudo guardar', mensaje: resultado.error || 'No fue posible guardar la historia clínica.' });
           }
         } catch (error) {
           console.error('Error al guardar historia clínica:', error);
-          alert('Error de conexión al guardar la historia clínica.');
+          mostrarNotificacion({ tipo: 'error', titulo: 'Error de conexión', mensaje: 'No fue posible guardar la historia clínica. Revisa tu conexión e inténtalo nuevamente.' });
         }
       }
 
       async function cancelarCita(citaId) {
-        if(!confirm('¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer.')) return;
+        const confirmar = await confirmarEnAplicacion({
+          titulo: 'Cancelar cita',
+          mensaje: '¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer.',
+          textoConfirmar: 'Sí, cancelar cita',
+          peligro: true
+        });
+        if (!confirmar) return;
         const csrf = document.getElementById('csrfToken').value;
 
         try {
@@ -508,13 +515,14 @@ html(lang="es")
                 body: JSON.stringify({ _csrf: csrf })
             });
             if(respuesta.ok) {
-                alert('Cita cancelada con éxito.');
-                window.location.reload();
+                mostrarNotificacion({ tipo: 'success', titulo: 'Cita cancelada', mensaje: 'La cita se canceló correctamente.' });
+                window.setTimeout(() => window.location.reload(), 900);
             } else {
-                alert('Error al cancelar la cita.');
+                mostrarNotificacion({ tipo: 'error', titulo: 'No se pudo cancelar', mensaje: 'Ocurrió un problema al cancelar la cita.' });
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error('Error al cancelar la cita:', error);
+            mostrarNotificacion({ tipo: 'error', titulo: 'Error de conexión', mensaje: 'No fue posible comunicarse con el servidor. Inténtalo nuevamente.' });
         }
       }
 
@@ -533,13 +541,14 @@ html(lang="es")
             });
             const resultado = await respuesta.json();
             if(respuesta.ok) {
-                alert('Cita reprogramada con éxito.');
-                window.location.reload(); 
+                mostrarNotificacion({ tipo: 'success', titulo: 'Cita reprogramada', mensaje: 'La fecha y la hora de la cita se actualizaron correctamente.' });
+                window.setTimeout(() => window.location.reload(), 900); 
             } else {
-                alert(resultado.error || 'Error al reprogramar.');
+                mostrarNotificacion({ tipo: 'error', titulo: 'No se pudo reprogramar', mensaje: resultado.error || 'Ocurrió un problema al reprogramar la cita.' });
             }
         } catch (error) {
             console.error("Error:", error);
-            alert('Error de conexión.');
+            mostrarNotificacion({ tipo: 'error', titulo: 'Error de conexión', mensaje: 'No fue posible comunicarse con el servidor. Inténtalo nuevamente.' });
         }
       }
+    script(src="/js/notificaciones.js")

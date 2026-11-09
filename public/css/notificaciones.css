@@ -1,0 +1,144 @@
+:root {
+  --sigcmi-ink: #111827;
+  --sigcmi-muted: #6b7280;
+  --sigcmi-border: #e5e7eb;
+  --sigcmi-surface: #ffffff;
+  --sigcmi-shadow: 0 18px 48px rgba(15, 23, 42, .16);
+}
+
+.sigcmi-notificaciones {
+  position: fixed;
+  z-index: 1200;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  width: min(390px, calc(100vw - 32px));
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.sigcmi-notificacion {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 14px;
+  border: 1px solid var(--sigcmi-border);
+  border-left: 4px solid #64748b;
+  border-radius: 13px;
+  background: var(--sigcmi-surface);
+  box-shadow: var(--sigcmi-shadow);
+  opacity: 0;
+  transform: translateY(-9px) scale(.985);
+  transition: opacity .2s ease, transform .2s ease;
+  pointer-events: auto;
+}
+
+.sigcmi-notificacion--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.sigcmi-notificacion--success { border-left-color: #16834a; }
+.sigcmi-notificacion--error { border-left-color: #c0392b; }
+.sigcmi-notificacion--warning { border-left-color: #b7791f; }
+.sigcmi-notificacion--info { border-left-color: #334155; }
+
+.sigcmi-notificacion__icono {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: #334155;
+}
+.sigcmi-notificacion--success .sigcmi-notificacion__icono { background: #eaf7ef; color: #16834a; }
+.sigcmi-notificacion--error .sigcmi-notificacion__icono { background: #fff0ef; color: #c0392b; }
+.sigcmi-notificacion--warning .sigcmi-notificacion__icono { background: #fff8e8; color: #a16207; }
+
+.sigcmi-notificacion__contenido { min-width: 0; flex: 1; }
+.sigcmi-notificacion__titulo { display: block; color: var(--sigcmi-ink); font-size: 13px; font-weight: 700; line-height: 1.4; }
+.sigcmi-notificacion__mensaje { margin: 4px 0 0; color: var(--sigcmi-muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.sigcmi-notificacion__cerrar {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+}
+.sigcmi-notificacion__cerrar:hover { background: #f3f4f6; color: #111827; }
+
+.sigcmi-confirmacion {
+  position: fixed;
+  z-index: 1300;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, .48);
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.sigcmi-confirmacion--visible { opacity: 1; }
+.sigcmi-confirmacion__dialogo {
+  width: min(430px, 100%);
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .22);
+  text-align: center;
+  transform: translateY(8px) scale(.985);
+  transition: transform .18s ease;
+}
+.sigcmi-confirmacion--visible .sigcmi-confirmacion__dialogo { transform: translateY(0) scale(1); }
+.sigcmi-confirmacion__icono {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  place-items: center;
+  border-radius: 15px;
+  background: #f3f4f6;
+  color: #111827;
+  font-size: 21px;
+}
+.sigcmi-confirmacion__icono--peligro { background: #fff1f0; color: #bd3328; }
+.sigcmi-confirmacion__titulo { margin: 0; color: #111827; font-size: 18px; font-weight: 750; }
+.sigcmi-confirmacion__mensaje { margin: 9px 0 22px; color: #6b7280; font-size: 13px; line-height: 1.6; }
+.sigcmi-confirmacion__acciones { display: flex; justify-content: center; gap: 10px; }
+.sigcmi-confirmacion__boton {
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+.sigcmi-confirmacion__boton:active { transform: scale(.98); }
+.sigcmi-confirmacion__boton--secundario { border-color: #e5e7eb; background: #f9fafb; color: #374151; }
+.sigcmi-confirmacion__boton--secundario:hover { background: #f3f4f6; }
+.sigcmi-confirmacion__boton--principal { background: #111827; color: #fff; }
+.sigcmi-confirmacion__boton--principal:hover { background: #293548; }
+.sigcmi-confirmacion__boton--peligro { background: #b42318; color: #fff; }
+.sigcmi-confirmacion__boton--peligro:hover { background: #912018; }
+
+@media (max-width: 520px) {
+  .sigcmi-notificaciones { top: 12px; right: 12px; width: calc(100vw - 24px); }
+  .sigcmi-confirmacion__dialogo { padding: 22px 18px; }
+  .sigcmi-confirmacion__acciones { flex-direction: column-reverse; }
+  .sigcmi-confirmacion__boton { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sigcmi-notificacion, .sigcmi-confirmacion, .sigcmi-confirmacion__dialogo { transition: none; }
+}
