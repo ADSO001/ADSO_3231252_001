@@ -26,8 +26,9 @@ router.get('/doctorsHours', protegerRuta, rutaAdmin, formularioDoctorsHours);
 
 // Rutas de gestión de pacientes
 router.get('/patientManagement', protegerRuta, rutaAdmin, formulariopatientManagement);
-router.get('/patientManagement/:id', protegerRuta, rutaAdmin, detallePaciente); // <-- Nueva ruta para ver el expediente
-router.get('/historiaClinica/:id', protegerRuta, rutaAdmin, verHistoriaClinica); // <-- Nueva ruta conectada al botón
+router.get('/patientManagement/:id', protegerRuta, rutaAdmin, detallePaciente);
+router.get('/physicianManagement', protegerRuta, managementDoctors);
+router.get('/historiaClinica/:id', protegerRuta, rutaAdmin, verHistoriaClinica);
 
 // Vista de gestión/aprobación de médicos
 router.get('/managementSpecialities', protegerRuta, rutaAdmin, confirmDoctors);
