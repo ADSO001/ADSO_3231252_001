@@ -74,7 +74,7 @@ html(lang="es")
           
           select#filtroEstadoCita(class="px-[15px] py-[10px] border border-gray-200 rounded-[8px] bg-white text-[14px] text-gray-600 outline-none cursor-pointer")
             option(value="") Todos los estados
-            option(value="pendiente") Programadas
+            option(value="pendiente") Pendientes
             option(value="completada") Completadas
             option(value="cancelada") Canceladas
 
@@ -90,7 +90,7 @@ html(lang="es")
                 - var fechaFormateada = fechaTexto.length === 3 ? `${fechaTexto[2]}/${fechaTexto[1]}/${fechaTexto[0]}` : cita.fecha;
                 
                 // Mapeo seguro de textos y colores según el estado real de la BD
-                - var estadoTexto = cita.estado === 'completada' ? 'Completada' : (cita.estado === 'cancelada' ? 'Cancelada' : (cita.estado === 'confirmada' ? 'Confirmada' : 'Programada'));
+                - var estadoTexto = cita.estado === 'completada' ? 'Completada' : (cita.estado === 'cancelada' ? 'Cancelada' : (cita.estado === 'confirmada' ? 'Confirmada' : 'Pendiente'));
                 - var estadoClase = cita.estado === 'completada' ? 'bg-green-600 text-white' : (cita.estado === 'cancelada' ? 'bg-red-600 text-white' : (cita.estado === 'confirmada' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'));
                 
                 div.cita-item(class="border border-gray-200 rounded-[10px] p-[20px]", data-estado=cita.estado, data-busqueda=((cita.paciente ? cita.paciente.nombre + ' ' + cita.paciente.apellido + ' ' + cita.paciente.email : '') + ' ' + (cita.medico ? cita.medico.nombre + ' ' + cita.medico.apellido : '') + ' ' + cita.motivo).toLowerCase())
