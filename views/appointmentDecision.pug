@@ -1,0 +1,147 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    meta(name="description" content="Respuesta de solicitudes de citas médicas en SIGCMI.")
+    title SIGCMI - Gestión de solicitud
+    link(rel="stylesheet" href="/css/output.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer")
+    link(rel="icon" href="/img/logo.png" type="image/png")
+    style.
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f3f4f6; color: #172033; }
+      .decision-header { background: #fff; border-bottom: 1px solid #e2e8f0; }
+      .decision-header-inner { width: calc(100% - 48px); max-width: 1240px; min-height: 82px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .decision-logo { display: block; width: 128px; height: 58px; object-fit: contain; }
+      .decision-back { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 16px; border: 1px solid #d8dee8; border-radius: 8px; background: #fff; color: #263449; font-size: 13px; font-weight: 600; text-decoration: none; transition: background .2s, border-color .2s; }
+      .decision-back:hover { background: #f8fafc; border-color: #b8c2d1; }
+      .decision-main { width: calc(100% - 48px); max-width: 1160px; margin: 0 auto; padding: 34px 0 28px; }
+      .decision-intro { margin: 0 0 22px; }
+      .decision-eyebrow { margin: 0 0 7px; color: #64748b; font-size: 12px; font-weight: 700; letter-spacing: .055em; text-transform: uppercase; }
+      .decision-title { margin: 0; color: #14233b; font-size: clamp(23px, 2.4vw, 29px); line-height: 1.25; font-weight: 750; }
+      .decision-subtitle { margin: 8px 0 0; color: #64748b; font-size: 14px; line-height: 1.6; }
+      .decision-card { background: #fff; border: 1px solid #dfe4eb; border-radius: 12px; box-shadow: 0 2px 5px rgba(15,23,42,.045); padding: 26px 28px; }
+      .patient-card { margin-bottom: 22px; }
+      .patient-doctor-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 34px; }
+      .decision-person { min-width: 0; }
+      .decision-label { margin: 0 0 6px; color: #64748b; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+      .decision-name { margin: 0 0 5px; color: #172033; font-size: 17px; line-height: 1.4; font-weight: 700; }
+      .decision-line { margin: 3px 0 0; color: #56657b; font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+      .decision-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; border-top: 1px solid #e8edf3; margin-top: 22px; padding-top: 18px; }
+      .decision-field { min-width: 0; }
+      .field-label { margin: 0 0 5px; color: #718096; font-size: 12px; line-height: 1.4; }
+      .field-value { margin: 0; color: #172033; font-size: 14px; line-height: 1.5; font-weight: 650; overflow-wrap: anywhere; }
+      .request-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+      .request-title { margin: 0; color: #172033; font-size: 18px; font-weight: 750; }
+      .status-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; padding: 5px 13px; border-radius: 8px; background: #fef3c7; color: #92400e; font-size: 12px; font-weight: 700; white-space: nowrap; }
+      .request-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 26px; }
+      .request-reason { grid-column: 1 / -1; padding-top: 16px; border-top: 1px solid #edf0f4; }
+      .decision-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #edf0f4; }
+      .decision-button { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 46px; padding: 12px 18px; border: 0; border-radius: 8px; color: #fff; font-size: 14px; line-height: 1.2; font-weight: 700; text-align: center; text-decoration: none; cursor: pointer; transition: background .18s, transform .18s; }
+      .decision-button:hover { transform: translateY(-1px); }
+      .decision-button-green { background: #16a34a; }
+      .decision-button-green:hover { background: #15803d; }
+      .decision-button-red { background: #dc2626; }
+      .decision-button-red:hover { background: #b91c1c; }
+      .decision-message { line-height: 1.7; }
+      .decision-footer { margin: 22px 0 0; color: #7b8798; font-size: 12px; text-align: center; }
+      @media (max-width: 760px) {
+        .decision-header-inner { width: calc(100% - 32px); min-height: 72px; }
+        .decision-logo { width: 110px; height: 50px; }
+        .decision-main { width: calc(100% - 32px); padding-top: 25px; }
+        .decision-card { padding: 21px 20px; }
+        .patient-doctor-grid { grid-template-columns: 1fr; gap: 22px; }
+        .decision-meta { grid-template-columns: 1fr; gap: 14px; }
+        .request-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+      }
+      @media (max-width: 520px) {
+        .decision-header-inner { width: calc(100% - 28px); }
+        .decision-main { width: calc(100% - 28px); padding-top: 20px; }
+        .decision-card { padding: 18px 16px; }
+        .request-grid, .decision-actions { grid-template-columns: 1fr; }
+        .request-reason { grid-column: auto; }
+        .request-heading { align-items: flex-start; }
+      }
+  body
+    header.decision-header
+      div.decision-header-inner
+        a(href="/login" class="decision-back") Volver
+        img(src="/img/logo.png" alt="Logo SIGCMI" class="decision-logo")
+    main.decision-main
+      div.decision-intro
+        p.decision-eyebrow SIGCMI · Gestión de citas
+        h1.decision-title Gestión de solicitud de cita
+        p.decision-subtitle Revisa los datos de la solicitud y registra tu respuesta.
+      if error
+        section.decision-card
+          div(class="decision-message" style="padding:14px 16px;border:1px solid #fecaca;background:#fef2f2;border-radius:8px;color:#991b1b;font-size:14px")= error
+          a(href="/login" class="decision-button decision-button-green" style="max-width:230px;margin-top:20px") Volver al inicio de sesión
+      else if resultado
+        section.decision-card
+          h2(class="request-title" style="margin-bottom:10px") Respuesta registrada
+          p(class="decision-message" style="margin:0;color:#526176;font-size:14px")= resultado
+          p(class="decision-line" style="margin-top:12px") El paciente recibirá una notificación por correo electrónico.
+          a(href="/login" class="decision-button decision-button-green" style="max-width:230px;margin-top:20px") Volver al inicio de sesión
+      else
+        section.decision-card.patient-card
+          div.patient-doctor-grid
+            div.decision-person
+              p.decision-label Paciente
+              p.decision-name= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+              if cita.paciente.numero_documento
+                p.decision-line= `${cita.paciente.tipo_documento || 'Documento'} ${cita.paciente.numero_documento}`
+              if cita.paciente.fechaNacimiento || cita.paciente.fecha_nacimiento
+                p.decision-line= `Fecha de nacimiento: ${cita.paciente.fechaNacimiento || cita.paciente.fecha_nacimiento}`
+              if cita.paciente.telefono
+                p.decision-line= `Teléfono: ${cita.paciente.telefono}`
+              if cita.paciente.telefono_emergencia
+                p.decision-line= `Emergencia: ${cita.paciente.telefono_emergencia}`
+              if cita.paciente.email
+                p.decision-line= cita.paciente.email
+            div.decision-person
+              p.decision-label Profesional responsable
+              p.decision-name= cita.medico ? `Dr. ${cita.medico.nombre} ${cita.medico.apellido || ''}` : 'Profesional SIGCMI'
+              p.decision-line= (cita.medico && cita.medico.especialidad) || cita.especialidad
+              if cita.medico && cita.medico.tarjeta_profesional
+                p.decision-line= `Registro profesional: ${cita.medico.tarjeta_profesional}`
+          div.decision-meta
+            div.decision-field
+              p.field-label Fecha de solicitud
+              p.field-value= cita.fecha
+            div.decision-field
+              p.field-label Motivo de consulta
+              p.field-value= cita.motivo || 'No especificado'
+            div.decision-field
+              p.field-label Cita relacionada
+              p.field-value= `${cita.fecha} · ${String(cita.hora).slice(0,5)}`
+        section.decision-card
+          div.request-heading
+            h2.request-title Gestión de solicitud
+            span.status-pill Pendiente
+          div.request-grid
+            div.decision-field
+              p.field-label Fecha solicitada
+              p.field-value= cita.fecha
+            div.decision-field
+              p.field-label Hora solicitada
+              p.field-value= String(cita.hora).slice(0,5)
+            div.decision-field
+              p.field-label Especialidad
+              p.field-value= cita.especialidad
+            div.decision-field.request-reason
+              p.field-label Motivo de consulta
+              p.field-value= cita.motivo || 'No especificado'
+          if decision === 'confirmada'
+            div.decision-actions
+              form(action=`/citas/responder-correo/${encodeURIComponent(token)}/confirmada` method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken)
+                button(type="submit" class="decision-button decision-button-green") Confirmar cita
+              a(href=`/citas/responder-correo/${encodeURIComponent(token)}/cancelada` class="decision-button decision-button-red") Rechazar solicitud
+          else
+            div.decision-actions
+              form(action=`/citas/responder-correo/${encodeURIComponent(token)}/cancelada` method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken)
+                button(type="submit" class="decision-button decision-button-red") Rechazar solicitud
+              a(href=`/citas/responder-correo/${encodeURIComponent(token)}/confirmada` class="decision-button decision-button-green") Volver
+      p.decision-footer © 2026 SIGCMI - Sistema Integrado de Gestión Clínica Médica

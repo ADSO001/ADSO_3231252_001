@@ -9,9 +9,34 @@ html(lang="es")
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
     link(rel="icon", href="icono.png", type="image/png")
     style.
-      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; }
+      .panel-main { width: calc(100% - 48px); max-width: 1540px; margin: 0 auto; padding: 28px 0 42px; }
+      .metricas-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 26px; }
+      .metrica-card { position: relative; min-height: 112px; padding: 20px 22px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
+      .solicitudes-section { padding: 24px 26px; margin-bottom: 26px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
+      .solicitudes-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+      .solicitudes-lista { display: flex; flex-direction: column; gap: 16px; }
+      .solicitud-card { display: grid; grid-template-columns: minmax(0, 1fr) 176px; align-items: center; gap: 26px; padding: 22px 24px; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.04); }
+      .solicitud-info { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+      .solicitud-titulo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+      .solicitud-detalles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 22px; row-gap: 12px; }
+      .solicitud-detalle { min-width: 0; margin: 0; color: #526176; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+      .solicitud-detalle i { margin-right: 7px; color: #8290a3; }
+      .solicitud-motivo { margin: 0; padding-top: 12px; border-top: 1px solid #edf0f4; color: #64748b; font-size: 13px; line-height: 1.55; }
+      .solicitud-acciones { width: 176px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+      .solicitud-acciones form { width: 100%; margin: 0; }
+      .solicitud-boton { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 43px; padding: 10px 14px; border-radius: 8px; font-size: 13px; line-height: 1.2; font-weight: 700; text-align: center; cursor: pointer; transition: background-color .2s, transform .2s; }
+      .solicitud-boton:hover { transform: translateY(-1px); }
+      .solicitud-confirmar { color: #fff; background: #16a34a; border: 1px solid #16a34a; }
+      .solicitud-confirmar:hover { background: #15803d; border-color: #15803d; }
+      .solicitud-rechazar { color: #fff; background: #dc2626; border: 1px solid #dc2626; }
+      .solicitud-rechazar:hover { background: #b91c1c; border-color: #b91c1c; }
+      .seccion-agenda { padding: 26px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
+      @media (max-width: 1100px) { .solicitud-detalles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 900px) { .panel-main { width: calc(100% - 32px); } .solicitud-card { grid-template-columns: minmax(0, 1fr); gap: 18px; } .solicitud-acciones { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 639px) { .panel-main { width: calc(100% - 24px); padding-top: 18px; } .metricas-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; } .solicitudes-section { padding: 18px 15px; margin-bottom: 18px; } .solicitudes-heading { align-items: flex-start; } .solicitud-card { padding: 18px 15px; } .solicitud-detalles { grid-template-columns: 1fr; } .solicitud-acciones { grid-template-columns: 1fr; } .seccion-agenda { padding: 18px 15px; } }
 
-  body(class="m-0 p-0 box-border bg-white text-gray-800")
+  body(class="m-0 p-0 box-border text-gray-800")
     header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px]")
       div(class="flex items-center")
         img(src="img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
@@ -30,25 +55,69 @@ html(lang="es")
             i(class="fa-solid fa-right-from-bracket")
             | Cerrar sesión
 
-    main(class="p-[20px]")
-      section(class="grid grid-cols-1 md:grid-cols-3 gap-[20px] mb-[20px]")
-        div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
+    main.panel-main
+      section.metricas-grid
+        div.metrica-card
           i(class="fa fa-calendar-day absolute top-[10px] right-[10px] text-[22px] text-gray-500")
           h3(class="text-[14px] font-bold mb-[5px]") Citas hoy
           p#citasHoy(class="text-[28px] font-bold m-0")= citasHoy ? citasHoy.length : 0
           p(class="text-[12px] text-gray-500 m-0") Citas programadas
 
-        div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
+        div.metrica-card
           i(class="fa fa-clock absolute top-[10px] right-[10px] text-[22px] text-gray-500")
           h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
           p#proxCita(class="text-[28px] font-bold m-0")= proximasCitas ? proximasCitas.length : 0
           p(class="text-[12px] text-gray-500 m-0") Esta semana y siguientes
 
-        div(class="border border-gray-300 rounded-[8px] p-[15px] relative shadow-sm bg-white")
+        div.metrica-card
           i(class="fa fa-folder-open absolute top-[10px] right-[10px] text-[22px] text-gray-500")
           h3(class="text-[14px] font-bold mb-[5px]") Consultas totales
           p#ConTotal(class="text-[28px] font-bold m-0")= totalCitas || 0
           p(class="text-[12px] text-gray-500 m-0") Registros en el sistema
+
+      //- Solicitudes pendientes de aprobación
+      input#csrfToken(type="hidden", value=csrfToken)
+      section.solicitudes-section
+        div.solicitudes-heading
+          div
+            h4(class="text-[17px] font-bold text-black mb-[3px]") Solicitudes de citas
+            p(class="text-[13px] text-gray-500 m-0") Revisa y responde las nuevas solicitudes de tus pacientes
+          span(class="self-start sm:self-auto text-[12px] font-bold px-[12px] py-[7px] rounded-full bg-yellow-100 text-yellow-800 whitespace-nowrap")= `${solicitudesPendientes ? solicitudesPendientes.length : 0} pendientes`
+        if solicitudesPendientes && solicitudesPendientes.length > 0
+          div(class="solicitudes-lista")
+            each cita in solicitudesPendientes
+              article(class="solicitud-card")
+                div(class="solicitud-info")
+                  div.solicitud-titulo
+                    span(class="font-bold text-[15px] text-black")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    span(class="text-[11px] px-[10px] py-[4px] rounded-full bg-yellow-100 text-yellow-800 font-bold") Pendiente
+                  div.solicitud-detalles
+                    p.solicitud-detalle
+                      i(class="fa-regular fa-calendar mr-[7px] text-gray-400")
+                      | #{cita.fecha}
+                    p.solicitud-detalle
+                      i(class="fa-regular fa-clock mr-[7px] text-gray-400")
+                      | #{String(cita.hora).slice(0,5)}
+                    p.solicitud-detalle
+                      i(class="fa-solid fa-stethoscope mr-[7px] text-gray-400")
+                      | #{cita.especialidad}
+                    p.solicitud-detalle
+                      i(class="fa-regular fa-envelope mr-[7px] text-gray-400")
+                      | #{cita.paciente.email}
+                  p.solicitud-motivo= cita.motivo
+                div(class="solicitud-acciones")
+                  form(action=`/medico/citas/${cita.id}/estado` method="POST" class="w-full" onsubmit="return decidirSolicitud(event, this, 'confirmada')")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    input(type="hidden" name="decision" value="confirmada")
+                    button(type="submit" class="solicitud-boton solicitud-confirmar") Confirmar
+                  form(action=`/medico/citas/${cita.id}/estado` method="POST" class="w-full" onsubmit="return decidirSolicitud(event, this, 'cancelada')")
+                    input(type="hidden" name="_csrf" value=csrfToken)
+                    input(type="hidden" name="decision" value="cancelada")
+                    button(type="submit" class="solicitud-boton solicitud-rechazar") Rechazar
+        else
+          div(class="text-center py-[26px] border border-dashed border-gray-300 rounded-[10px]")
+            i(class="fa-regular fa-calendar-check text-[30px] text-gray-300 mb-[8px]")
+            p(class="text-[13px] text-gray-500 m-0") No tienes solicitudes pendientes por revisar.
 
       section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
         button#tabHoy(onclick="cambiarPestana('hoy')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]")
@@ -64,7 +133,7 @@ html(lang="es")
           | Historias clínicas
 
       //- SECCIÓN 1: Agenda de hoy
-      section#seccionHoy(class="border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
+      section#seccionHoy.seccion-agenda
         h4(class="text-[18px] font-bold text-black mb-[2px]") Agenda del día
         p(class="text-[14px] text-gray-500 mb-[20px]") Tus consultas programadas para hoy
 
@@ -75,10 +144,14 @@ html(lang="es")
                 div
                   div(class="flex items-center mb-[8px]")
                     span(class="font-bold text-[16px] text-black")= cita.hora
-                    if cita.estado === 'cancelada'
-                      span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-red-100 text-red-800 capitalize font-bold")= cita.estado
+                    if cita.estado === 'completada'
+                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-blue-600 text-white capitalize font-bold")= cita.estado
+                    else if cita.estado === 'cancelada'
+                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-red-600 text-white capitalize font-bold")= cita.estado
+                    else if cita.estado === 'confirmada'
+                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-green-600 text-white capitalize font-bold")= cita.estado
                     else
-                      span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-blue-100 text-blue-800 capitalize font-bold")= cita.estado
+                      span(class="inline-block text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] capitalize font-bold" style="background-color: #EAB308; color: #FFFFFF;")= cita.estado
                   div(class="flex flex-col gap-[4px] text-[14px]")
                     div(class="flex")
                       span(class="text-gray-400 w-[75px]") Paciente:
@@ -86,7 +159,7 @@ html(lang="es")
                     div(class="flex")
                       span(class="text-gray-400 w-[75px]") Motivo:
                       span(class="text-gray-600")= cita.motivo
-                if cita.estado !== 'cancelada' && cita.estado !== 'completada'
+                if cita.estado === 'confirmada'
                   div(class="flex flex-col gap-[8px] w-full md:w-auto")
                     button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
                     div(class="flex gap-[8px] w-full md:w-[160px]")
@@ -98,7 +171,7 @@ html(lang="es")
               p(class="text-gray-500 text-[14px] m-0") No hay citas programadas para el día de hoy.
 
       //- SECCIÓN 2: Próximas Citas
-      section#seccionProximas(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
+      section#seccionProximas.seccion-agenda.hidden
         h4(class="text-[18px] font-bold text-black mb-[2px]") Próximas citas
         p(class="text-[14px] text-gray-500 mb-[20px]") Consultas agendadas para los próximos días
         
@@ -109,10 +182,14 @@ html(lang="es")
                 div
                   div(class="flex items-center mb-[8px]")
                     span(class="font-bold text-[16px] text-black")= `${cita.fecha} | ${cita.hora}`
-                    if cita.estado === 'cancelada'
-                      span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-red-100 text-red-800 capitalize font-bold")= cita.estado
+                    if cita.estado === 'completada'
+                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-blue-600 text-white capitalize font-bold")= cita.estado
+                    else if cita.estado === 'cancelada'
+                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-red-600 text-white capitalize font-bold")= cita.estado
+                    else if cita.estado === 'confirmada'
+                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-green-600 text-white capitalize font-bold")= cita.estado
                     else
-                      span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-yellow-100 text-yellow-800 capitalize font-bold")= cita.estado
+                     span(class="inline-block text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] capitalize font-bold" style="background-color: #EAB308; color: #FFFFFF;")= cita.estado
                   div(class="flex flex-col gap-[4px] text-[14px]")
                     div(class="flex")
                       span(class="text-gray-400 w-[75px]") Paciente:
@@ -120,7 +197,7 @@ html(lang="es")
                     div(class="flex")
                       span(class="text-gray-400 w-[75px]") Motivo:
                       span(class="text-gray-600")= cita.motivo
-                if cita.estado !== 'cancelada' && cita.estado !== 'completada'
+                if cita.estado === 'confirmada'
                   div(class="flex flex-col gap-[8px] w-full md:w-auto")
                     button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
                     div(class="flex gap-[8px] w-full md:w-[160px]")
@@ -132,7 +209,7 @@ html(lang="es")
               p(class="text-gray-500 text-[14px] m-0") No hay citas agendadas próximamente.
 
       //- SECCIÓN 3: Historias clínicas de pacientes atendidos
-      section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white shadow-sm")
+      section#seccionHistorial.seccion-agenda.hidden
         h4(class="text-[18px] font-bold text-black mb-[2px]") Historias clínicas
         p(class="text-[14px] text-gray-500 mb-[20px]") Consulta los registros clínicos que has elaborado y las historias de pacientes que has atendido.
         div(class="flex flex-col gap-[15px]")
@@ -166,7 +243,7 @@ html(lang="es")
           button(type="button", onclick="cerrarModalCrearHistoria()", class="text-gray-500 hover:text-black font-bold text-[22px]") &times;
         form#formCrearHistoria(onsubmit="guardarHistoria(event)", class="p-[20px] flex flex-col gap-[18px] text-[14px] max-h-[82vh] overflow-y-auto")
           input#citaIdHistoria(type="hidden", name="citaId")
-          input#csrfToken(type="hidden", name="_csrf", value=csrfToken)
+          input(type="hidden", name="_csrf", value=csrfToken)
           div(class="flex justify-between border border-blue-100 bg-blue-50 p-3 rounded-lg")
             span(class="font-bold text-gray-700") Paciente:
             span#crearPacienteNombre(class="text-gray-900 font-semibold") -
@@ -408,6 +485,45 @@ html(lang="es")
             button(type="submit", class="bg-blue-600 text-white px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-blue-700 transition-colors cursor-pointer") Reprogramar
 
     script.
+      async function decidirSolicitud(event, formulario, decision) {
+        event.preventDefault();
+        const esConfirmacion = decision === 'confirmada';
+        const continuar = await confirmarEnAplicacion({
+          titulo: esConfirmacion ? 'Confirmar cita' : 'Rechazar solicitud',
+          mensaje: esConfirmacion ? '¿Deseas confirmar esta cita?' : '¿Deseas rechazar esta solicitud de cita?',
+          textoConfirmar: esConfirmacion ? 'Sí, confirmar' : 'Sí, rechazar',
+          peligro: !esConfirmacion
+        });
+        if (!continuar) return false;
+
+        const boton = formulario.querySelector('button[type="submit"]');
+        if (boton) { boton.disabled = true; boton.textContent = esConfirmacion ? 'Confirmando...' : 'Rechazando...'; }
+        try {
+          const datos = new URLSearchParams(new FormData(formulario));
+          const respuesta = await fetch(formulario.action, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'CSRF-Token': datos.get('_csrf') || document.getElementById('csrfToken').value
+            },
+            body: datos.toString()
+          });
+          const resultado = await respuesta.json().catch(() => ({}));
+          if (!respuesta.ok) throw new Error(resultado.error || 'No fue posible actualizar la solicitud.');
+          mostrarNotificacion({
+            tipo: 'success',
+            titulo: esConfirmacion ? 'Cita confirmada' : 'Solicitud rechazada',
+            mensaje: esConfirmacion ? 'La cita fue confirmada y se notificó al paciente por correo.' : 'La solicitud fue rechazada y se notificó al paciente por correo.'
+          });
+          window.setTimeout(() => window.location.reload(), 1000);
+        } catch (error) {
+          if (boton) { boton.disabled = false; boton.textContent = esConfirmacion ? 'Confirmar' : 'Rechazar'; }
+          mostrarNotificacion({ tipo: 'error', titulo: 'No se pudo actualizar la cita', mensaje: error.message || 'Inténtalo nuevamente.' });
+        }
+        return false;
+      }
+
       function cambiarPestana(pestana) {
         const seccionHoy = document.getElementById('seccionHoy');
         const seccionProximas = document.getElementById('seccionProximas');

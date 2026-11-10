@@ -75,6 +75,7 @@ html(lang="es")
           select#filtroEstadoCita(class="px-[15px] py-[10px] border border-gray-200 rounded-[8px] bg-white text-[14px] text-gray-600 outline-none cursor-pointer")
             option(value="") Todos los estados
             option(value="pendiente") Pendientes
+            option(value="confirmada") Confirmadas
             option(value="completada") Completadas
             option(value="cancelada") Canceladas
 
@@ -88,17 +89,15 @@ html(lang="es")
               each cita in citas
                 - var fechaTexto = String(cita.fecha).substring(0, 10).split('-');
                 - var fechaFormateada = fechaTexto.length === 3 ? `${fechaTexto[2]}/${fechaTexto[1]}/${fechaTexto[0]}` : cita.fecha;
-                
-                // Mapeo seguro de textos y colores según el estado real de la BD
-                - var estadoTexto = cita.estado === 'completada' ? 'Completada' : (cita.estado === 'cancelada' ? 'Cancelada' : (cita.estado === 'confirmada' ? 'Confirmada' : 'Pendiente'));
-                - var estadoClase = cita.estado === 'completada' ? 'bg-green-600 text-white' : (cita.estado === 'cancelada' ? 'bg-red-600 text-white' : (cita.estado === 'confirmada' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'));
-                
+                - var estadoNormalizado = (cita.estado || '').toString().trim().toLowerCase();
+                - var estadoTexto = estadoNormalizado === 'pendiente' ? 'Pendiente' : estadoNormalizado === 'confirmada' ? 'Confirmada' : estadoNormalizado === 'completada' ? 'Completada' : 'Cancelada';
+                - var estadoStyle = estadoNormalizado === 'completada' ? 'background-color:#2563EB;color:white;' : estadoNormalizado === 'confirmada' ? 'background-color:#16A34A;color:white;' : estadoNormalizado === 'cancelada' ? 'background-color:#DC2626;color:white;' : 'background-color:#EAB308;color:white;';
                 div.cita-item(class="border border-gray-200 rounded-[10px] p-[20px]", data-estado=cita.estado, data-busqueda=((cita.paciente ? cita.paciente.nombre + ' ' + cita.paciente.apellido + ' ' + cita.paciente.email : '') + ' ' + (cita.medico ? cita.medico.nombre + ' ' + cita.medico.apellido : '') + ' ' + cita.motivo).toLowerCase())
                   div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
                     div(class="flex flex-wrap items-center gap-[15px]")
                       span(class="font-bold text-[15px]")= fechaFormateada
                       span(class="text-gray-600 text-[15px]")= String(cita.hora).substring(0, 5)
-                      span(class=`px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold ${estadoClase}`)= estadoTexto
+                      span(class="px-[12px] py-[4px] rounded-[12px] text-[11px] font-bold" style=estadoStyle)= estadoTexto
                   div(class="flex flex-col md:flex-row justify-between gap-[20px]")
                     div(class="flex-1 min-w-[200px]")
                       p(class="mb-[6px] text-[14px]")
@@ -114,9 +113,9 @@ html(lang="es")
             else
               div(class="p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg")
                 p(class="font-medium") No hay citas registradas en el sistema.
-            p#sinResultadosCitas(class="hidden p-8 text-center text-gray-500") No se encontraron citas con esos filtros.
+          p#sinResultadosCitas(class="hidden p-8 text-center text-gray-500") No se encontraron citas con esos filtros.
 
-    //- Script para inicializar los íconos de Lucide y filtros
+    //- Script para inicializar los íconos de Lucide
     script.
       lucide.createIcons();
 

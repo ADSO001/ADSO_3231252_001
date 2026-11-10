@@ -173,7 +173,8 @@ const medicalPanel = async (req, res) => {
             proximasCitas,
             historial,
             historiasClinicas,
-            totalCitas: citas.length
+            totalCitas: citas.length,
+            solicitudesPendientes: citas.filter(cita => cita.estado === 'pendiente')
         });
     } catch (error) {
         console.error(error);
@@ -185,7 +186,8 @@ const medicalPanel = async (req, res) => {
             proximasCitas: [],
             historial: [],
             historiasClinicas: [],
-            totalCitas: 0
+            totalCitas: 0,
+            solicitudesPendientes: []
         });
     }
 };

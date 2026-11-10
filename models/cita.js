@@ -32,6 +32,14 @@ const Cita = db.define('citas', {
   notas: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  token_decision_hash: {
+    type: DataTypes.STRING(64),
+    allowNull: true
+  },
+  token_decision_expira: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
 });
 

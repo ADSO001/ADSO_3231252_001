@@ -162,7 +162,7 @@ html(lang="es")
                     span(class="font-bold text-[16px]") #{cita.hora}
                     
                     //- Lógica de colores para el estado de la cita
-                    - var estadoClase = cita.estado === 'completada' ? 'bg-green-600 text-white' : (cita.estado === 'cancelada' || cita.estado === 'inasistencia' ? 'bg-red-600 text-white' : (cita.estado === 'confirmada' ? 'bg-black text-white' : 'bg-white text-black border border-gray-300'))
+                    - var estadoClase = cita.estado === 'completada' ? 'bg-blue-600 text-white' : (cita.estado === 'cancelada' || cita.estado === 'inasistencia' ? 'bg-red-600 text-white' : (cita.estado === 'confirmada' ? 'bg-green-600 text-white' : 'bg-yellow-400 text-yellow-950'))
                     span(class=`px-[10px] py-[4px] rounded-[20px] text-[10px] font-bold shadow-sm capitalize ${estadoClase}`) #{cita.estado}
                   
                   div(class="flex flex-col gap-[3px] flex-1")

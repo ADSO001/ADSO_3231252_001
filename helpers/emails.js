@@ -137,9 +137,100 @@ const emailMedicoRechazado = async (datos) => {
   }
 };
 
+
+const obtenerUrlBase = () => {
+  const base = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3000}`;
+  const url = new URL(base);
+  if (!url.port && process.env.PORT) url.port = String(process.env.PORT);
+  return url.origin;
+};
+
+const escaparHtml = (valor = '') => String(valor).replace(/[&<>"']/g, caracter => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+}[caracter]));
+
+// Notifica al médico y ofrece enlaces seguros para revisar la solicitud.
+const emailNuevaSolicitudCita = async ({ medico, paciente, cita, token }) => {
+  const baseUrl = obtenerUrlBase();
+  const aceptarUrl = `${baseUrl}/citas/responder-correo/${encodeURIComponent(token)}/confirmada`;
+  const rechazarUrl = `${baseUrl}/citas/responder-correo/${encodeURIComponent(token)}/cancelada`;
+  const nombrePaciente = `${paciente.nombre} ${paciente.apellido}`;
+  const fecha = escaparHtml(cita.fecha);
+  const hora = escaparHtml(String(cita.hora).slice(0, 5));
+  const motivo = escaparHtml(cita.motivo);
+
+  await transporter.sendMail({
+    from: 'SIGCMI SENA <noreply@sigcmi.com>',
+    to: medico.email,
+    subject: 'Nueva solicitud de cita médica - SIGCMI',
+    text: `Hola Dr(a). ${medico.nombre}, ${nombrePaciente} ha solicitado una cita para el ${fecha} a las ${hora}. Motivo: ${cita.motivo}. Aceptar: ${aceptarUrl} Rechazar: ${rechazarUrl}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:10px;padding:26px;background:#fff;color:#1f2937">
+        <div style="text-align:center;border-bottom:1px solid #e5e7eb;padding-bottom:18px;margin-bottom:22px">
+          <h2 style="margin:0;color:#111827">SIGCMI</h2>
+          <p style="margin:6px 0 0;color:#6b7280;font-size:13px">Nueva solicitud de cita médica</p>
+        </div>
+        <p>Hola, Dr(a). <strong>${escaparHtml(medico.nombre)} ${escaparHtml(medico.apellido)}</strong>:</p>
+        <p>Un paciente ha solicitado una cita. Revisa la información y selecciona una decisión.</p>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;line-height:1.8">
+          <p style="margin:0"><strong>Paciente:</strong> ${escaparHtml(nombrePaciente)}</p>
+          <p style="margin:0"><strong>Correo:</strong> ${escaparHtml(paciente.email)}</p>
+          <p style="margin:0"><strong>Fecha:</strong> ${fecha}</p>
+          <p style="margin:0"><strong>Hora:</strong> ${hora}</p>
+          <p style="margin:0"><strong>Especialidad:</strong> ${escaparHtml(cita.especialidad)}</p>
+          <p style="margin:0"><strong>Motivo:</strong> ${motivo}</p>
+        </div>
+        <p style="margin:22px 0 12px;text-align:center;font-weight:bold">¿Qué deseas hacer con esta solicitud?</p>
+        <div style="text-align:center">
+          <a href="${aceptarUrl}" style="display:inline-block;background:#15803d;color:#fff;text-decoration:none;padding:12px 20px;border-radius:7px;font-weight:bold;margin:5px">Aceptar cita</a>
+          <a href="${rechazarUrl}" style="display:inline-block;background:#b91c1c;color:#fff;text-decoration:none;padding:12px 20px;border-radius:7px;font-weight:bold;margin:5px">Rechazar cita</a>
+        </div>
+        <p style="font-size:12px;color:#6b7280;line-height:1.5;margin-top:22px">Por seguridad, el enlace abre una página de confirmación antes de registrar tu decisión. El enlace vence en 7 días y solo puede utilizarse una vez.</p>
+        <hr style="border:0;border-top:1px solid #e5e7eb;margin-top:24px" />
+        <p style="font-size:11px;color:#9ca3af;text-align:center">Mensaje automático del sistema SIGCMI.</p>
+      </div>`
+  });
+};
+
+const emailEstadoCitaPaciente = async ({ paciente, medico, cita, estado }) => {
+  const confirmada = estado === 'confirmada';
+  const titulo = confirmada ? 'Tu cita ha sido confirmada' : 'Actualización de tu solicitud de cita';
+  const mensaje = confirmada
+    ? 'El médico ha aprobado tu solicitud. Tu cita quedó confirmada.'
+    : 'El médico no pudo aprobar tu solicitud. Tu cita quedó cancelada.';
+  const color = confirmada ? '#15803d' : '#b91c1c';
+  const fecha = escaparHtml(cita.fecha);
+  const hora = escaparHtml(String(cita.hora).slice(0, 5));
+
+  await transporter.sendMail({
+    from: 'SIGCMI SENA <noreply@sigcmi.com>',
+    to: paciente.email,
+    subject: `${titulo} - SIGCMI`,
+    text: `Hola ${paciente.nombre}, ${mensaje} Médico: Dr(a). ${medico.nombre} ${medico.apellido}. Fecha: ${fecha}. Hora: ${hora}.`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:10px;padding:26px;background:#fff;color:#1f2937">
+        <div style="text-align:center;border-bottom:1px solid #e5e7eb;padding-bottom:18px;margin-bottom:22px"><h2 style="margin:0;color:#111827">SIGCMI</h2></div>
+        <h2 style="color:${color};font-size:21px">${titulo}</h2>
+        <p>Hola, <strong>${escaparHtml(paciente.nombre)} ${escaparHtml(paciente.apellido)}</strong>.</p>
+        <p>${mensaje}</p>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;line-height:1.8">
+          <p style="margin:0"><strong>Médico:</strong> Dr(a). ${escaparHtml(medico.nombre)} ${escaparHtml(medico.apellido)}</p>
+          <p style="margin:0"><strong>Especialidad:</strong> ${escaparHtml(cita.especialidad)}</p>
+          <p style="margin:0"><strong>Fecha:</strong> ${fecha}</p>
+          <p style="margin:0"><strong>Hora:</strong> ${hora}</p>
+        </div>
+        <p style="font-size:12px;color:#6b7280;margin-top:22px">Puedes consultar el estado actualizado ingresando a tu panel de paciente en SIGCMI.</p>
+        <hr style="border:0;border-top:1px solid #e5e7eb;margin-top:24px" />
+        <p style="font-size:11px;color:#9ca3af;text-align:center">Mensaje automático del sistema SIGCMI.</p>
+      </div>`
+  });
+};
+
 export { 
   emailRegistro, 
   emailOlvidePassword, 
   emailMedicoAprobado, 
-  emailMedicoRechazado 
+  emailMedicoRechazado,
+  emailNuevaSolicitudCita,
+  emailEstadoCitaPaciente
 };

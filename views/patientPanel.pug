@@ -9,54 +9,109 @@ html(lang="es")
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
         link(rel="icon" href="icono.png" type="image/png")
         style.
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #1f2937; min-height: 100vh; }
+            body.patient-body { background: #f4f6f9; }
+            .patient-header { min-height: 88px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #dce2e9; }
+            .patient-header-logo { width: 90px; height: 85px; object-fit: contain; border-right: 1px solid #e5e7eb; padding-right: 10px; margin-right: 10px; }
+            .patient-main { width: calc(100% - 48px); max-width: 1540px; margin: 0 auto; padding: 28px 0 42px; }
+            .patient-metrics-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 26px; }
+            .patient-metric-card { position: relative; min-height: 112px; padding: 20px 22px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
+            .patient-metric-card h3 { color: #334155; font-size: 14px; margin: 0 0 8px; }
+            .patient-metric-card p.metric-value { color: #111827; font-size: 28px; font-weight: 700; line-height: 1.15; margin: 0 0 5px; }
+            .patient-metric-card p.metric-caption { color: #64748b; font-size: 12px; margin: 0; }
+            .patient-metric-icon { position: absolute; top: 19px; right: 20px; color: #8290a3; font-size: 21px; }
+            .patient-tabs { display: flex; flex-direction: row; gap: 10px; margin-bottom: 20px; }
+            .patient-section { padding: 26px; margin-bottom: 22px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
+            .patient-section h2 { color: #111827; font-size: 19px; line-height: 1.35; margin: 0 0 5px; }
+            .patient-section .section-description { margin: 0; color: #64748b; font-size: 13px; line-height: 1.55; }
+            .doctor-filter { display: flex; align-items: end; gap: 18px; margin: 22px 0 26px; padding: 20px; border: 1px solid #e1e7ef; border-radius: 10px; background: #f8fafc; }
+            .doctor-filter select { min-height: 44px; border-color: #cbd5e1; }
+            .doctor-filter button { min-height: 44px; background: #172033; border-radius: 8px; }
+            .doctor-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+            .doctor-card { overflow: hidden; display: flex; flex-direction: column; min-width: 0; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.035); transition: transform .2s, box-shadow .2s; }
+            .doctor-card:hover { transform: translateY(-2px); box-shadow: 0 7px 16px rgba(15,23,42,.07); }
+            .doctor-image { position: relative; height: 165px; overflow: hidden; background: #eef2f7; }
+            .doctor-image img { width: 100%; height: 100%; object-fit: cover; }
+            .doctor-card-content { display: flex; flex: 1; flex-direction: column; padding: 20px; }
+            .doctor-card-content h3 { margin: 0; color: #111827; font-size: 16px; line-height: 1.4; }
+            .doctor-data { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; color: #526176; font-size: 13px; }
+            .doctor-data-row { display: flex; align-items: flex-start; gap: 9px; min-width: 0; overflow-wrap: anywhere; }
+            .doctor-data-row i { width: 15px; margin-top: 2px; color: #8290a3; }
+            .doctor-schedule { margin-top: auto; padding-top: 14px; border-top: 1px solid #edf0f4; }
+            .doctor-book-button { min-height: 42px; margin-top: 16px; border-radius: 8px; background: #172033; font-size: 13px; }
+            .patient-appointments-list, .patient-history-list { display: flex; flex-direction: column; gap: 16px; }
+            .patient-appointment-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 24px; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.04); }
+            .patient-appointment-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+            .patient-appointment-actions { display: flex; flex: 0 0 225px; gap: 10px; }
+            .patient-appointment-actions button { min-height: 40px; padding: 9px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+            .patient-history-card { padding: 22px 24px; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.035); }
+            .patient-history-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+            .patient-modal-panel { width: 100%; max-width: 440px; padding: 28px; border: 1px solid #dce2e9; border-radius: 14px; background: #fff; box-shadow: 0 18px 45px rgba(15,23,42,.2); }
+            .patient-modal-panel input { min-height: 44px; border: 1px solid #cbd5e1; border-radius: 8px; }
+            @media (max-width: 1100px) { .doctor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+            @media (max-width: 850px) { .patient-main { width: calc(100% - 32px); } .patient-appointment-card { align-items: flex-start; flex-direction: column; } .patient-appointment-actions { width: 100%; flex-basis: auto; } }
+            @media (max-width: 639px) { .patient-header { padding: 10px 14px; } .patient-header-logo { width: 76px; height: 64px; } .patient-main { width: calc(100% - 24px); padding-top: 18px; } .patient-metrics-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; } .patient-tabs { flex-direction: column; gap: 8px; margin-bottom: 16px; } .patient-section { padding: 19px 15px; margin-bottom: 17px; } .doctor-filter { align-items: stretch; flex-direction: column; gap: 12px; padding: 15px; } .doctor-grid { grid-template-columns: 1fr; gap: 15px; } .doctor-card-content { padding: 17px; } .patient-appointment-card, .patient-history-card { padding: 18px 15px; } .patient-appointment-actions { flex-direction: column; width: 100%; } .patient-history-actions { width: 100%; } .patient-history-actions a { flex: 1; text-align: center; } .patient-modal-panel { padding: 22px 18px; } }
 
-    body(class="m-0 p-0 box-border bg-white text-gray-800")
-        header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px]")
+    body.patient-body(class="m-0 p-0 box-border text-gray-800")
+        header.patient-header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px]")
             div(class="flex items-center")
-                img(src="img/logo.png" alt="logo" class="w-[90px] border-r border-gray-200 pr-[10px] mr-[10px]")
+                img.patient-header-logo(src="img/logo.png", alt="logo")
                 div(class="border border-gray-300 rounded-[8px] px-[15px] py-[5px] ml-[20px]")
-                    p(class="text-[14px] font-bold m-0") Portal del Paciente
-                    p(class="text-[12px] text-gray-500 m-0")= usuario ? usuario.nombre : 'Paciente'
+                    p#nombrePaciente(class="text-[14px] font-bold m-0")= usuario ? `${usuario.nombre} ${usuario.apellido}` : 'Paciente'
+                    p#tipoUsuarioPaciente(class="text-[12px] text-gray-500 m-0") Portal del Paciente
 
-            a(href="/login" class="no-underline ml-auto")
-                button(type="button" class="bg-black text-white px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:opacity-70 transition-opacity border-none")
-                    i(class="fa-solid fa-right-from-bracket")
-                    | Cerrar Sesión
+            div(class="flex items-center gap-[10px] ml-auto")
+                button(type="button", onclick="cambiarPestana('citas')", class="bg-gray-100 border border-gray-300 text-black px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:bg-gray-200 transition-colors font-medium")
+                    i(class="fa-solid fa-calendar-days text-gray-600")
+                    | Mis citas
 
-        main(class="p-[20px]")
+                a(href="/login", class="no-underline")
+                    button#logout(type="button", class="bg-black text-white px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:opacity-70 transition-opacity border-none")
+                        i(class="fa-solid fa-right-from-bracket")
+                        | Cerrar sesión
+
+        main.patient-main
             //- Token CSRF oculto global para los scripts de fetch (cancelar/reprogramar)
             input(type="hidden" id="csrfToken" value=csrfToken)
 
-            section(class="grid grid-cols-1 md:grid-cols-3 gap-[20px] mb-[20px]")
-                div(class="border border-gray-300 rounded-[8px] p-[15px]")
-                    h3(class="text-[14px] font-bold mb-[5px]") Especialistas Disponibles
-                    p#numMedicos(class="text-[28px] font-bold m-0")= medicos ? medicos.length : 0
-                    p(class="text-[12px] text-gray-500 m-0") Médicos registrados
+            section.patient-metrics-grid
+                div.patient-metric-card
+                    i.patient-metric-icon(class="fa-solid fa-user-doctor")
+                    h3 Especialistas Disponibles
+                    p#numMedicos.metric-value= medicos ? medicos.length : 0
+                    p.metric-caption Médicos registrados
 
-                div(class="border border-gray-300 rounded-[8px] p-[15px]")
-                    h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
-                    p#numCitas(class="text-[28px] font-bold m-0")= citas ? citas.length : 0
-                    p(class="text-[12px] text-gray-500 m-0") Citas programadas
+                div.patient-metric-card
+                    i.patient-metric-icon(class="fa-solid fa-calendar-check")
+                    h3 Próximas citas
+                    p#numCitas.metric-value= citas ? citas.length : 0
+                    p.metric-caption Citas programadas
 
-                div(class="border border-gray-300 rounded-[8px] p-[15px]")
-                    h3(class="text-[14px] font-bold mb-[5px]") Historial médico
-                    p#numHistorial(class="text-[28px] font-bold m-0")= historiasClinicas ? historiasClinicas.length : 0
-                    p(class="text-[12px] text-gray-500 m-0") Registros guardados
+                div.patient-metric-card
+                    i.patient-metric-icon(class="fa-solid fa-folder-open")
+                    h3 Historial médico
+                    p#numHistorial.metric-value= historiasClinicas ? historiasClinicas.length : 0
+                    p.metric-caption Registros guardados
 
-            section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
-                button#tabBuscar(onclick="cambiarPestana('buscar')" class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-gray-300 font-medium cursor-pointer transition-colors text-black") Buscar Especialistas
+            section.patient-tabs
+                button#tabCitas(onclick="cambiarPestana('citas')", class=(pestanaInicial === 'buscar' ? "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]" : "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]") )
+                    i(class="fa fa-calendar-day")
+                    | Mis citas
 
-                button#tabCitas(onclick="cambiarPestana('citas')" class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium") Mis citas
+                button#tabBuscar(onclick="cambiarPestana('buscar')", class=(pestanaInicial === 'buscar' ? "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]" : "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]") )
+                    i(class="fa fa-user-doctor")
+                    | Buscar especialistas
 
-                button#tabHistorial(onclick="cambiarPestana('historial')" class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium") Historial Médico
+                button#tabHistorial(onclick="cambiarPestana('historial')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]")
+                    i(class="fa fa-folder")
+                    | Historial clínico
 
-            section#seccionBuscar(class="border border-gray-300 rounded-[8px] p-[25px] bg-white")
+            section#seccionBuscar.patient-section(class=pestanaInicial === 'buscar' ? '' : 'hidden')
                 div(class="mb-[25px]")
                     h2(class="text-[18px] font-bold text-black mb-[5px]") Encuentra tu Especialista
-                    p(class="text-[14px] text-gray-500 m-0") Selecciona la especialidad médica que necesitas
+                    p.section-description Selecciona la especialidad médica que necesitas
 
-                form(method="GET" action="/patientPanel" class="bg-gray-50 border border-gray-200 rounded-[12px] p-[20px] mb-[30px] flex flex-col sm:flex-row gap-[15px] items-center")
+                form.doctor-filter(method="GET" action="/patientPanel")
                     div(class="flex-1 w-full")
                         label(for="especialidad" class="block text-[13px] font-bold text-gray-700 mb-[6px]") Especialidad
                         select(name="especialidad" id="especialidad" class="w-full p-[12px] border border-gray-300 rounded-[8px] text-[14px] outline-none focus:border-black bg-white cursor-pointer")
@@ -70,37 +125,37 @@ html(lang="es")
                             i(class="fa fa-search")
                             | Buscar
 
-                div(class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px]")
+                div.doctor-grid
                     if medicos && medicos.length > 0
                         each medico in medicos
-                            div(class="bg-white border border-gray-200 rounded-[8px] overflow-hidden flex flex-col")
-                                div(class="h-[140px] bg-gray-100 relative")
+                            div.doctor-card
+                                div.doctor-image
                                     img(src= medico.foto ? `/uploads/documentos/${medico.foto}` : "img/doctor1.png" class="w-full h-full object-cover")
                                     span(class="absolute top-[10px] right-[10px] bg-white px-[10px] py-[4px] rounded-[15px] text-[11px] font-bold text-gray-800")= medico.especialidad || 'Especialista'
                                 
-                                div(class="p-[15px] flex flex-col flex-1")
+                                div.doctor-card-content
                                     h3(class="text-[16px] font-bold text-gray-900 mb-[4px]")= `Dr. ${medico.nombre} ${medico.apellido}`
                                     
-                                    div(class="flex flex-col gap-[6px] mb-[15px] mt-[10px]")
-                                        div(class="flex items-center gap-[8px] text-[12px] text-gray-600")
+                                    div.doctor-data
+                                        div.doctor-data-row
                                             i(class="fa fa-envelope text-gray-400 w-[14px]")
                                             span= medico.email
-                                        div(class="flex items-center gap-[8px] text-[12px] text-gray-600")
+                                        div.doctor-data-row
                                             i(class="fa fa-phone text-gray-400 w-[14px]")
                                             span= medico.telefono
-                                        div(class="flex items-center gap-[8px] text-[12px] text-gray-600")
+                                        div.doctor-data-row
                                             i(class="fa fa-money-bill text-gray-400 w-[14px]")
                                             strong(class="text-gray-900")= medico.precio_consulta ? `$${medico.precio_consulta}` : 'N/A'
                                             span(class="text-gray-400") Consulta
 
                                     p(class="text-[11px] font-bold text-gray-500 uppercase mb-[6px]") Horarios
-                                    div(class="flex flex-wrap gap-[4px] mb-[15px]")
+                                    div.doctor-schedule(class="flex flex-wrap gap-[6px]")
                                         if medico.horarios
                                             span(class="border border-gray-200 bg-gray-50 px-[8px] py-[3px] rounded-[10px] text-[11px] text-gray-700")= medico.horarios
                                         else
                                             span(class="text-[11px] text-gray-400 italic") No especificado
                                     
-                                    a(href=`/paciente/agendar?medicoId=${medico.id}` class="w-full bg-black text-white py-[8px] rounded-[6px] font-bold text-[12px] hover:opacity-80 transition-opacity cursor-pointer border-none flex items-center justify-center gap-[6px] no-underline")
+                                    a(href=`/paciente/agendar?medicoId=${medico.id}` class="doctor-book-button w-full bg-black text-white py-[10px] font-bold hover:opacity-85 transition-opacity cursor-pointer border-none flex items-center justify-center gap-[8px] no-underline")
                                         i(class="fa fa-calendar-check")
                                         | Ver Horarios y Agendar
 
@@ -109,61 +164,66 @@ html(lang="es")
                             i(class="fa fa-user-md text-[36px] text-gray-300 mb-[10px]")
                             p(class="text-[14px] m-0") No hay médicos disponibles para la especialidad seleccionada.
 
-            section#seccionCitas(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white")
+            section#seccionCitas.patient-section(class=pestanaInicial === 'buscar' ? 'hidden' : '')
                 div(class="flex justify-between items-center mb-[25px]")
                     div
                         h2(class="text-[18px] font-bold text-black mb-[5px]") Agenda de Citas
                         p(class="text-[14px] text-gray-500 m-0") Tus consultas programadas
 
-                div#listaCitas(class="flex flex-col gap-[15px]")
+                div#listaCitas.patient-appointments-list
                     if citas && citas.length > 0
                         each cita in citas
-                            div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
-                                div(class="w-full md:w-auto")
+                            div.patient-appointment-card
+                                div.patient-appointment-info
                                     div(class="flex items-center mb-[12px]")
                                         p(class="font-bold text-[15px] m-0")= cita.fecha
                                             span(class="text-gray-400 font-normal ml-[10px]")= cita.hora
-                                        if cita.estado === 'cancelada'
-                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-red-100 text-red-800 capitalize font-bold")= cita.estado
-                                        else if cita.estado === 'completada'
-                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-green-100 text-green-800 capitalize font-bold")= cita.estado
+                                        if cita.estado === 'completada'
+                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-blue-600 text-white capitalize font-bold")= cita.estado
+                                        else if cita.estado === 'cancelada'
+                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-red-600 text-white capitalize font-bold")= cita.estado
+                                        else if cita.estado === 'confirmada'
+                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-green-600 text-white capitalize font-bold")= cita.estado
                                         else
-                                            span(class="text-[11px] px-[12px] py-[3px] rounded-[15px] ml-[15px] bg-black text-white capitalize font-bold")= cita.estado
+                                           span(class="text-[11px] px-[12px] py-[5px] rounded-full ml-[15px] capitalize font-bold" style="background-color:#EAB308;color:#FFFFFF;") Pendiente
                                             
                                     div(class="flex flex-col gap-[5px] text-[14px]")
                                         div(class="flex")
                                             span(class="text-gray-400 w-[75px]") Médico:
-                                            span(class="font-bold text-gray-800")= `Dr. ${cita.medico.nombre} ${cita.medico.apellido} (${cita.medico.especialidad})`
+                                            span(class="font-bold text-gray-800")= cita.medico ? 'Dr. ' + cita.medico.nombre + ' ' + cita.medico.apellido + (cita.medico.especialidad ? ' (' + cita.medico.especialidad + ')' : '') : 'Profesional no disponible' 
+                                        div(class="flex items-center gap-[3px]")
+                                            span(class="text-gray-400 inline-block w-[90px] shrink-0") Especialidad:
+                                            span(class="font-bold text-gray-800")= cita.especialidad || (cita.medico && cita.medico.especialidad) || 'General'
                                         div(class="flex")
                                             span(class="text-gray-400 w-[75px]") Motivo:
                                             span(class="font-bold text-gray-800")= cita.motivo
                                 
                                 if cita.estado !== 'cancelada' && cita.estado !== 'completada'
-                                    div(class="flex gap-[8px] w-full md:w-[200px]")
-                                        button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 transition-colors border-none") Reprogramar
-                                        button(type="button" onclick=`cancelarCita('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-red-100 text-red-700 cursor-pointer hover:bg-red-200 transition-colors border-none") Cancelar
+                                    div.patient-appointment-actions
+                                        button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="flex-1 p-[10px] rounded-[8px] text-[12px] font-bold bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 transition-colors border-none") Reprogramar
+                                        button(type="button" onclick=`cancelarCita('${cita.id}')` class="flex-1 p-[10px] rounded-[8px] text-[12px] font-bold bg-red-100 text-red-700 cursor-pointer hover:bg-red-200 transition-colors border-none") Cancelar
                     else
                         div#mensajeVacioCitas(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
                             i(class="fa fa-calendar-xmark text-[36px] text-gray-300 mb-[10px]")
                             p(class="text-gray-500 text-[14px] m-0") No tienes citas programadas por el momento.
 
-            section#seccionHistorial(class="hidden border border-gray-300 rounded-[8px] p-[25px] bg-white")
+            section#seccionHistorial.patient-section.hidden
                 div(class="mb-[20px]")
                     h2(class="text-[18px] font-bold text-black mb-[5px]") Historial Médico
                     p(class="text-[14px] text-gray-500 m-0") Tus registros y diagnósticos
 
-                div#listaHistorial(class="flex flex-col gap-[15px]")
+                div#listaHistorial.patient-history-list
                     if historiasClinicas && historiasClinicas.length > 0
                         each historia in historiasClinicas
-                            div(class="border border-gray-200 rounded-[12px] p-[18px] bg-white shadow-sm")
+                            div.patient-history-card
                                 div(class="flex flex-col md:flex-row md:items-start md:justify-between gap-3")
                                     div
                                         p(class="text-[11px] uppercase font-bold tracking-wide text-gray-500 mb-1")= new Date(historia.fecha_elaboracion).toLocaleString('es-CO', { timeZone: 'America/Bogota' })
                                         h3(class="text-[16px] font-bold text-gray-900")= historia.diagnostico_principal || (historia.datos_clinicos && historia.datos_clinicos.diagnosticoPrincipal) || 'Atención médica'
-                                        p(class="text-[13px] text-gray-600 mt-1")= `Médico: Dr. ${historia.medico.nombre} ${historia.medico.apellido}${historia.medico.especialidad ? ' · ' + historia.medico.especialidad : ''}`
+                                        p(class="text-[13px] text-gray-600 mt-1")= historia.medico ? `Médico: Dr. ${historia.medico.nombre} ${historia.medico.apellido}${historia.medico.especialidad ? ' · ' + historia.medico.especialidad : ''}` : 'Médico: No disponible'
                                         p(class="text-[13px] text-gray-600 mt-1")= `Motivo: ${historia.motivo}`
                                         p(class="text-[13px] text-gray-600 mt-1")= `Código CIE-10: ${historia.codigo_cie10 || 'No registrado'}`
-                                    div(class="flex gap-2 shrink-0")
+                                    div.patient-history-actions
                                         a(href=`/historia-clinica/${historia.id}` class="bg-black text-white px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") Ver historia completa
                                         a(href=`/historia-clinica/pdf/${historia.id}` target="_blank" class="bg-red-100 text-red-700 px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") PDF
                     else
@@ -173,7 +233,7 @@ html(lang="es")
 
             //- MODAL REPROGRAMAR CITA
             div#modalReprogramar(class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-[20px]")
-                div(class="bg-[#d1d1d1] w-full max-w-[400px] p-[30px] rounded-[15px] shadow-2xl relative")
+                div.patient-modal-panel
                     h3(class="text-[22px] font-bold text-black mb-[20px] flex items-center gap-[10px]")
                         i(class="fa fa-calendar-days text-black")
                         | Reprogramar Cita
@@ -198,7 +258,7 @@ html(lang="es")
                 const seccionBuscar = document.getElementById('seccionBuscar');
                 const seccionCitas = document.getElementById('seccionCitas');
                 const seccionHistorial = document.getElementById('seccionHistorial');
-                
+
                 const tabBuscar = document.getElementById('tabBuscar');
                 const tabCitas = document.getElementById('tabCitas');
                 const tabHistorial = document.getElementById('tabHistorial');
@@ -207,22 +267,22 @@ html(lang="es")
                 seccionCitas.classList.add('hidden');
                 seccionHistorial.classList.add('hidden');
 
-                const claseInactiva = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium";
-                const claseActiva = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[20px] bg-gray-300 font-medium cursor-pointer transition-colors text-black";
+                const estiloInactivo = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]";
+                const estiloActivo = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]";
 
-                tabBuscar.className = claseInactiva;
-                tabCitas.className = claseInactiva;
-                tabHistorial.className = claseInactiva;
+                tabBuscar.className = estiloInactivo;
+                tabCitas.className = estiloInactivo;
+                tabHistorial.className = estiloInactivo;
 
                 if (pestana === 'buscar') {
                     seccionBuscar.classList.remove('hidden');
-                    tabBuscar.className = claseActiva;
-                } else if (pestana === 'citas') {
-                    seccionCitas.classList.remove('hidden');
-                    tabCitas.className = claseActiva;
+                    tabBuscar.className = estiloActivo;
                 } else if (pestana === 'historial') {
                     seccionHistorial.classList.remove('hidden');
-                    tabHistorial.className = claseActiva;
+                    tabHistorial.className = estiloActivo;
+                } else {
+                    seccionCitas.classList.remove('hidden');
+                    tabCitas.className = estiloActivo;
                 }
             }
 

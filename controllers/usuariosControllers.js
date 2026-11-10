@@ -28,51 +28,65 @@ const vistaPrincipal = (req, res) => {
 };
 
 const verPatientPanel = async (req, res) => {
+    const pacienteId = req.usuario.id;
+
     try {
         const { especialidad } = req.query;
-        
-        let condiciones = {
+        const condicionesMedicos = {
             rol: 'medico',
             estado_aprobacion: 'aprobado'
         };
 
         if (especialidad && especialidad.trim() !== '') {
-            condiciones.especialidad = especialidad;
+            condicionesMedicos.especialidad = especialidad.trim();
         }
 
-        const medicos = await Usuario.findAll({
-            where: condiciones
-        });
+        // Cada bloque se consulta de forma independiente: un problema al cargar
+        // médicos o historias clínicas no debe ocultar las citas del paciente.
+        const resultados = await Promise.allSettled([
+            Usuario.findAll({ where: condicionesMedicos }),
+            Usuario.findAll({
+                attributes: ['especialidad'],
+                where: {
+                    rol: 'medico',
+                    estado_aprobacion: 'aprobado',
+                    especialidad: { [Op.not]: null }
+                },
+                group: ['especialidad']
+            }),
+            Cita.findAll({
+                where: { paciente_id: pacienteId },
+                include: [{
+                    model: Usuario,
+                    as: 'medico',
+                    attributes: ['nombre', 'apellido', 'especialidad'],
+                    required: false
+                }],
+                order: [['fecha', 'ASC'], ['hora', 'ASC']]
+            }),
+            HistoriaClinica.findAll({
+                where: { paciente_id: pacienteId },
+                include: [
+                    { model: Cita, as: 'cita', attributes: ['id', 'fecha', 'hora', 'motivo'], required: false },
+                    { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad', 'tarjeta_profesional'], required: false }
+                ],
+                order: [['fecha_elaboracion', 'DESC']]
+            })
+        ]);
 
-        const medicosDisponibles = await Usuario.findAll({
-            attributes: ['especialidad'],
-            where: {
-                rol: 'medico',
-                estado_aprobacion: 'aprobado',
-                especialidad: { [Op.not]: null }
-            },
-            group: ['especialidad']
-        });
-        
-        const especialidades = medicosDisponibles.map(m => m.especialidad);
+        const obtenerValor = (resultado, nombre) => {
+            if (resultado.status === 'fulfilled') return resultado.value;
+            console.error(`No se pudieron cargar ${nombre}:`, resultado.reason);
+            return [];
+        };
 
-        const misCitas = await Cita.findAll({
-            where: { paciente_id: req.usuario.id },
-            include: [{ model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad'] }],
-            order: [['fecha', 'ASC'], ['hora', 'ASC']]
-        });
+        const medicos = obtenerValor(resultados[0], 'los médicos');
+        const medicosDisponibles = obtenerValor(resultados[1], 'las especialidades');
+        const misCitas = obtenerValor(resultados[2], 'las citas del paciente');
+        const historiasClinicas = obtenerValor(resultados[3], 'las historias clínicas');
+        const especialidades = medicosDisponibles.map(m => m.especialidad).filter(Boolean);
 
-        // Cargamos también las historias clínicas del paciente para mostrarlas en su panel
-        const historiasClinicas = await HistoriaClinica.findAll({
-            where: { paciente_id: req.usuario.id },
-            include: [
-                { model: Cita, as: 'cita', attributes: ['id', 'fecha', 'hora', 'motivo'] },
-                { model: Usuario, as: 'medico', attributes: ['nombre', 'apellido', 'especialidad', 'tarjeta_profesional'] }
-            ],
-            order: [['fecha_elaboracion', 'DESC']]
-        });
-
-        res.render("patientPanel", {
+        return res.render("patientPanel", {
             tituloPagina: "Panel del Paciente",
             usuario: req.usuario,
             medicos,
@@ -80,20 +94,12 @@ const verPatientPanel = async (req, res) => {
             citas: misCitas,
             historiasClinicas,
             especialidadSeleccionada: especialidad || '',
+            pestanaInicial: Object.prototype.hasOwnProperty.call(req.query, 'especialidad') ? 'buscar' : 'citas',
             csrfToken: req.csrfToken()
         });
-
     } catch (error) {
-        console.error(error);
-        res.render("patientPanel", {
-            tituloPagina: "Panel del Paciente",
-            usuario: req.usuario,
-            medicos: [],
-            especialidades: [],
-            citas: [],
-            historiasClinicas: [],
-            csrfToken: req.csrfToken()
-        });
+        console.error('Error general al cargar el panel del paciente:', error);
+        return res.status(500).send('No fue posible cargar el portal del paciente. Inténtalo nuevamente.');
     }
 };
 
