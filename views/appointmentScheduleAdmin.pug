@@ -75,7 +75,6 @@ html(lang="es")
           select#filtroEstadoCita(class="px-[15px] py-[10px] border border-gray-200 rounded-[8px] bg-white text-[14px] text-gray-600 outline-none cursor-pointer")
             option(value="") Todos los estados
             option(value="pendiente") Programadas
-            option(value="confirmada") Confirmadas
             option(value="completada") Completadas
             option(value="cancelada") Canceladas
 
@@ -89,8 +88,11 @@ html(lang="es")
               each cita in citas
                 - var fechaTexto = String(cita.fecha).substring(0, 10).split('-');
                 - var fechaFormateada = fechaTexto.length === 3 ? `${fechaTexto[2]}/${fechaTexto[1]}/${fechaTexto[0]}` : cita.fecha;
-                - var estadoTexto = cita.estado === 'pendiente' ? 'Programada' : cita.estado === 'confirmada' ? 'Confirmada' : cita.estado === 'completada' ? 'Completada' : 'Cancelada';
-                - var estadoClase = cita.estado === 'confirmada' || cita.estado === 'completada' ? 'bg-black text-white' : cita.estado === 'cancelada' ? 'bg-[#f5dada] text-[#8a2222]' : 'bg-[#ccc] text-[#333]';
+                
+                // Mapeo seguro de textos y colores según el estado real de la BD
+                - var estadoTexto = cita.estado === 'completada' ? 'Completada' : (cita.estado === 'cancelada' ? 'Cancelada' : (cita.estado === 'confirmada' ? 'Confirmada' : 'Programada'));
+                - var estadoClase = cita.estado === 'completada' ? 'bg-green-600 text-white' : (cita.estado === 'cancelada' ? 'bg-red-600 text-white' : (cita.estado === 'confirmada' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'));
+                
                 div.cita-item(class="border border-gray-200 rounded-[10px] p-[20px]", data-estado=cita.estado, data-busqueda=((cita.paciente ? cita.paciente.nombre + ' ' + cita.paciente.apellido + ' ' + cita.paciente.email : '') + ' ' + (cita.medico ? cita.medico.nombre + ' ' + cita.medico.apellido : '') + ' ' + cita.motivo).toLowerCase())
                   div(class="flex flex-wrap justify-between items-center mb-[15px] gap-[10px]")
                     div(class="flex flex-wrap items-center gap-[15px]")
@@ -112,9 +114,9 @@ html(lang="es")
             else
               div(class="p-8 text-center text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg")
                 p(class="font-medium") No hay citas registradas en el sistema.
-          p#sinResultadosCitas(class="hidden p-8 text-center text-gray-500") No se encontraron citas con esos filtros.
+            p#sinResultadosCitas(class="hidden p-8 text-center text-gray-500") No se encontraron citas con esos filtros.
 
-    //- Script para inicializar los íconos de Lucide
+    //- Script para inicializar los íconos de Lucide y filtros
     script.
       lucide.createIcons();
 
