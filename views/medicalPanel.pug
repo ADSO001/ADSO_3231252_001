@@ -9,225 +9,359 @@ html(lang="es")
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css")
     link(rel="icon", href="icono.png", type="image/png")
     style.
-      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; }
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #1f2937; min-height: 100vh; }
+      body.doctor-body { background: #f4f6f9; }
+      .doctor-header { min-height: 88px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #dce2e9; }
+      .doctor-header-logo { width: 90px; height: 85px; object-fit: contain; border-right: 1px solid #e5e7eb; padding-right: 10px; margin-right: 10px; }
+      .header-btn-secondary { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 15px; border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; color: #1e293b; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color .2s, border-color .2s; }
+      .header-btn-secondary:hover { background: #eef2f6; border-color: #94a3b8; }
+      .header-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 15px; border-radius: 10px; border: none; background: #172033; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .2s, background-color .2s; }
+      .header-btn-primary:hover { background: #24304a; }
+
       .panel-main { width: calc(100% - 48px); max-width: 1540px; margin: 0 auto; padding: 28px 0 42px; }
       .metricas-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 26px; }
       .metrica-card { position: relative; min-height: 112px; padding: 20px 22px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
-      .solicitudes-section { padding: 24px 26px; margin-bottom: 26px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
-      .solicitudes-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+      .metrica-card h3 { color: #334155; font-size: 14px; font-weight: 700; margin: 0 0 8px; }
+      .metrica-card p.metric-value { color: #111827; font-size: 28px; font-weight: 700; line-height: 1.15; margin: 0 0 5px; }
+      .metrica-card p.metric-caption { color: #64748b; font-size: 12px; margin: 0; }
+      .metrica-icon { position: absolute; top: 19px; right: 20px; color: #8290a3; font-size: 21px; }
+
+      /* Pestañas */
+      .doctor-tabs { display: flex; flex-direction: row; gap: 10px; margin-bottom: 20px; }
+      .doctor-tab { flex: 1; height: 42px; padding: 0 18px; border: 1px solid #dce2e9; border-radius: 10px; background: #fff; color: #1f2937; font-size: 14px; font-weight: 500; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: background-color .2s, border-color .2s; }
+      .doctor-tab:hover { background: #f1f5f9; }
+      .doctor-tab.is-active { background: #e2e8f0; border-color: #cbd5e1; color: #111827; font-weight: 600; }
+      .tab-counter { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 7px; border-radius: 9999px; font-size: 11px; font-weight: 700; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+      /* Secciones */
+      .seccion-agenda { padding: 26px; margin-bottom: 22px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
+      .seccion-header { margin-bottom: 22px; }
+      .seccion-header h4 { font-size: 18px; font-weight: 700; color: #111827; margin: 0 0 4px; }
+      .seccion-header p { font-size: 13px; color: #64748b; margin: 0; }
+
+      /* Solicitudes de citas */
+      .solicitudes-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
       .solicitudes-lista { display: flex; flex-direction: column; gap: 16px; }
       .solicitud-card { display: grid; grid-template-columns: minmax(0, 1fr) 176px; align-items: center; gap: 26px; padding: 22px 24px; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.04); }
       .solicitud-info { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
-      .solicitud-titulo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+      .solicitud-titulo { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
       .solicitud-detalles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 22px; row-gap: 12px; }
       .solicitud-detalle { min-width: 0; margin: 0; color: #526176; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
       .solicitud-detalle i { margin-right: 7px; color: #8290a3; }
       .solicitud-motivo { margin: 0; padding-top: 12px; border-top: 1px solid #edf0f4; color: #64748b; font-size: 13px; line-height: 1.55; }
-      .solicitud-acciones { width: 176px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
-      .solicitud-acciones form { width: 100%; margin: 0; }
-      .solicitud-boton { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 43px; padding: 10px 14px; border-radius: 8px; font-size: 13px; line-height: 1.2; font-weight: 700; text-align: center; cursor: pointer; transition: background-color .2s, transform .2s; }
-      .solicitud-boton:hover { transform: translateY(-1px); }
-      .solicitud-confirmar { color: #fff; background: #16a34a; border: 1px solid #16a34a; }
-      .solicitud-confirmar:hover { background: #15803d; border-color: #15803d; }
-      .solicitud-rechazar { color: #fff; background: #dc2626; border: 1px solid #dc2626; }
-      .solicitud-rechazar:hover { background: #b91c1c; border-color: #b91c1c; }
-      .seccion-agenda { padding: 26px; border: 1px solid #dce2e9; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.045); }
-      @media (max-width: 1100px) { .solicitud-detalles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-      @media (max-width: 900px) { .panel-main { width: calc(100% - 32px); } .solicitud-card { grid-template-columns: minmax(0, 1fr); gap: 18px; } .solicitud-acciones { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-      @media (max-width: 639px) { .panel-main { width: calc(100% - 24px); padding-top: 18px; } .metricas-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; } .solicitudes-section { padding: 18px 15px; margin-bottom: 18px; } .solicitudes-heading { align-items: flex-start; } .solicitud-card { padding: 18px 15px; } .solicitud-detalles { grid-template-columns: 1fr; } .solicitud-acciones { grid-template-columns: 1fr; } .seccion-agenda { padding: 18px 15px; } }
+      .solicitud-acciones {
+        width: 176px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+      }
+      .solicitud-acciones form {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+      .solicitud-acciones .btn-pastel-green,
+      .solicitud-acciones .btn-pastel-red {
+        width: 100%;
+        min-height: 40px;
+        padding: 9px 14px;
+        font-size: 12px;
+        box-sizing: border-box;
+      }
+      .solicitud-acciones .btn-pastel-red:hover { transform: translateY(-1px); }
 
-  body(class="m-0 p-0 box-border text-gray-800")
-    header(class="flex items-center justify-between border-b border-gray-200 px-[20px] py-[10px]")
+      /* Tarjetas de Agenda de hoy y Próximas citas */
+      .citas-lista { display: flex; flex-direction: column; gap: 16px; }
+      .cita-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 24px; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.04); transition: box-shadow .2s, border-color .2s; }
+      .cita-card:hover { border-color: #cbd5e1; box-shadow: 0 5px 14px rgba(15,23,42,.06); }
+      .cita-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+      .cita-header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+      .cita-fecha-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 700; color: #111827; }
+      .cita-hora-texto { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #64748b; padding-left: 10px; border-left: 1px solid #dce2e9; }
+      .cita-detalles { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+      .cita-fila { display: flex; align-items: baseline; gap: 10px; }
+      .cita-label { width: 82px; flex-shrink: 0; color: #64748b; font-size: 13px; }
+      .cita-valor { color: #1f2937; font-weight: 600; overflow-wrap: anywhere; }
+      .cita-valor-secundario { color: #475569; font-weight: 400; overflow-wrap: anywhere; }
+      .cita-acciones { width: 210px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }
+      .cita-acciones-fila { display: flex; gap: 8px; width: 100%; }
+
+      /* Tarjetas de Historias clínicas */
+      .historias-lista { display: flex; flex-direction: column; gap: 16px; }
+      .historia-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 24px; border: 1px solid #e0e5ec; border-radius: 12px; background: #fff; box-shadow: 0 2px 5px rgba(15,23,42,.04); }
+      .historia-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+      .historia-acciones { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+      /* Badges de Estado Pastel */
+      .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: capitalize; letter-spacing: 0.01em; }
+      .status-completada { background-color: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+      .status-confirmada { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+      .status-pendiente  { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+      .status-cancelada  { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+      /* Botones de Acción Pastel y Primarios */
+      .btn-action-dark { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 38px; padding: 8px 14px; border-radius: 8px; border: none; background: #172033; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; transition: background-color .2s, transform .15s; text-decoration: none; }
+      .btn-action-dark:hover { background: #24304a; transform: translateY(-1px); }
+
+      .btn-pastel-green { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; padding: 9px 14px; border-radius: 8px; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 12px; font-weight: 700; cursor: pointer; transition: background-color .2s, transform .15s; }
+      .btn-pastel-green:hover { background: #bbf7d0; transform: translateY(-1px); }
+
+      .btn-pastel-blue { display: flex; align-items: center; justify-content: center; flex: 1; min-height: 36px; padding: 8px 12px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 11px; font-weight: 700; cursor: pointer; transition: background-color .2s; }
+      .btn-pastel-blue:hover { background: #bfdbfe; }
+
+      .btn-pastel-red { display: flex; align-items: center; justify-content: center; flex: 1; min-height: 36px; padding: 8px 12px; border-radius: 8px; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-size: 11px; font-weight: 700; cursor: pointer; transition: background-color .2s; text-decoration: none; }
+      .btn-pastel-red:hover { background: #fecaca; }
+
+      .solicitud-acciones .btn-pastel-red { min-height: 40px; font-size: 12px; }
+      .solicitud-acciones .btn-pastel-red:hover { transform: translateY(-1px); }
+
+      @media (max-width: 1100px) { .solicitud-detalles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 900px) {
+        .panel-main { width: calc(100% - 32px); }
+        .solicitud-card { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+        .solicitud-acciones { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .cita-card, .historia-card { flex-direction: column; align-items: flex-start; gap: 18px; }
+        .cita-acciones, .historia-acciones { width: 100%; }
+      }
+      @media (max-width: 639px) {
+        .doctor-header { padding: 10px 14px; }
+        .doctor-header-logo { width: 76px; height: 64px; }
+        .panel-main { width: calc(100% - 24px); padding-top: 18px; }
+        .metricas-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; }
+        .doctor-tabs { flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .seccion-agenda { padding: 19px 15px; margin-bottom: 17px; }
+        .solicitudes-heading { align-items: flex-start; flex-direction: column; }
+        .solicitud-card, .cita-card, .historia-card { padding: 18px 15px; }
+        .solicitud-detalles { grid-template-columns: 1fr; }
+        .solicitud-acciones { grid-template-columns: 1fr; }
+        .historia-acciones { flex-direction: column; }
+        .historia-acciones a { width: 100%; }
+      }
+
+  body.doctor-body(class="m-0 p-0 box-border text-gray-800")
+    header.doctor-header(class="flex items-center justify-between")
       div(class="flex items-center")
-        img(src="img/logo.png", alt="logo", class="w-[90px] h-[85px] object-contain border-r border-gray-200 pr-[10px] mr-[10px]")
+        img.doctor-header-logo(src="img/logo.png", alt="logo")
         div(class="border border-gray-300 rounded-[8px] px-[15px] py-[5px] ml-[20px]")
-          p#nombreMedico(class="text-[14px] font-bold m-0")= medico ? `Dr. ${medico.nombre}` : (usuario ? `Dr. ${usuario.nombre}` : 'Dr. Médico')
+          p#nombreMedico(class="text-[14px] font-bold text-gray-900 m-0")= medico ? `Dr. ${medico.nombre}` : (usuario ? `Dr. ${usuario.nombre}` : 'Dr. Médico')
           p#especialidadMedico(class="text-[12px] text-gray-500 m-0")= medico && medico.especialidad ? medico.especialidad : (usuario && usuario.especialidad ? usuario.especialidad : 'Medicina General')
 
       div(class="flex items-center gap-[10px] ml-auto")
         a(href="/medico/mi-agenda", class="no-underline")
-          button(type="button", class="bg-gray-100 border border-gray-300 text-black px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:bg-gray-200 transition-colors font-medium")
-            i(class="fa-solid fa-calendar-days text-gray-600")
+          button(type="button", class="header-btn-secondary")
+            i(class="fa-solid fa-calendar-days text-gray-500")
             | Mi Agenda
 
-        a(href="/login", class="no-underline")
-          button#logout(type="button", class="bg-black text-white px-[15px] h-[35px] rounded-[10px] flex items-center gap-[8px] text-[14px] cursor-pointer hover:opacity-70 transition-opacity")
+        a(href="/cerrar-sesion", class="no-underline")
+          button#logout(type="button", class="header-btn-primary")
             i(class="fa-solid fa-right-from-bracket")
             | Cerrar sesión
 
     main.panel-main
+      input#csrfToken(type="hidden", value=csrfToken)
+
       section.metricas-grid
         div.metrica-card
-          i(class="fa fa-calendar-day absolute top-[10px] right-[10px] text-[22px] text-gray-500")
-          h3(class="text-[14px] font-bold mb-[5px]") Citas hoy
-          p#citasHoy(class="text-[28px] font-bold m-0")= citasHoy ? citasHoy.length : 0
-          p(class="text-[12px] text-gray-500 m-0") Citas programadas
+          i.metrica-icon(class="fa-solid fa-calendar-day")
+          h3 Citas hoy
+          p#citasHoy.metric-value= citasHoy ? citasHoy.length : 0
+          p.metric-caption Citas programadas
 
         div.metrica-card
-          i(class="fa fa-clock absolute top-[10px] right-[10px] text-[22px] text-gray-500")
-          h3(class="text-[14px] font-bold mb-[5px]") Próximas citas
-          p#proxCita(class="text-[28px] font-bold m-0")= proximasCitas ? proximasCitas.length : 0
-          p(class="text-[12px] text-gray-500 m-0") Esta semana y siguientes
+          i.metrica-icon(class="fa-solid fa-clock")
+          h3 Próximas citas
+          p#proxCita.metric-value= proximasCitas ? proximasCitas.length : 0
+          p.metric-caption Esta semana y siguientes
 
         div.metrica-card
-          i(class="fa fa-folder-open absolute top-[10px] right-[10px] text-[22px] text-gray-500")
-          h3(class="text-[14px] font-bold mb-[5px]") Consultas totales
-          p#ConTotal(class="text-[28px] font-bold m-0")= totalCitas || 0
-          p(class="text-[12px] text-gray-500 m-0") Registros en el sistema
+          i.metrica-icon(class="fa-solid fa-folder-open")
+          h3 Consultas totales
+          p#ConTotal.metric-value= totalCitas || 0
+          p.metric-caption Registros en el sistema
 
-      //- Solicitudes pendientes de aprobación
-      input#csrfToken(type="hidden", value=csrfToken)
-      section.solicitudes-section
+      //- BARRA DE PESTAÑAS (Solicitudes de citas es la primera)
+      section.doctor-tabs
+        button#tabSolicitudes.doctor-tab.is-active(onclick="cambiarPestana('solicitudes')")
+          span(class="flex items-center gap-[8px]")
+            i(class="fa-solid fa-inbox")
+            | Solicitudes de citas
+          span.tab-counter= solicitudesPendientes ? solicitudesPendientes.length : 0
+
+        button#tabHoy.doctor-tab(onclick="cambiarPestana('hoy')")
+          span(class="flex items-center gap-[8px]")
+            i(class="fa-solid fa-calendar-day")
+            | Agenda de hoy
+
+        button#tabProximas.doctor-tab(onclick="cambiarPestana('proximas')")
+          span(class="flex items-center gap-[8px]")
+            i(class="fa-solid fa-clock")
+            | Próximas citas
+
+        button#tabHistorial.doctor-tab(onclick="cambiarPestana('historial')")
+          span(class="flex items-center gap-[8px]")
+            i(class="fa-solid fa-folder")
+            | Historias clínicas
+
+      //- SECCIÓN 1 (ACTIVA POR DEFECTO): Solicitudes de citas
+      section#seccionSolicitudes.seccion-agenda
         div.solicitudes-heading
           div
-            h4(class="text-[17px] font-bold text-black mb-[3px]") Solicitudes de citas
+            h4(class="text-[18px] font-bold text-gray-900 mb-[4px]") Solicitudes de citas
             p(class="text-[13px] text-gray-500 m-0") Revisa y responde las nuevas solicitudes de tus pacientes
-          span(class="self-start sm:self-auto text-[12px] font-bold px-[12px] py-[7px] rounded-full bg-yellow-100 text-yellow-800 whitespace-nowrap")= `${solicitudesPendientes ? solicitudesPendientes.length : 0} pendientes`
+          span.status-badge.status-pendiente= `${solicitudesPendientes ? solicitudesPendientes.length : 0} pendientes`
+
         if solicitudesPendientes && solicitudesPendientes.length > 0
-          div(class="solicitudes-lista")
+          div.solicitudes-lista
             each cita in solicitudesPendientes
-              article(class="solicitud-card")
-                div(class="solicitud-info")
+              article.solicitud-card
+                div.solicitud-info
                   div.solicitud-titulo
-                    span(class="font-bold text-[15px] text-black")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
-                    span(class="text-[11px] px-[10px] py-[4px] rounded-full bg-yellow-100 text-yellow-800 font-bold") Pendiente
+                    span(class="font-bold text-[15px] text-gray-900")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    span.status-badge.status-pendiente Pendiente
                   div.solicitud-detalles
                     p.solicitud-detalle
-                      i(class="fa-regular fa-calendar mr-[7px] text-gray-400")
+                      i(class="fa-regular fa-calendar")
                       | #{cita.fecha}
                     p.solicitud-detalle
-                      i(class="fa-regular fa-clock mr-[7px] text-gray-400")
+                      i(class="fa-regular fa-clock")
                       | #{String(cita.hora).slice(0,5)}
                     p.solicitud-detalle
-                      i(class="fa-solid fa-stethoscope mr-[7px] text-gray-400")
+                      i(class="fa-solid fa-stethoscope")
                       | #{cita.especialidad}
                     p.solicitud-detalle
-                      i(class="fa-regular fa-envelope mr-[7px] text-gray-400")
+                      i(class="fa-regular fa-envelope")
                       | #{cita.paciente.email}
                   p.solicitud-motivo= cita.motivo
-                div(class="solicitud-acciones")
+                div.solicitud-acciones
                   form(action=`/medico/citas/${cita.id}/estado` method="POST" class="w-full" onsubmit="return decidirSolicitud(event, this, 'confirmada')")
                     input(type="hidden" name="_csrf" value=csrfToken)
                     input(type="hidden" name="decision" value="confirmada")
-                    button(type="submit" class="solicitud-boton solicitud-confirmar") Confirmar
+                    button(type="submit" class="btn-pastel-green") Confirmar
                   form(action=`/medico/citas/${cita.id}/estado` method="POST" class="w-full" onsubmit="return decidirSolicitud(event, this, 'cancelada')")
                     input(type="hidden" name="_csrf" value=csrfToken)
                     input(type="hidden" name="decision" value="cancelada")
-                    button(type="submit" class="solicitud-boton solicitud-rechazar") Rechazar
+                    button(type="submit" class="btn-pastel-red") Rechazar
         else
-          div(class="text-center py-[26px] border border-dashed border-gray-300 rounded-[10px]")
-            i(class="fa-regular fa-calendar-check text-[30px] text-gray-300 mb-[8px]")
-            p(class="text-[13px] text-gray-500 m-0") No tienes solicitudes pendientes por revisar.
+          div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
+            i(class="fa-regular fa-calendar-check text-[36px] text-gray-300 mb-[10px]")
+            p(class="text-[14px] text-gray-500 m-0") No tienes solicitudes pendientes por revisar.
 
-      section(class="flex flex-col sm:flex-row gap-[10px] mb-[20px]")
-        button#tabHoy(onclick="cambiarPestana('hoy')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]")
-          i(class="fa fa-calendar-day")
-          | Agenda de hoy
+      //- SECCIÓN 2: Agenda de hoy
+      section#seccionHoy.seccion-agenda.hidden
+        div.seccion-header
+          h4 Agenda del día
+          p Tus consultas programadas para hoy
 
-        button#tabProximas(onclick="cambiarPestana('proximas')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]")
-          i(class="fa fa-clock")
-          | Próximas citas
-
-        button#tabHistorial(onclick="cambiarPestana('historial')", class="flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]")
-          i(class="fa fa-folder")
-          | Historias clínicas
-
-      //- SECCIÓN 1: Agenda de hoy
-      section#seccionHoy.seccion-agenda
-        h4(class="text-[18px] font-bold text-black mb-[2px]") Agenda del día
-        p(class="text-[14px] text-gray-500 mb-[20px]") Tus consultas programadas para hoy
-
-        div#lista-pacientes(class="flex flex-col gap-[15px]")
+        div#lista-pacientes.citas-lista
           if citasHoy && citasHoy.length > 0
             each cita in citasHoy
-              div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
-                div
-                  div(class="flex items-center mb-[8px]")
-                    span(class="font-bold text-[16px] text-black")= cita.hora
+              div.cita-card
+                div.cita-info
+                  div.cita-header
+                    span.cita-fecha-badge
+                      i(class="fa-regular fa-clock text-gray-400")
+                      | #{String(cita.hora).slice(0,5)}
                     if cita.estado === 'completada'
-                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-blue-600 text-white capitalize font-bold")= cita.estado
+                      span.status-badge.status-completada= cita.estado
                     else if cita.estado === 'cancelada'
-                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-red-600 text-white capitalize font-bold")= cita.estado
+                      span.status-badge.status-cancelada= cita.estado
                     else if cita.estado === 'confirmada'
-                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-green-600 text-white capitalize font-bold")= cita.estado
+                      span.status-badge.status-confirmada= cita.estado
                     else
-                      span(class="inline-block text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] capitalize font-bold" style="background-color: #EAB308; color: #FFFFFF;")= cita.estado
-                  div(class="flex flex-col gap-[4px] text-[14px]")
-                    div(class="flex")
-                      span(class="text-gray-400 w-[75px]") Paciente:
-                      span(class="font-bold text-gray-800")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
-                    div(class="flex")
-                      span(class="text-gray-400 w-[75px]") Motivo:
-                      span(class="text-gray-600")= cita.motivo
+                      span.status-badge.status-pendiente= cita.estado || 'Pendiente'
+                  div.cita-detalles
+                    div.cita-fila
+                      span.cita-label Paciente:
+                      span.cita-valor= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    if cita.especialidad
+                      div.cita-fila
+                        span.cita-label Especialidad:
+                        span.cita-valor-secundario= cita.especialidad
+                    div.cita-fila
+                      span.cita-label Motivo:
+                      span.cita-valor-secundario= cita.motivo
                 if cita.estado === 'confirmada'
-                  div(class="flex flex-col gap-[8px] w-full md:w-auto")
-                    button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
-                    div(class="flex gap-[8px] w-full md:w-[160px]")
-                      button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 transition-colors") Reprogramar
-                      button(type="button" onclick=`cancelarCita('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-red-100 text-red-700 cursor-pointer hover:bg-red-200 transition-colors") Cancelar
+                  div.cita-acciones
+                    button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="btn-action-dark") Atender Paciente
+                    div.cita-acciones-fila
+                      button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="btn-pastel-blue") Reprogramar
+                      button(type="button" onclick=`cancelarCita('${cita.id}')` class="btn-pastel-red") Cancelar
           else
             div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
               i(class="fa fa-user-clock text-[36px] text-gray-300 mb-[10px]")
               p(class="text-gray-500 text-[14px] m-0") No hay citas programadas para el día de hoy.
 
-      //- SECCIÓN 2: Próximas Citas
+      //- SECCIÓN 3: Próximas Citas
       section#seccionProximas.seccion-agenda.hidden
-        h4(class="text-[18px] font-bold text-black mb-[2px]") Próximas citas
-        p(class="text-[14px] text-gray-500 mb-[20px]") Consultas agendadas para los próximos días
+        div.seccion-header
+          h4 Próximas citas
+          p Consultas agendadas para los próximos días
         
-        div#lista-proximas(class="flex flex-col gap-[15px]")
+        div#lista-proximas.citas-lista
           if proximasCitas && proximasCitas.length > 0
             each cita in proximasCitas
-              div(class="flex flex-col md:flex-row justify-between items-start md:items-center p-[20px] border border-gray-200 rounded-[12px] bg-white gap-[15px] shadow-sm")
-                div
-                  div(class="flex items-center mb-[8px]")
-                    span(class="font-bold text-[16px] text-black")= `${cita.fecha} | ${cita.hora}`
+              div.cita-card
+                div.cita-info
+                  div.cita-header
+                    span.cita-fecha-badge
+                      i(class="fa-regular fa-calendar text-gray-400")
+                      | #{cita.fecha}
+                    span.cita-hora-texto
+                      i(class="fa-regular fa-clock text-gray-400")
+                      | #{String(cita.hora).slice(0,5)}
                     if cita.estado === 'completada'
-                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-blue-600 text-white capitalize font-bold")= cita.estado
+                      span.status-badge.status-completada= cita.estado
                     else if cita.estado === 'cancelada'
-                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-red-600 text-white capitalize font-bold")= cita.estado
+                      span.status-badge.status-cancelada= cita.estado
                     else if cita.estado === 'confirmada'
-                      span(class="text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] bg-green-600 text-white capitalize font-bold")= cita.estado
+                      span.status-badge.status-confirmada= cita.estado
                     else
-                     span(class="inline-block text-[11px] px-[12px] py-[4px] rounded-[15px] ml-[15px] capitalize font-bold" style="background-color: #EAB308; color: #FFFFFF;")= cita.estado
-                  div(class="flex flex-col gap-[4px] text-[14px]")
-                    div(class="flex")
-                      span(class="text-gray-400 w-[75px]") Paciente:
-                      span(class="font-bold text-gray-800")= `${cita.paciente.nombre} ${cita.paciente.apellido}`
-                    div(class="flex")
-                      span(class="text-gray-400 w-[75px]") Motivo:
-                      span(class="text-gray-600")= cita.motivo
+                      span.status-badge.status-pendiente= cita.estado || 'Pendiente'
+                  div.cita-detalles
+                    div.cita-fila
+                      span.cita-label Paciente:
+                      span.cita-valor= `${cita.paciente.nombre} ${cita.paciente.apellido}`
+                    if cita.especialidad
+                      div.cita-fila
+                        span.cita-label Especialidad:
+                        span.cita-valor-secundario= cita.especialidad
+                    div.cita-fila
+                      span.cita-label Motivo:
+                      span.cita-valor-secundario= cita.motivo
                 if cita.estado === 'confirmada'
-                  div(class="flex flex-col gap-[8px] w-full md:w-auto")
-                    button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="w-full md:w-[160px] p-[8px] rounded-[8px] text-[12px] font-bold bg-black text-white cursor-pointer hover:opacity-70 transition-opacity") Atender Paciente
-                    div(class="flex gap-[8px] w-full md:w-[160px]")
-                      button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 transition-colors") Reprogramar
-                      button(type="button" onclick=`cancelarCita('${cita.id}')` class="flex-1 p-[8px] rounded-[8px] text-[11px] font-bold bg-red-100 text-red-700 cursor-pointer hover:bg-red-200 transition-colors") Cancelar
+                  div.cita-acciones
+                    button(type="button" onclick=`abrirModalCrearHistoria('${cita.id}', '${cita.paciente.nombre} ${cita.paciente.apellido}')` class="btn-action-dark") Atender Paciente
+                    div.cita-acciones-fila
+                      button(type="button" onclick=`abrirModalReprogramar('${cita.id}')` class="btn-pastel-blue") Reprogramar
+                      button(type="button" onclick=`cancelarCita('${cita.id}')` class="btn-pastel-red") Cancelar
           else
             div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
               i(class="fa fa-clock text-[36px] text-gray-300 mb-[10px]")
               p(class="text-gray-500 text-[14px] m-0") No hay citas agendadas próximamente.
 
-      //- SECCIÓN 3: Historias clínicas de pacientes atendidos
+      //- SECCIÓN 4: Historias clínicas de pacientes atendidos
       section#seccionHistorial.seccion-agenda.hidden
-        h4(class="text-[18px] font-bold text-black mb-[2px]") Historias clínicas
-        p(class="text-[14px] text-gray-500 mb-[20px]") Consulta los registros clínicos que has elaborado y las historias de pacientes que has atendido.
-        div(class="flex flex-col gap-[15px]")
+        div.seccion-header
+          h4 Historias clínicas
+          p Consulta los registros clínicos que has elaborado y las historias de pacientes que has atendido.
+
+        div.historias-lista
           if historiasClinicas && historiasClinicas.length > 0
             each historia in historiasClinicas
-              div(class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-[18px] border border-gray-200 rounded-[12px] bg-gray-50")
-                div
-                  p(class="text-[11px] uppercase font-bold tracking-wide text-gray-500 mb-1")= new Date(historia.fecha_elaboracion).toLocaleString('es-CO', { timeZone: 'America/Bogota' })
-                  h3(class="text-[15px] font-bold text-gray-900")= `${historia.paciente.nombre} ${historia.paciente.apellido}`
-                  p(class="text-[13px] text-gray-600 mt-1")= `Motivo: ${historia.motivo}`
-                  p(class="text-[13px] text-gray-600 mt-1")= `Diagnóstico: ${historia.diagnostico_principal || 'No registrado'} · CIE-10: ${historia.codigo_cie10 || 'No registrado'}`
+              div.historia-card
+                div.historia-info
+                  p(class="text-[11px] uppercase font-bold tracking-wide text-gray-500 m-0")= new Date(historia.fecha_elaboracion).toLocaleString('es-CO', { timeZone: 'America/Bogota' })
+                  h3(class="text-[15px] font-bold text-gray-900 m-0")= `${historia.paciente.nombre} ${historia.paciente.apellido}`
+                  p(class="text-[13px] text-gray-600 m-0")= `Motivo: ${historia.motivo}`
+                  p(class="text-[13px] text-gray-600 m-0")= `Diagnóstico: ${historia.diagnostico_principal || 'No registrado'} · CIE-10: ${historia.codigo_cie10 || 'No registrado'}`
                   if historia.medico
-                    p(class="text-[12px] text-gray-500 mt-1")= `Atención registrada por: Dr. ${historia.medico.nombre} ${historia.medico.apellido}`
+                    p(class="text-[12px] text-gray-500 m-0")= `Atención registrada por: Dr. ${historia.medico.nombre} ${historia.medico.apellido}`
                   if historia.cita
-                    p(class="text-[12px] text-gray-500 mt-1")= `Cita: ${historia.cita.fecha} · ${historia.cita.hora}`
-                div(class="flex gap-2 shrink-0")
-                  a(href=`/historia-clinica/${historia.id}` class="bg-black text-white px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") Ver historia
-                  a(href=`/historia-clinica/pdf/${historia.id}` target="_blank" class="bg-red-100 text-red-700 px-[14px] py-[9px] rounded-[7px] text-[12px] font-bold no-underline") PDF
+                    p(class="text-[12px] text-gray-500 m-0")= `Cita: ${historia.cita.fecha} · ${historia.cita.hora}`
+                div.historia-acciones
+                  a(href=`/historia-clinica/${historia.id}` class="btn-action-dark w-auto px-[16px]") Ver historia
+                  a(href=`/historia-clinica/pdf/${historia.id}` target="_blank" class="btn-pastel-red flex-none px-[16px]") PDF
           else
             div(class="text-center py-[40px] border border-dashed border-gray-300 rounded-[12px]")
               i(class="fa fa-file-medical text-[36px] text-gray-300 mb-[10px]")
@@ -461,28 +595,28 @@ html(lang="es")
                 label(for="observaciones", class="text-xs font-semibold text-gray-600") Observaciones adicionales
                 textarea#observaciones(name="observaciones", rows="2", class="border border-gray-300 rounded-[8px] p-[9px] text-[13px]", placeholder="Registrar información clínica..." )
           div(class="flex justify-end gap-[10px] border-t border-gray-200 pt-4")
-            button(type="button", onclick="cerrarModalCrearHistoria()", class="bg-gray-200 text-black px-[18px] py-[9px] rounded-[6px] font-bold text-[13px]") Cancelar
-            button(type="submit", class="bg-black text-white px-[20px] py-[9px] rounded-[6px] font-bold text-[13px]") Guardar historia clínica
+            button(type="button", onclick="cerrarModalCrearHistoria()", class="bg-gray-200 text-black px-[18px] py-[9px] rounded-[8px] font-bold text-[13px] cursor-pointer") Cancelar
+            button(type="submit", class="header-btn-primary px-[20px] h-[38px] text-[13px] font-bold") Guardar historia clínica
 
     //- MODAL 3: Reprogramar Cita 
     div#modalReprogramar(class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-[20px]")
-      div(class="bg-white w-full max-w-[400px] rounded-[15px] shadow-2xl overflow-hidden")
+      div(class="bg-white w-full max-w-[440px] rounded-[14px] border border-gray-200 shadow-2xl overflow-hidden")
         div(class="p-[20px] border-b border-gray-200 bg-gray-50")
-          h2(class="text-[18px] font-bold text-black m-0") Reprogramar Cita
-        form#formReprogramar(onsubmit="guardarReprogramacion(event)", class="p-[20px] flex flex-col gap-[15px] text-[14px]")
+          h2(class="text-[18px] font-bold text-gray-900 m-0") Reprogramar Cita
+        form#formReprogramar(onsubmit="guardarReprogramacion(event)", class="p-[22px] flex flex-col gap-[15px] text-[14px]")
           input#citaIdReprogramar(type="hidden")
           
-          div(class="flex flex-col gap-[5px]")
-            label(for="nuevaFecha", class="font-bold text-gray-700") Nueva Fecha:
-            input#nuevaFecha(type="date", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]")
+          div(class="flex flex-col gap-[6px]")
+            label(for="nuevaFecha", class="font-bold text-gray-700 text-[13px]") Nueva Fecha:
+            input#nuevaFecha(type="date", required, class="border border-gray-300 rounded-[8px] p-[11px] outline-none text-[13px]")
             
-          div(class="flex flex-col gap-[5px]")
-            label(for="nuevaHora", class="font-bold text-gray-700") Nueva Hora:
-            input#nuevaHora(type="time", required, class="border border-gray-300 rounded-[8px] p-[10px] outline-none text-[13px]")
+          div(class="flex flex-col gap-[6px]")
+            label(for="nuevaHora", class="font-bold text-gray-700 text-[13px]") Nueva Hora:
+            input#nuevaHora(type="time", required, class="border border-gray-300 rounded-[8px] p-[11px] outline-none text-[13px]")
             
           div(class="flex justify-end gap-[10px] mt-[10px]")
-            button(type="button", onclick="cerrarModalReprogramar()", class="bg-gray-200 text-black px-[18px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-gray-300 transition-colors cursor-pointer") Cancelar
-            button(type="submit", class="bg-blue-600 text-white px-[20px] py-[8px] rounded-[6px] font-bold text-[13px] hover:bg-blue-700 transition-colors cursor-pointer") Reprogramar
+            button(type="button", onclick="cerrarModalReprogramar()", class="bg-gray-100 text-gray-800 border border-gray-300 px-[18px] py-[9px] rounded-[8px] font-bold text-[13px] hover:bg-gray-200 transition-colors cursor-pointer") Cancelar
+            button(type="submit", class="btn-pastel-blue flex-none px-[20px] text-[13px]") Reprogramar
 
     script.
       async function decidirSolicitud(event, formulario, decision) {
@@ -525,34 +659,38 @@ html(lang="es")
       }
 
       function cambiarPestana(pestana) {
+        const seccionSolicitudes = document.getElementById('seccionSolicitudes');
         const seccionHoy = document.getElementById('seccionHoy');
         const seccionProximas = document.getElementById('seccionProximas');
         const seccionHistorial = document.getElementById('seccionHistorial');
 
+        const tabSolicitudes = document.getElementById('tabSolicitudes');
         const tabHoy = document.getElementById('tabHoy');
         const tabProximas = document.getElementById('tabProximas');
         const tabHistorial = document.getElementById('tabHistorial');
 
+        seccionSolicitudes.classList.add('hidden');
         seccionHoy.classList.add('hidden');
         seccionProximas.classList.add('hidden');
         seccionHistorial.classList.add('hidden');
 
-        const estiloInactivo = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-white hover:bg-gray-100 transition-colors cursor-pointer text-black font-medium flex items-center gap-[8px]";
-        const estiloActivo = "flex-1 h-[40px] text-[15px] text-left px-[20px] border border-gray-300 rounded-[10px] bg-gray-300 font-medium cursor-pointer transition-colors flex items-center gap-[8px]";
+        tabSolicitudes.classList.remove('is-active');
+        tabHoy.classList.remove('is-active');
+        tabProximas.classList.remove('is-active');
+        tabHistorial.classList.remove('is-active');
 
-        tabHoy.className = estiloInactivo;
-        tabProximas.className = estiloInactivo;
-        tabHistorial.className = estiloInactivo;
-
-        if (pestana === 'hoy') {
+        if (pestana === 'solicitudes') {
+          seccionSolicitudes.classList.remove('hidden');
+          tabSolicitudes.classList.add('is-active');
+        } else if (pestana === 'hoy') {
           seccionHoy.classList.remove('hidden');
-          tabHoy.className = estiloActivo;
+          tabHoy.classList.add('is-active');
         } else if (pestana === 'proximas') {
           seccionProximas.classList.remove('hidden');
-          tabProximas.className = estiloActivo;
+          tabProximas.classList.add('is-active');
         } else {
           seccionHistorial.classList.remove('hidden');
-          tabHistorial.className = estiloActivo;
+          tabHistorial.classList.add('is-active');
         }
       }
 

@@ -1,20 +1,70 @@
 import { check, validationResult } from "express-validator";
 import { Op } from "sequelize";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { Usuario, Cita, HistoriaClinica } from "../models/index.js";
 import { generarJWT, generarId } from "../helpers/tokens.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
 
-const formularioLogin = (req, res) => {
-    res.render("login", {
+const COOKIE_OPCIONES = {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/"
+};
+
+const DURACION_COOKIE_MS = 7 * 24 * 60 * 60 * 1000; // 7 días
+
+const redirigirPorRol = (res, rol) => {
+    if (rol === "admin") return res.redirect("/adminPanel");
+    if (rol === "medico") return res.redirect("/medicalPanel");
+    return res.redirect("/patientPanel");
+};
+
+const obtenerUsuarioActivo = async (req) => {
+    const token = req.cookies?._token;
+    if (!token) return null;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const usuario = await Usuario.findByPk(decoded.id, {
+            attributes: { exclude: ["password", "token"] }
+        });
+        return usuario || null;
+    } catch {
+        return null;
+    }
+};
+
+const formularioLogin = async (req, res) => {
+    const usuarioActivo = await obtenerUsuarioActivo(req);
+    if (usuarioActivo) {
+        return redirigirPorRol(res, usuarioActivo.rol);
+    }
+
+    if (req.cookies?._token) {
+        res.clearCookie("_token", COOKIE_OPCIONES);
+    }
+
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    return res.render("login", {
         autenticado: true,
         tituloPagina: "Inicio de Sesión",
         csrfToken: req.csrfToken()
     });
 };
 
-const formularioRegistro = (req, res) => {
-    res.render("pacientRegistration", {
+const cerrarSesion = (req, res) => {
+    res.clearCookie("_token", COOKIE_OPCIONES);
+    return res.redirect("/login");
+};
+
+const formularioRegistro = async (req, res) => {
+    const usuarioActivo = await obtenerUsuarioActivo(req);
+    if (usuarioActivo) {
+        return redirigirPorRol(res, usuarioActivo.rol);
+    }
+
+    return res.render("pacientRegistration", {
         tituloPagina: "Registro de Paciente",
         csrfToken: req.csrfToken()
     });
@@ -41,8 +91,6 @@ const verPatientPanel = async (req, res) => {
             condicionesMedicos.especialidad = especialidad.trim();
         }
 
-        // Cada bloque se consulta de forma independiente: un problema al cargar
-        // médicos o historias clínicas no debe ocultar las citas del paciente.
         const resultados = await Promise.allSettled([
             Usuario.findAll({ where: condicionesMedicos }),
             Usuario.findAll({
@@ -318,6 +366,11 @@ const nuevaPassword = async (req, res) => {
 };
 
 const autenticar = async (req, res) => {
+    const usuarioActivo = await obtenerUsuarioActivo(req);
+    if (usuarioActivo) {
+        return redirigirPorRol(res, usuarioActivo.rol);
+    }
+
     await check("email").isEmail().withMessage("El correo es obligatorio").run(req);
     await check("password").notEmpty().withMessage("La contraseña no puede estar vacía").run(req);
 
@@ -374,18 +427,11 @@ const autenticar = async (req, res) => {
     });
 
     res.cookie("_token", token, {
-        httpOnly: true,
+        ...COOKIE_OPCIONES,
+        maxAge: DURACION_COOKIE_MS
     });
 
-    if (usuario.rol === 'admin') {
-        return res.redirect("/adminPanel");
-    }
-
-    if (usuario.rol === 'medico') {
-        return res.redirect("/medicalPanel");
-    }
-
-    return res.redirect("/patientPanel");
+    return redirigirPorRol(res, usuario.rol);
 };
 
 const verAgendaMedicoParaPaciente = async (req, res) => {
@@ -457,10 +503,9 @@ const verAgendaMedicoParaPaciente = async (req, res) => {
     }
 };
 
-
-
 export { 
-    formularioLogin, 
+    formularioLogin,
+    cerrarSesion,
     registrar, 
     formularioRegistro, 
     resetPassword, 

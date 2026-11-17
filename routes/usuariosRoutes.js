@@ -12,7 +12,8 @@ import {
   comprobarToken, 
   nuevaPassword,
   vistaPrincipal,
-  verAgendaMedicoParaPaciente
+  verAgendaMedicoParaPaciente,
+  cerrarSesion
 } from "../controllers/usuariosControllers.js";
 import protegerRuta from "../middleware/protegerRuta.js"; 
 
@@ -54,4 +55,7 @@ router.post("/forgotPassword/:token", nuevaPassword);
 
 router.get("/patientPanel", protegerRuta, verPatientPanel);
 router.get('/paciente/agendar', protegerRuta, verAgendaMedicoParaPaciente);
+
+router.get("/cerrar-sesion", cerrarSesion);
+router.post("/cerrar-sesion", cerrarSesion);
 export default router;
