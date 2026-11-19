@@ -13,7 +13,8 @@ import {
   nuevaPassword,
   vistaPrincipal,
   verAgendaMedicoParaPaciente,
-  cerrarSesion
+  cerrarSesion,
+  verificarSesion
 } from "../controllers/usuariosControllers.js";
 import protegerRuta from "../middleware/protegerRuta.js"; 
 
@@ -58,4 +59,5 @@ router.get('/paciente/agendar', protegerRuta, verAgendaMedicoParaPaciente);
 
 router.get("/cerrar-sesion", cerrarSesion);
 router.post("/cerrar-sesion", cerrarSesion);
+router.get("/verificar-sesion", verificarSesion);
 export default router;

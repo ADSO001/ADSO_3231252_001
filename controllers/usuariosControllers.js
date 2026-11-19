@@ -502,6 +502,16 @@ const verAgendaMedicoParaPaciente = async (req, res) => {
         res.redirect("/patientPanel");
     }
 };
+const verificarSesion = async (req, res) => {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    const usuarioActivo = await obtenerUsuarioActivo(req);
+
+    if (!usuarioActivo) {
+        return res.status(401).json({ activa: false });
+    }
+
+    return res.status(200).json({ activa: true });
+};
 
 export { 
     formularioLogin,
@@ -516,5 +526,6 @@ export {
     verPatientPanel, 
     confirmar,
     vistaPrincipal,
-    verAgendaMedicoParaPaciente
+    verAgendaMedicoParaPaciente,
+    verificarSesion
 };

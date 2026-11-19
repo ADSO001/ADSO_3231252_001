@@ -48,4 +48,34 @@ app.use("/", adminRouter);
 app.use("/", citaRouter);
 app.use("/", historiaClinicaRouter);
 
+// Inyectar sesionSync.js automáticamente en todas las vistas renderizadas
+app.use((req, res, next) => {
+  const renderOriginal = res.render.bind(res);
+
+  res.render = (vista, opciones, callback) => {
+    if (typeof opciones === "function") {
+      callback = opciones;
+      opciones = {};
+    }
+
+    renderOriginal(vista, opciones, (err, html) => {
+      if (err) {
+        if (callback) return callback(err);
+        return next(err);
+      }
+
+      const autenticado = Boolean(req.usuario);
+      const scriptTag = `<script src="/js/sesionSync.js" data-autenticado="${autenticado}"></script>`;
+
+      const htmlFinal = typeof html === "string" && html.includes("</body>")
+        ? html.replace("</body>", `  ${scriptTag}\n</body>`)
+        : `${html}\n${scriptTag}`;
+
+      if (callback) return callback(null, htmlFinal);
+      res.send(htmlFinal);
+    });
+  };
+
+  next();
+});
 export default app;
